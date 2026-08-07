@@ -1,0 +1,424 @@
+
+> build · deepseek-v4-flash-free
+
+I'll load the relevant skill for this task
+→ Skill "data-conversions-complex-logic"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/ 2>/dev/null || echo "no artifacts dir"
+total 0
+drwxr-xr-x 1 pi pi  30 Aug  8 05:49 .
+drwxr-xr-x 1 pi pi  12 Aug  8 05:49 ..
+drwxr-xr-x 1 pi pi 140 Aug  8 06:01 outputs
+drwxr-xr-x 1 pi pi  18 Aug  8 05:49 prompt0a
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/
+total 24
+drwxr-xr-x 1 pi pi  140 Aug  8 06:01 .
+drwxr-xr-x 1 pi pi   30 Aug  8 05:49 ..
+-rw-r--r-- 1 pi pi    7 Aug  8 05:49 esphome_component.txt
+-rw-r--r-- 1 pi pi 8550 Aug  8 05:54 spec_tmp102.md
+-rw-r--r-- 1 pi pi 2097 Aug  8 06:01 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi   76 Aug  8 05:49 tmp102
+-rw-r--r-- 1 pi pi 1767 Aug  8 05:49 tmp102.mdx
+
+→ Read artifacts/tmp102/outputs/spec_tmp102.md
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/
+total 16
+drwxr-xr-x 1 pi pi   76 Aug  8 05:49 .
+drwxr-xr-x 1 pi pi  140 Aug  8 06:01 ..
+-rw-r--r-- 1 pi pi  282 Aug  8 05:49 __init__.py
+-rw-r--r-- 1 pi pi 1204 Aug  8 05:49 sensor.py
+-rw-r--r-- 1 pi pi 1430 Aug  8 05:49 tmp102.cpp
+-rw-r--r-- 1 pi pi  370 Aug  8 05:49 tmp102.h
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/
+total 0
+drwxr-xr-x 1 pi pi  18 Aug  8 05:49 .
+drwxr-xr-x 1 pi pi  30 Aug  8 05:49 ..
+drwxr-xr-x 1 pi pi 204 Aug  8 05:53 datasheet
+
+$ zig version 2>/dev/null || echo "zig not found"
+0.16.0
+
+→ Read artifacts/tmp102/outputs/test_spec_tmp102.md
+→ Read artifacts/tmp102/outputs/tmp102/tmp102.cpp
+Now let me set up the working directories and initialize the zig
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c /home/pi/Developer/wokwi-ai/feedback/tmp102 && echo done
+done
+
+$ zig init
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+
+→ Read artifacts/tmp102/prompt0c/build.zig
+→ Read artifacts/tmp102/prompt0c/src/main.zig
+→ Read artifacts/tmp102/prompt0c/src/root.zig
+Let me check the datasheet directory for the authoritative bit layout
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet/
+total 1260
+drwxr-xr-x 1 pi pi     204 Aug  8 05:53 .
+drwxr-xr-x 1 pi pi      18 Aug  8 05:49 ..
+-rw-r--r-- 1 pi pi     639 Aug  8 05:52 main.py
+-rw-r--r-- 1 pi pi     183 Aug  8 05:52 pyproject.toml
+-rw-r--r-- 1 pi pi       5 Aug  8 05:52 .python-version
+-rw-r--r-- 1 pi pi       0 Aug  8 05:52 README.md
+-rw-r--r-- 1 pi pi    2468 Aug  8 05:52 template_chip.md
+-rw-r--r-- 1 pi pi   70086 Aug  8 05:53 tmp102_datasheet.md
+-rw-r--r-- 1 pi pi 1151760 Aug  8 05:52 tmp102.pdf
+-rw-r--r-- 1 pi pi   43235 Aug  8 05:52 uv.lock
+drwxr-xr-x 1 pi pi      96 Aug  8 05:52 .venv
+
+✱ Grep "extended|13-bit|T12|Extended Mode|0x0960|1E70" in artifacts/tmp102/prompt0a/datasheet/tmp102_datasheet.md · 12 matches
+→ Read artifacts/tmp102/prompt0a/datasheet/tmp102_datasheet.md [offset=355, limit=50]
+→ Read artifacts/tmp102/prompt0a/datasheet/tmp102_datasheet.md [offset=597, limit=45]
+
+# Todos
+[✓] Initialize zig project in artifacts/tmp102/prompt0c
+[•] Implement data-conversion + reference-algorithm functions (temperature decode/encode normal+extended, byte order, config) with unit tests
+[ ] Verify with zig build
+[ ] Write conversions_manifest.md listing functions + worked examples
+[ ] Write feedback/prompt0c.md
+
+Now I understand the exact bit layout from the datasheet (Tables 6-8/6-9, 6-10/6-11). Let me set up a todo and write the implementation.
+
+Key facts:
+- **Normal (12-bit):** T11..T0 in bits 15:4 (left-aligned), decode `(i16)reg >> 4`, scale 0.0625
+- **Extended (13-bit):** T12..T0 in bits 15:3, plus bit 0 (D0 of byte 2) set to indicate EM
+- **Byte order:**
+← Write artifacts/tmp102/prompt0c/src/root.zig
+Wrote file successfully.
+
+I made several errors in that draft. Let me rewrite it cleanly and
+← Write artifacts/tmp102/prompt0c/src/root.zig
+Wrote file successfully.
+
+I have inconsistent naming. Let me fix the function names for symmetry (`decodeTempNormal`, `encodeTempNormal`, `decodeTempExtended`, `encode
+← Edit artifacts/tmp102/prompt0c/src/root.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+@@ -47,17 +47,17 @@
+ //   temp_C = ((i16)reg >> 4) * 0.0625
+ // ===========================================================================
+ 
+ /// Decode a normal-mode (12-bit) temperature register word to degrees C.
+-pub fn tempNormalToCelsius(reg: u16) f32 {
++pub fn decodeTempNormal(reg: u16) f32 {
+     const count: i16 = @bitCast(reg);
+     return @as(f32, @floatFromInt(count >> 4)) * RESOLUTION;
+ }
+ 
+ /// Encode a temperature in degrees C to a normal-mode (12-bit) register word,
+ /// left-aligned at bits 15:4, rounded to the nearest 0.0625 C LSB.
+ /// Clamps to the 12-bit signed range [-128, 127.9375] C.
+-pub fn celsiusToTempNormal(value: f32) u16 {
++pub fn encodeTempNormal(value: f32) u16 {
+     const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
+     const count = std.math.clamp(raw, -2048, 2047);
+     return @as(u16, @bitCast(@as(i16, @intCast(count)))) << 4;
+ }
+
+
+← Edit artifacts/tmp102/prompt0c/src/root.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+@@ -78,9 +78,9 @@
+ 
+ /// Encode a temperature (degrees C) to an extended-mode (13-bit) register word,
+ /// left-aligned at bits 15:3 with the extended marker set in bit 0.
+ /// Round-clamped to the 13-bit signed range [-256, 255.9375] C.
+-pub fn celsiusToTempExtended(value: f32) u16 {
++pub fn encodeTempExtended(value: f32) u16 {
+     const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
+     const count = std.math.clamp(raw, -4096, 4095);
+     const base: u16 = @as(u16, @bitCast(@as(i16, @intCast(count)))) << 3;
+     // Bit 0 (D0 of byte 2) flags the extended data format.
+
+
+Now update the test invocations to match renamed functions
+$ cd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c && sed -i 's/celsiusToTempNormal(/encodeTempNormal(/g; s/celsiusToTempExtended(/encodeTempExtended(/g' src/root.zig && rg -n "celsiusToTemp|celsiusToTemp|encodeTemp|decodeTemp" src/root.zig
+51:pub fn decodeTempNormal(reg: u16) f32 {
+59:pub fn encodeTempNormal(value: f32) u16 {
+74:pub fn decodeTempExtended(reg: u16) f32 {
+82:pub fn encodeTempExtended(value: f32) u16 {
+185:        try std.testing.expectApproxEqAbs(case.c, decodeTempNormal(case.reg), 0.0001);
+190:    try std.testing.expectEqual(@as(u16, 0x6400), encodeTempNormal(100.0));
+191:    try std.testing.expectEqual(@as(u16, 0x5000), encodeTempNormal(80.0));
+192:    try std.testing.expectEqual(@as(u16, 0x4B00), encodeTempNormal(75.0));
+193:    try std.testing.expectEqual(@as(u16, 0x3200), encodeTempNormal(50.0));
+194:    try std.testing.expectEqual(@as(u16, 0x1900), encodeTempNormal(25.0));
+195:    try std.testing.expectEqual(@as(u16, 0x0040), encodeTempNormal(0.25));
+196:    try std.testing.expectEqual(@as(u16, 0x0000), encodeTempNormal(0.0));
+197:    try std.testing.expectEqual(@as(u16, 0xFFC0), encodeTempNormal(-0.25));
+198:    try std.testing.expectEqual(@as(u16, 0xE700), encodeTempNormal(-25.0));
+199:    try std.testing.expectEqual(@as(u16, 0xC900), encodeTempNormal(-55.0));
+204:    try std.testing.expectEqual(@as(u16, 0x7FF0), encodeTempNormal(128.0));
+205:    try std.testing.expectEqual(@as(u16, 0x8000), encodeTempNormal(-128.1));
+210:    try std.testing.expectEqual(@as(u16, 0x1500), encodeTempNormal(21.0));
+211:    try std.testing.expectApproxEqAbs(21.0, decodeTempNormal(0x1500), 0.0001);
+226:        try std.testing.expectApproxEqAbs(case.c, decodeTempExtended(reg), 0.0001);
+232:    try std.testing.expectEqual(@as(u16, 0x4B01), encodeTempExtended(150.0));
+234:    try std.testing.expectEqual(@as(u16, 0x0A81), encodeTempExtended(21.0));
+236:    try std.testing.expectApproxEqAbs(21.0, decodeTempExtended(0x0A81), 0.0001);
+
+The conversion-rate test uses a wrong literal type. Let me fix it
+← Edit artifacts/tmp102/prompt0c/src/root.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+@@ -253,12 +253,10 @@
+     const f = setBit(setBit(0x0000, 12, true), 11, true);
+     try std.testing.expectEqual(@as(u8, 6), faultQueueCount(f));
+     try std.testing.expectEqual(@as(u8, 1), faultQueueCount(0x0000));
+     // Conversion rate mapping 00..11.
+-    try std.testing.expectEqual(f32{ 0.25, 1.0, 4.0, 8.0 }, blk: {
+-        var v: [4]f32 = undefined;
+-        inline for (0..4) |i| {
+-            v[i] = conversionRateHz(@as(u16, @as(u16, i) << 6));
+-        }
+-        break :blk v;
+-    });
++    var rates: [4]f32 = undefined;
++    inline for (0..4) |i| {
++        rates[i] = conversionRateHz(@as(u16, i) << 6);
++    }
++    try std.testing.expectEqual([4]f32{ 0.25, 1.0, 4.0, 8.0 }, rates);
+ }
+\ No newline at end of file
+
+
+Now clean up main.zig to be a simple demo of the module functions
+← Write artifacts/tmp102/prompt0c/src/main.zig
+Wrote file successfully.
+
+Let me match the template's main API style exactly
+← Write artifacts/tmp102/prompt0c/src/main.zig
+Wrote file successfully.
+
+$ cd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c && zig build test 2>&1 | head -60
+test
++- run test
+   +- compile test Debug native 2 errors
+src/root.zig:99:21: error: expected type 'u4', found 'u5'
+    return ((reg >> bit) & 1) == 1;
+                    ^~~
+src/root.zig:99:21: note: unsigned 4-bit int cannot represent all possible unsigned 5-bit values
+referenced by:
+    configExtendedMode: src/root.zig:123:18
+    test.config reset value field decoding: src/root.zig:243:58
+src/root.zig:104:43: error: expected type 'u4', found 'u5'
+    const bit_value: u16 = @as(u16, 1) << bit;
+                                          ^~~
+src/root.zig:104:43: note: unsigned 4-bit int cannot represent all possible unsigned 5-bit values
+error: 2 compilation errors
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/5 steps succeeded (1 failed)
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 2 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x3bd8ccdb -Z98a9999e7f2abbff test
+
+← Edit artifacts/tmp102/prompt0c/src/root.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+@@ -94,14 +94,14 @@
+ // Byte 2 (LSB):  D7..D0 = CR1, CR0, AL, EM, -, -, -, -
+ // ===========================================================================
+ 
+ /// Read bit `bit` (0..15) of a 16-bit register word.
+-pub fn getBit(reg: u16, bit: u5) bool {
++pub fn getBit(reg: u16, bit: u4) bool {
+     return ((reg >> bit) & 1) == 1;
+ }
+ 
+ /// Return a copy of `reg` with bit `bit` set to `value`.
+-pub fn setBit(reg: u16, bit: u5, value: bool) u16 {
++pub fn setBit(reg: u16, bit: u4, value: bool) u16 {
+     const bit_value: u16 = @as(u16, 1) << bit;
+     if (value) return reg | bit_value;
+     return reg & ~bit_value;
+ }
+
+
+$ cd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c && zig build test 2>&1 | head -60
+(no output)
+
+All tests pass. Let me confirm the run step works too
+$ cd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c && zig build test; echo "test exit: $?"; zig build run 2>&1
+test exit: 0
+21.0 C -> register 0x1500 (bytes 15 00), decoded 21.00 C
+
+# Todos
+[✓] Initialize zig project in artifacts/tmp102/prompt0c
+[✓] Implement data-conversion + reference-algorithm functions with unit tests
+[✓] Verify with zig build
+[•] Write conversions_manifest.md listing functions + worked examples
+[ ] Write feedback/prompt0c.md
+
+Both pass. Now the manifest and feedback
+← Write artifacts/tmp102/prompt0c/conversions_manifest.md
+Wrote file successfully.
+
+← Edit artifacts/tmp102/prompt0c/conversions_manifest.md
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+@@ -24,9 +24,9 @@
+ | `decodeTempNormal(reg)` | register word → C | `decodeTempNormal(0x1500)` = `21.0 C` | `((i16)reg >> 4) * 0.0625` |
+ | `encodeTempNormal(c)` | C → register word | `encodeTempNormal(21.0)` = `0x1500` | round(c/0.0625), clamp [-2048,2047], `<< 4`, lower nibble 0 |
+ 
+ Spec table round-trips tested: 0x6400→100, 0x4B00→75, 0x1900→25, 0x0040→0.25,
+-0xFFC0→–0.25, 0xE700→–25, 0xC900→–55; clamp 128→0x7FF0, –128.1→0x0800.
++0xFFC0→–0.25, 0xE700→–25, 0xC900→–55; clamp 128→0x7FF0, –128.1→0x8000.
+ 
+ ## Normal — Extended (13-bit, EM=1)
+ 
+ 13-bit signed value T12..T0 **left-aligned in bits 15:3**, with **bit 0 set to 1**
+
+
+← Edit artifacts/tmp102/prompt0c/conversions_manifest.md
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+@@ -31,16 +31,15 @@
+ 
+ 13-bit signed value T12..T0 **left-aligned in bits 15:3**, with **bit 0 set to 1**
+ (D0 of byte 2) as the extended-mode marker. Decode by arithmetic shift by 3.
+ 
+-| Function | Meaning | Worked example | Assumption |
+-|---|---|---|---|
+ | `decodeTempExtended(reg)` | register word → C | `decodeTempExtended(0x0A81)` = `21.0 C` | `((i16)reg >> 3) * 0.0625`; bit 0 marker dropped by shift |
+-| `encodeTempExtended(val)` | C → register word | `encodeTempExtended(150.0)` = `0x4B01` | round(c/0.0625), clamp [-4096,4095], `<< 3`, `\| 0x0001` marker |
++| `encodeTempExtended(value)` | C → register word | `encodeTempExtended(150.0)` = `0x4B01` | round(c/0.0625), clamp [-4096,4095], `<< 3`, `\| 0x0001` marker |
+ 
+-Note: the spec's raw "130 °C = 0x0901" example lists the **13-bit count**, not the
+-register word; the register word additionally left-shifts this count 3 places and
+-sets bit 0. `encodeTempExtended(150.0)=0x4B01` matches the datasheet layout.
++Note: the datasheet's raw "150 °C = 0x0960" example lists the **13-bit two's
++complement number**, not the register word; the register word additionally
++left-aligns this by 3 places and sets bit 0. `encodeTempExtended(150.0)=0x4B01`
++matches the datasheet layout.
+ 
+ ## Configuration register (0x01) helpers
+ 
+ Layout: Byte1 `OS R1 R0 F1 F0 POL TM SD`, Byte2 `CR1 CR0 AL EM - - - -`.
+
+
+→ Read artifacts/tmp102/prompt0c/conversions_manifest.md [offset=20, limit=22]
+✗ Edit artifacts/tmp102/prompt0c/conversions_manifest.md failed
+Error: Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+
+← Edit artifacts/tmp102/prompt0c/conversions_manifest.md
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+@@ -26,13 +26,17 @@
+ 
+ Spec table round-trips tested: 0x6400→100, 0x4B00→75, 0x1900→25, 0x0040→0.25,
+ 0xFFC0→–0.25, 0xE700→–25, 0xC900→–55; clamp 128→0x7FF0, –128.1→0x8000.
+ 
+-## Normal — Extended (13-bit, EM=1)
++## Extended (13-bit, EM=1)
+ 
+ 13-bit signed value T12..T0 **left-aligned in bits 15:3**, with **bit 0 set to 1**
+ (D0 of byte 2) as the extended-mode marker. Decode by arithmetic shift by 3.
+ 
++## table
++
++| Function | Meaning | Worked example | Assumption |
++
+ | `decodeTempExtended(reg)` | register word → C | `decodeTempExtended(0x0A81)` = `21.0 C` | `((i16)reg >> 3) * 0.0625`; bit 0 marker dropped by shift |
+ | `encodeTempExtended(value)` | C → register word | `encodeTempExtended(150.0)` = `0x4B01` | round(c/0.0625), clamp [-4096,4095], `<< 3`, `\| 0x0001` marker |
+ 
+ Note: the datasheet's raw "150 °C = 0x0960" example lists the **13-bit two's
+
+
+← Edit artifacts/tmp102/prompt0c/conversions_manifest.md
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+@@ -31,10 +31,8 @@
+ 
+ 13-bit signed value T12..T0 **left-aligned in bits 15:3**, with **bit 0 set to 1**
+ (D0 of byte 2) as the extended-mode marker. Decode by arithmetic shift by 3.
+ 
+-## table
+-
+ | Function | Meaning | Worked example | Assumption |
+ 
+ | `decodeTempExtended(reg)` | register word → C | `decodeTempExtended(0x0A81)` = `21.0 C` | `((i16)reg >> 3) * 0.0625`; bit 0 marker dropped by shift |
+ | `encodeTempExtended(value)` | C → register word | `encodeTempExtended(150.0)` = `0x4B01` | round(c/0.0625), clamp [-4096,4095], `<< 3`, `\| 0x0001` marker |
+
+
+→ Read artifacts/tmp102/prompt0c/conversions_manifest.md
+Line 36 has a stray divider with no header row. Let me fix
+
+← Edit artifacts/tmp102/prompt0c/conversions_manifest.md
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/conversions_manifest.md
+@@ -32,9 +32,9 @@
+ 13-bit signed value T12..T0 **left-aligned in bits 15:3**, with **bit 0 set to 1**
+ (D0 of byte 2) as the extended-mode marker. Decode by arithmetic shift by 3.
+ 
+ | Function | Meaning | Worked example | Assumption |
+-
++|---|---|---|---|
+ | `decodeTempExtended(reg)` | register word → C | `decodeTempExtended(0x0A81)` = `21.0 C` | `((i16)reg >> 3) * 0.0625`; bit 0 marker dropped by shift |
+ | `encodeTempExtended(value)` | C → register word | `encodeTempExtended(150.0)` = `0x4B01` | round(c/0.0625), clamp [-4096,4095], `<< 3`, `\| 0x0001` marker |
+ 
+ Note: the datasheet's raw "150 °C = 0x0960" example lists the **13-bit two's
+
+
+Now write feedback file
+← Write feedback/tmp102/prompt0c.md
+Wrote file successfully.
+
+$ cd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c && zig build test && echo BUILD_OK
+BUILD_OK
+
+# Todos
+[✓] Initialize zig project in artifacts/tmp102/prompt0c
+[✓] Implement data-conversion + reference-algorithm functions with unit tests
+[✓] Verify with zig build
+[✓] Write conversions_manifest.md listing functions + worked examples
+[✓] Write feedback/prompt0c.md
+
+Done. Created the TMP102 Zig 0.16 project in `artifacts/tmp102/prompt0c/`.
+
+**`src/root.zig`** — conversion functions + reference algorithms (imported as the shared `prompt0c` module), all verified by `zig build test` (passes):
+- Byte order: `bytesToWord` / `wordToBytes` (I²C big-endian)
+- Normal 12-bit temp: `decodeTempNormal` / `encodeTempNormal` (left-aligned bits 15:4)
+- Extended 13-bit temp: `decodeTempExtended` / `encodeTempExtended` (bits 15:3 + bit-0 EM marker)
+- Config register: `getBit`/`setBit`, `configShutdown/ExtendedMode/Polarity/ThermostatMode`, `conversionRateField/Hz`, `faultQueueCount`
+
+**`src/main.zig`** — demo (`21.0 C -> register 0x1500, decoded 21.00 C`).
+
+**`conversions_manifest.md`** — per-function worked examples + exact bit-layout assumptions.
+
+**`feedback/tmp102/prompt0c.md`** — notes the spec's extended-mode `0x0960` is a 13-bit count, not a register word; resolved against the raw datasheet (bits 15:3 + bit-0 marker).
+
+One note: the spec's extended-mode example was ambiguous, so I implemented the datasheet layout (Tables 6-8/6-9) and documented the discrepancy in the manifest.
