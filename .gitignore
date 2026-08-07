@@ -1,0 +1,10 @@
+.git
+**/target/
+.zig-cache/
+.esphome/
+log.md
+*.pdf
+*.wasm
+components/
+esphome/
+artifacts/**/outputs/qa_test/.git/
