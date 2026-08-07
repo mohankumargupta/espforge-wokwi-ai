@@ -1,0 +1,1 @@
+do not run via llm, needs to be run manually esphome compile yaml

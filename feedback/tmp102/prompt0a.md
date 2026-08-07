@@ -1,28 +1,28 @@
-# Feedback: spec-from-datasheet for tmp102 (prompt0a)
+# Skill Feedback: spec-from-datasheet (tmp102)
 
-## What went well
-- `components.sh` detected existing `components/` and `esphome/` dirs and exited cleanly.
-- `rg -i tmp102 components` found the component doc immediately at `components/sensor/tmp102.mdx`.
-- esphome source code was found at `esphome/esphome/components/tmp102` and copied to outputs.
-- `analog.sh` returned a TI datasheet URL; direct curl download to TI succeeded
-  (1.1 MB valid PDF v1.4).
-- `uv init` + `uv add pymupdf4llm` and `uv run main.py` worked without issue.
-  Datasheet converted cleanly; tables extracted well with pymupdf4llm.
-- The TI datasheet is very well structured — register map, bit fields, and data
-  conversion tables all extract cleanly.
+## What worked
+- The TMP102 esphome component name matches the device name, so `rg -i tmp102 components` found the mdx immediately; no fallback `rg` step needed.
+- `uv init` + `uv add pymupdf4llm` + `uv run main.py` pipeline worked cleanly and produced a well-structured 70 KB markdown with register tables, pin tables, and timing intact.
+- Copying the component source (`esphome/esphome/components/tmp102/`) and the mdx into outputs worked.
 
-## Obstacles / observations
-- The esphome tmp102.mdx does not contain a datasheet URL, so I had to use the
-  well-known TI product URL (`https://www.ti.com/lit/ds/symlink/tmp102.pdf`)
-  rather than deriving it from the docs. The skill assumes the doc file contains
-  the datasheet link; for this device it did not.
-- The `analog.sh` wayback URL returned a 2013 archive snapshot which is ancient;
-  I preferred the live TI download. The wayback fallback may be stale for TI parts.
-- No true blocking obstacles. Minor OCR noise in the markdown (e.g. `Figure
-  5-2. Shutdown Current` etc.) is expected and was ignored.
-
-## Suggestions for improvement
-- Step 2: when the esphome doc has no datasheet link, suggest a fallback: query
-  the component source (e.g. the `*.h`/`*.cpp`) or the manufacturer product page.
-- Consider recommending the direct TI download first before the wayback snapshot,
-  since TI serves its own datasheets directly.
+## Obstacles / improvements
+1. **Datasheet URL not in the mdx.** The ESPHome doc for TMP102 does not list a
+   datasheet URL. The skill's Step 2 (find a datasheet URL in the doc) cannot
+   be satisfied. I had to know the TI lit entry (`https://www.ti.com/lit/gpn/tmp102`)
+   from domain knowledge. Suggest the skill add a fallback: use a known part
+   URL (e.g. TI `lit/gpn/<device>`) or a web search for `<device> datasheet pdf`.
+2. **`analog.sh` is Analog Devices-specific.** It checks for `analog.com`; for a
+   TI device it just echoes the URL back. That was fine here because the TI
+   `lit/gpn` URL 302-redirects to the real PDF, but the waybackpy logic is
+   analog-only and confusing. Could rename/document as "datasheet URL resolver"
+   and note non-analog.org URLs are returned verbatim.
+3. **Block-diagram figure shows max temp confusion.** Table 6-2 lists `128` with
+   the same 12-bit pattern as `127.9375` (both `0111 1111 1111`); emulation
+   should treat the top of range as 127.94/128 boundary. Fine to note in spec.
+4. **Register map "reset" col for 16-bit regs** — the datasheet gives reset bytes
+   as two 8-bit fields (Config = 0x60 0x80), best recorded as 16-bit work 0x6080.
+   Template may benefit from a note that 16-bit regs have byte-pair resets.
+5. Growth suggestion: template's worked-examples table wants the stored register
+   value; the datasheet lists the 12-bit field hex, which is not the raw 16-bit
+   word. Spec must include the note that tests should left-shift by 4. Done, but
+   a skill-level reminder could be helpful.

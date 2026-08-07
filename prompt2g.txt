@@ -1,0 +1,1 @@
+using test-customchip skill only, Assemble wokwi test harness for device <device>

@@ -3,56 +3,49 @@
 [0m
 [0m→ [0mSkill "spec-from-datasheet"
 [0m
-[0m# [0mTodos
-[•] Run components.sh to download esphome.io components
-[ ] Find esphome.io docs markdown for tmp102, copy component mdx + source, create esphome_component.txt
-[ ] Download tmp102 datasheet to artifacts/tmp102/prompt0a/datasheet/tmp102.pdf
-[ ] Prepare extraction env (uv init, pymupdf4llm, copy main.py + template_chip.md)
-[ ] Convert tmp102.pdf to tmp102_datasheet.md
-[ ] Produce final spec markdown from template + datasheet
-[ ] Write feedback file feedback/tmp102/prompt0a.md
-[0m
 [0m$ [0mpwd
 /home/pi/Developer/wokwi-ai
 [0m
-[0m$ [0mbash /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/components.sh
+[0m# [0mTodos
+[•] Run components.sh to download esphome.io components
+[ ] Find esphome docs markdown for tmp102 and copy component resources
+[ ] Download datasheet for tmp102
+[ ] Prepare extraction environment (uv init, add pymupdf4llm)
+[ ] Convert pdf to markdown
+[ ] Produce finished spec markdown from template + source of truth
+[ ] Write feedback file
+[0m
+[0m$ [0mls -la /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/ && cat /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/components.sh
+total 8
+drwxr-xr-x 1 pi pi  44 Jun 22 13:14 .
+drwxr-xr-x 1 pi pi  42 Jun 22 12:33 ..
+-rwxr-xr-x 1 pi pi 432 Jun 22 13:22 analog.sh
+-rwxr-xr-x 1 pi pi 289 Jul  4 08:09 components.sh
+#!/usr/bin/env bash
+
+set -x
+
+if [[ -d components && -d esphome ]]; then
+  exit 0
+fi
+
+rm -rf components esphome
+mkdir -p components
+cd components
+npx -y degit -f https://github.com/esphome/esphome.io/src/content/docs/components
+cd ..
+git clone --depth 1 https://github.com/esphome/esphome
+[0m
+[0m$ [0m/home/pi/.config/opencode/skills/spec-from-datasheet/scripts/components.sh
 + [[ -d components ]]
 + [[ -d esphome ]]
 + exit 0
 [0m
-[0m$ [0mls -la components esphome 2>/dev/null | head -30
-components:
-total 1512
-drwxr-xr-x 1 pi pi  4300 Jul 28 13:12 .
-drwxr-xr-x 1 pi pi   670 Aug  3 15:17 ..
-drwxr-xr-x 1 pi pi    42 Jul 28 13:12 alarm_control_panel
--rw-r--r-- 1 pi pi 27345 Jul 28 13:12 api.mdx
--rw-r--r-- 1 pi pi  7012 Jul 28 13:12 at581x.mdx
-drwxr-xr-x 1 pi pi    60 Jul 28 13:12 audio_adc
-drwxr-xr-x 1 pi pi   122 Jul 28 13:12 audio_dac
-drwxr-xr-x 1 pi pi    18 Jul 28 13:12 audio_file
--rw-r--r-- 1 pi pi  5289 Jul 28 13:12 audio.mdx
-drwxr-xr-x 1 pi pi   606 Jul 28 13:13 binary_sensor
--rw-r--r-- 1 pi pi 18247 Jul 28 13:12 ble_client.mdx
--rw-r--r-- 1 pi pi  1369 Jul 28 13:12 ble_nus.mdx
--rw-r--r-- 1 pi pi  7749 Jul 28 13:12 bluetooth_proxy.mdx
-drwxr-xr-x 1 pi pi   244 Jul 28 13:13 button
-drwxr-xr-x 1 pi pi    54 Jul 28 13:12 camera
-drwxr-xr-x 1 pi pi    78 Jul 28 13:12 canbus
--rw-r--r-- 1 pi pi  1867 Jul 28 13:12 captive_portal.mdx
--rw-r--r-- 1 pi pi 16229 Jul 28 13:12 cc1101.mdx
--rw-r--r-- 1 pi pi  2191 Jul 28 13:12 ch422g.mdx
--rw-r--r-- 1 pi pi  2756 Jul 28 13:12 ch423.mdx
-drwxr-xr-x 1 pi pi   256 Jul 28 13:13 climate
--rw-r--r-- 1 pi pi  4404 Jul 28 13:12 copy.mdx
-drwxr-xr-x 1 pi pi   236 Jul 28 13:13 cover
-drwxr-xr-x 1 pi pi    42 Jul 28 13:12 datetime
--rw-r--r-- 1 pi pi  4088 Jul 28 13:12 debug.mdx
--rw-r--r-- 1 pi pi 10968 Jul 28 13:12 deep_sleep.mdx
--rw-r--r-- 1 pi pi   617 Jul 28 13:12 demo.mdx
--rw-r--r-- 1 pi pi  8803 Jul 28 13:12 dfplayer.mdx
+[0m$ [0mls -d components esphome 2>&1
+components
+esphome
 [0m
-[0m$ [0mrg -i tmp102 components
+[0m$ [0mrg -i tmp102 components 2>&1 | head -50
 components/sensor/tmp102.mdx:description: "Instructions for setting up TMP102 temperature sensors."
 components/sensor/tmp102.mdx:title: "TMP102 Temperature Sensor"
 components/sensor/tmp102.mdx:import tmp102FullImg from './images/tmp102-full.jpg';
@@ -64,190 +57,149 @@ components/sensor/tmp102.mdx:- <APIRef text="tmp102.h" path="tmp102/tmp102.h" />
 components/sensor/tc74.mdx:- [TMP102 Temperature Sensor](/components/sensor/tmp102/)
 components/index.mdx:  ["TMP102", "/components/sensor/tmp102/", "tmp102.jpg", "Temperature"],
 [0m
-[0m$ [0mmkdir -p /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet /home/pi/Developer/wokwi-ai/feedback/tmp102 && ls esphome/components/tmp102
-ls: cannot access 'esphome/components/tmp102': No such file or directory
-[0m
+Step 1 done. Now find esphome docs for tmp102.
 [0m→ [0mRead components/sensor/tmp102.mdx
+ESPhome component name is `tmp102`. No datasheet URL in the mdx. Let me set up directories and copy resources
 [0m
-[0m$ [0mls esphome/ 2>/dev/null; ls esphome/esphome/components/ 2>/dev/null | head -20
-AGENTS.md
-CLAUDE.md
-codecov.yml
-CODE_OF_CONDUCT.md
-CODEOWNERS
-CONTRIBUTING.md
-docker
-Doxyfile
-esphome
-GEMINI.md
-LICENSE
-MANIFEST.in
-netlify.toml
-platformio.ini
-pyproject.toml
-README.md
-requirements_dev.txt
-requirements_test.txt
-requirements.txt
-script
-sdkconfig.defaults
-sdkconfig.defaults.esp32c6
-sdkconfig.defaults.esp32p4
-sdkconfig.defaults.esp32s3
-tests
-THREAT_MODEL.md
-a01nyub
-a02yyuw
-a4988
-absolute_humidity
-ac_dimmer
-adalight
-adc
-adc128s102
-addressable_light
-ade7880
-ade7953
-ade7953_base
-ade7953_i2c
-ade7953_spi
-ads1115
-ads1118
-ags10
-aht10
-aic3204
-airthings_ble
+[0m$ [0mecho "/home/pi/Developer/wokwi-ai" ; ORIG=/home/pi/Developer/wokwi-ai; OUT=$ORIG/artifacts/tmp102/outputs; ART=$ORIG/artifacts/tmp102/prompt0a; DS=$ART/datasheet; FB=$ORIG/feedback/tmp102; mkdir -p "$OUT" "$DS" "$FB" && echo "created"; ls -la components/sensor/tmp102.mdx; ls -la esphome/esphome/components/tmp102/
+/home/pi/Developer/wokwi-ai
+created
+-rw-r--r-- 1 pi pi 1767 Jul 28 13:13 components/sensor/tmp102.mdx
+total 16
+drwxr-xr-x 1 pi pi    76 Jul 28 13:13 .
+drwxr-xr-x 1 pi pi 12948 Jul 28 13:13 ..
+-rw-r--r-- 1 pi pi   282 Jul 28 13:13 __init__.py
+-rw-r--r-- 1 pi pi  1204 Jul 28 13:13 sensor.py
+-rw-r--r-- 1 pi pi  1430 Jul 28 13:13 tmp102.cpp
+-rw-r--r-- 1 pi pi   370 Jul 28 13:13 tmp102.h
 [0m
-[0m$ [0mcp /home/pi/Developer/wokwi-ai/components/sensor/tmp102.mdx /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/ && cp -r /home/pi/Developer/wokwi-ai/esphome/esphome/components/tmp102 /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/ && printf 'tmp102' > /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/esphome_component.txt && ls /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/ /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102
-/home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/:
-esphome_component.txt
-tmp102
-tmp102.mdx
+[0m$ [0mORIG=/home/pi/Developer/wokwi-ai; OUT=$ORIG/artifacts/tmp102/outputs; NAME=tmp102; echo "$NAME" > "$OUT/esphome_component.txt"; cp $ORIG/components/sensor/tmp102.mdx "$OUT/"; mkdir -p "$OUT/$NAME"; cp $ORIG/esphome/esphome/components/$NAME/* "$OUT/$NAME/"; ls -la "$OUT"; echo "---"; ls -la "$OUT/$NAME"
+total 8
+drwxr-xr-x 1 pi pi   74 Aug  8 05:49 .
+drwxr-xr-x 1 pi pi   30 Aug  8 05:49 ..
+-rw-r--r-- 1 pi pi    7 Aug  8 05:49 esphome_component.txt
+drwxr-xr-x 1 pi pi   76 Aug  8 05:49 tmp102
+-rw-r--r-- 1 pi pi 1767 Aug  8 05:49 tmp102.mdx
+---
+total 16
+drwxr-xr-x 1 pi pi   76 Aug  8 05:49 .
+drwxr-xr-x 1 pi pi   74 Aug  8 05:49 ..
+-rw-r--r-- 1 pi pi  282 Aug  8 05:49 __init__.py
+-rw-r--r-- 1 pi pi 1204 Aug  8 05:49 sensor.py
+-rw-r--r-- 1 pi pi 1430 Aug  8 05:49 tmp102.cpp
+-rw-r--r-- 1 pi pi  370 Aug  8 05:49 tmp102.h
+[0m
+Step 2 done. Now the datasheet. The TMP102 is a TI sensor. Let me use analog.sh with the TI
+[0m$ [0mcat /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/analog.sh
+#!/usr/bin/env bash
 
-/home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102:
-__init__.py
-sensor.py
-tmp102.cpp
-tmp102.h
+#set -x
+
+DATASHEET_URL="$1"
+
+waybackurl() {
+  local url=$1
+	
+  if [[ $url != *analog.com* ]]; then
+    echo $url
+  fi
+
+  wayback=$(waybackpy --url "$DATASHEET_URL" --cdx 2>/dev/null) 
+  #echo $wayback
+  datasheet=$(echo $wayback | awk -v url="${DATASHEET_URL}" '$5=="200" {print "https://web.archive.org/web/" $2 "im_/" url}'| tail -n1) 
+  echo $datasheet
+}
+
+newurl=$(waybackurl $DATASHEET_URL)
+echo $newurl
 [0m
-[0m# [0mTodos
-[✓] Run components.sh to download esphome.io components
-[✓] Find esphome.io docs markdown for tmp102, copy component mdx + source, create esphome_component.txt
-[•] Download tmp102 datasheet to artifacts/tmp102/prompt0a/datasheet/tmp102.pdf
-[ ] Prepare extraction env (uv init, pymupdf4llm, copy main.py + template_chip.md)
-[ ] Convert tmp102.pdf to tmp102_datasheet.md
-[ ] Produce final spec markdown from template + datasheet
-[ ] Write feedback file feedback/tmp102/prompt0a.md
+[0m$ [0m/home/pi/.config/opencode/skills/spec-from-datasheet/scripts/analog.sh "https://www.ti.com/lit/gpn/tmp102" 2>&1
+https://www.ti.com/lit/gpn/tmp102
 [0m
-[0m→ [0mRead /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/analog.sh
-[0m
-[0m$ [0mrg -i "datasheet|www\.|\.pdf" /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/*.h /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/*.cpp
-(no output)
-[0m
-The esphome docs point to the TI TMP102. Let me find the datasheet URL.
-[0m$ [0mbash /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/analog.sh "https://www.ti.com/lit/ds/symlink/tmp102.pdf"
-https://www.ti.com/lit/ds/symlink/tmp102.pdf https://web.archive.org/web/20130123160814im_/https://www.ti.com/lit/ds/symlink/tmp102.pdf
-[0m
-[0m$ [0mcd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet && curl -sL -o tmp102.pdf "https://www.ti.com/lit/ds/symlink/tmp102.pdf" -A "Mozilla/5.0" && ls -la && file tmp102.pdf
-total 1128
-drwxr-xr-x 1 pi pi      20 Aug  3 15:23 .
-drwxr-xr-x 1 pi pi      18 Aug  3 15:23 ..
--rw-r--r-- 1 pi pi 1151760 Aug  3 15:23 tmp102.pdf
+The TI `gpn` URL redirects to the actual PDF. Let me download it
+[0m$ [0mDS=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet; cd "$DS" && curl -sL -o tmp102.pdf "https://www.ti.com/lit/gpn/tmp102" && file tmp102.pdf && ls -la tmp102.pdf
 tmp102.pdf: PDF document, version 1.4
+-rw-r--r-- 1 pi pi 1151760 Aug  8 05:52 tmp102.pdf
 [0m
 [0m# [0mTodos
 [✓] Run components.sh to download esphome.io components
-[✓] Find esphome.io docs markdown for tmp102, copy component mdx + source, create esphome_component.txt
-[✓] Download tmp102 datasheet to artifacts/tmp102/prompt0a/datasheet/tmp102.pdf
-[•] Prepare extraction env (uv init, pymupdf4llm, copy main.py + template_chip.md)
-[ ] Convert tmp102.pdf to tmp102_datasheet.md
-[ ] Produce final spec markdown from template + datasheet
-[ ] Write feedback file feedback/tmp102/prompt0a.md
+[✓] Find esphome docs markdown for tmp102 and copy component resources
+[✓] Download datasheet for tmp102
+[•] Prepare extraction environment (uv init, add pymupdf4llm)
+[ ] Convert pdf to markdown
+[ ] Produce finished spec markdown from template + source of truth
+[ ] Write feedback file
 [0m
-Datasheet downloaded. Now preparing the extraction environment.
-[0m$ [0mls /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/
-main.py
-template_chip2.md
-template_chip.md
-transport_i2c.md
-transport_spi.md
-transport_uart.md
-[0m
-[0m$ [0mcd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet && uv init && uv add pymupdf4llm
+[0m$ [0mDS=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet; cd "$DS" && uv init 2>&1 | tail -5 && uv add pymupdf4llm 2>&1 | tail -10
 Initialized project `datasheet`
-Using CPython 3.13.3
-Creating virtual environment at: .venv
-Resolved 12 packages in 107ms
-Installed 11 packages in 356ms
- + flatbuffers==25.12.19
- + networkx==3.6.1
  + numpy==2.5.1
  + onnxruntime==1.28.0
- + packaging==26.2
+ + packaging==26.3
  + protobuf==7.35.1
- + pymupdf==1.28.0
- + pymupdf-layout==1.28.0
- + pymupdf4llm==1.28.0
+ + psutil==7.2.2
+ + pymupdf==1.28.2
+ + pymupdf-layout==1.28.2
+ + pymupdf4llm==1.28.2
  + pyyaml==6.0.3
  + tabulate==0.10.0
 [0m
-[0m$ [0mcp /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/main.py /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/template_chip.md /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet/ && ls /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet/
-main.py
-pyproject.toml
-README.md
-template_chip.md
-tmp102.pdf
-uv.lock
+Now copy the helper files from the skill
+[0m$ [0mDS=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet; SK=/home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device; cp "$SK/main.py" "$SK/template_chip.md" "$DS/" && ls -la "$DS"
+total 1188
+drwxr-xr-x 1 pi pi     166 Aug  8 05:52 .
+drwxr-xr-x 1 pi pi      18 Aug  8 05:49 ..
+-rw-r--r-- 1 pi pi     639 Aug  8 05:52 main.py
+-rw-r--r-- 1 pi pi     183 Aug  8 05:52 pyproject.toml
+-rw-r--r-- 1 pi pi       5 Aug  8 05:52 .python-version
+-rw-r--r-- 1 pi pi       0 Aug  8 05:52 README.md
+-rw-r--r-- 1 pi pi    2468 Aug  8 05:52 template_chip.md
+-rw-r--r-- 1 pi pi 1151760 Aug  8 05:52 tmp102.pdf
+-rw-r--r-- 1 pi pi   43235 Aug  8 05:52 uv.lock
+drwxr-xr-x 1 pi pi      96 Aug  8 05:52 .venv
 [0m
-[0m→ [0mRead artifacts/tmp102/prompt0a/datasheet/main.py
-[0m→ [0mRead artifacts/tmp102/prompt0a/datasheet/template_chip.md
-Now converting the PDF to markdown.
-[0m
-[0m$ [0mcd /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet && uv run main.py tmp102.pdf tmp102_datasheet.md && ls -la tmp102_datasheet.md && wc -l tmp102_datasheet.md
-[0;93m2026-08-03 15:24:08.482223206 [W:onnxruntime:Default, device_discovery.cc:285 GetGpuDevices] Failed to detect devices under "/sys/class/drm/card1": device_discovery.cc:94 ReadFileContents Failed to open file: "/sys/class/drm/card1/device/vendor"[m
-[0;93m2026-08-03 15:24:08.485473047 [W:onnxruntime:Default, device_discovery.cc:285 GetGpuDevices] Failed to detect devices under "/sys/class/drm/card0": device_discovery.cc:94 ReadFileContents Failed to open file: "/sys/class/drm/card0/device/vendor"[m
+[0m$ [0mDS=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0a/datasheet; cd "$DS" && uv run main.py tmp102.pdf tmp102_datasheet.md 2>&1 | tail -20; ls -la tmp102_datasheet.md
+[0;93m2026-08-08 05:52:29.935366664 [W:onnxruntime:Default, device_discovery.cc:285 GetGpuDevices] Failed to detect devices under "/sys/class/drm/card1": device_discovery.cc:94 ReadFileContents Failed to open file: "/sys/class/drm/card1/device/vendor"[m
+[0;93m2026-08-08 05:52:29.935682549 [W:onnxruntime:Default, device_discovery.cc:285 GetGpuDevices] Failed to detect devices under "/sys/class/drm/card0": device_discovery.cc:94 ReadFileContents Failed to open file: "/sys/class/drm/card0/device/vendor"[m
+
 === Document parser messages ===
 Using Tesseract for OCR processing.
-
--rw-r--r-- 1 pi pi 70403 Aug  3 15:25 tmp102_datasheet.md
-1104 tmp102_datasheet.md
+-rw-r--r-- 1 pi pi 70086 Aug  8 05:53 tmp102_datasheet.md
 [0m
 [0m# [0mTodos
 [✓] Run components.sh to download esphome.io components
-[✓] Find esphome.io docs markdown for tmp102, copy component mdx + source, create esphome_component.txt
-[✓] Download tmp102 datasheet to artifacts/tmp102/prompt0a/datasheet/tmp102.pdf
-[✓] Prepare extraction env (uv init, pymupdf4llm, copy main.py + template_chip.md)
-[✓] Convert tmp102.pdf to tmp102_datasheet.md
-[•] Produce final spec markdown from template + datasheet
-[ ] Write feedback file feedback/tmp102/prompt0a.md
+[✓] Find esphome docs markdown for tmp102 and copy component resources
+[✓] Download datasheet for tmp102
+[✓] Prepare extraction environment (uv init, add pymupdf4llm)
+[✓] Convert pdf to markdown
+[•] Produce finished spec markdown from template + source of truth
+[ ] Write feedback file
 [0m
-Now reading the datasheet markdown to produce the spec.
+Let me read the template and the grep the source-of-truth markdown for the key sections
+[0m→ [0mRead artifacts/tmp102/prompt0a/datasheet/template_chip.md
 [0m→ [0mRead artifacts/tmp102/prompt0a/datasheet/tmp102_datasheet.md
-[0m→ [0mRead artifacts/tmp102/prompt0a/datasheet/tmp102_datasheet.md[90m [offset=822][0m
+I have enough source-of-truth data. Now writing the finished
 [0m
 [0m← [0mWrite artifacts/tmp102/outputs/spec_tmp102.md
 Wrote file successfully.
 [0m
-I have all the datasheet data needed. Now producing the final spec file.
 [0m← [0mWrite feedback/tmp102/prompt0a.md
 Wrote file successfully.
 [0m
-Now writing the feedback file.
+Now the feedback file
 [0m# [0mTodos
 [✓] Run components.sh to download esphome.io components
-[✓] Find esphome.io docs markdown for tmp102, copy component mdx + source, create esphome_component.txt
-[✓] Download tmp102 datasheet to artifacts/tmp102/prompt0a/datasheet/tmp102.pdf
-[✓] Prepare extraction env (uv init, pymupdf4llm, copy main.py + template_chip.md)
-[✓] Convert tmp102.pdf to tmp102_datasheet.md
-[✓] Produce final spec markdown from template + datasheet
-[✓] Write feedback file feedback/tmp102/prompt0a.md
+[✓] Find esphome docs markdown for tmp102 and copy component resources
+[✓] Download datasheet for tmp102
+[✓] Prepare extraction environment (uv init, add pymupdf4llm)
+[✓] Convert pdf to markdown
+[✓] Produce finished spec markdown from template + source of truth
+[✓] Write feedback file
 [0m
-Done. Spec produced at `artifacts/tmp102/outputs/spec_tmp102.md`.
+Spec created at `artifacts/tmp102/outputs/spec_tmp102.md`.
 
-**Pipeline summary:**
-- Found esphome component `tmp102`; copied `tmp102.mdx` + source to `artifacts/tmp102/outputs/` and wrote `esphome_component.txt`
-- Downloaded TI datasheet (1.1 MB) to `artifacts/tmp102/prompt0a/datasheet/tmp102.pdf`
-- Converted to `tmp102_datasheet.md` (1104 lines) with pymupdf4llm
-- Filled `template_chip.md` from the datasheet: I²C addressing (0x48–0x4B via ADD0), 6-pin SOT563 pinout, full register map (Temperature/Configuration/TLOW/THIGH), config bit fields, init sequence, and the `value = raw * 0.0625` conversion
-- Feedback written to `feedback/tmp102/prompt0a.md`
-
-Note: the esphome doc had no datasheet URL, so I used the TI product page directly (better than the 2013 wayback snapshot `analog.sh` returned).
+Key findings from the TI TMP102 datasheet (SBOS397I):
+- **I²C-only**, 7-bit addrs `0x48`–`0x4B` via ADD0 strap; 400 kHz fast / 2.85 MHz HS
+- **12-bit two's complement**, left-aligned in 16-bit reg (bits 15:4), 0.0625 °C/LSB
+- Registers: Temp `0x00` (R), Config `0x01` (R/W, reset `0x6080`), TLOW `0x02`, THIGH `0x03`
+- ALERT: open-drain, configurable polarity, comparator/interrupt modes, fault queue
+- Test vectors extracted from Table 6-2 and included.

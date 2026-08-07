@@ -1,0 +1,1 @@
+test wokwi custom chip for device <device> using esphome yaml example using test-wokwitoml skill only

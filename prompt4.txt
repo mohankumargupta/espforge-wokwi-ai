@@ -1,0 +1,1 @@
+Configure wokwi project using wokwi.toml for device <device>

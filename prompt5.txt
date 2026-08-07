@@ -1,0 +1,1 @@
+research exising crates and esphome for device <device>
