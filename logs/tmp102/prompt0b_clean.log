@@ -1,0 +1,611 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "canonical-test-spec"
+
+$ pwd && ls -la && ls -la artifacts 2>/dev/null
+/home/pi/Developer/wokwi-ai
+total 108
+drwxr-xr-x 1 pi pi  670 Aug  3 15:17 .
+drwxr-xr-x 1 pi pi  798 Jul 27 11:30 ..
+-rw-r--r-- 1 pi pi 1601 Jul  6 14:24 AGENTS.md
+drwxr-xr-x 1 pi pi   12 Aug  3 15:23 artifacts
+-rwxr-xr-x 1 pi pi  268 Jul 23 06:47 clean.sh
+drwxr-xr-x 1 pi pi 4300 Jul 28 13:12 components
+drwxr-xr-x 1 pi pi 1020 Jul 28 13:13 esphome
+drwxr-xr-x 1 pi pi   12 Aug  3 15:23 feedback
+-rw-r--r-- 1 pi pi   36 Jun 13 09:57 .gitignore
+-rw-r--r-- 1 pi pi 1072 Aug  3 12:32 justfile
+-rw-r--r-- 1 pi pi 6945 Jul  4 06:39 .log
+drwxr-xr-x 1 pi pi   12 Aug  3 15:22 logs
+-rw-r--r-- 1 pi pi   49 Aug  3 11:54 prompt0a.txt
+-rw-r--r-- 1 pi pi  104 Aug  3 15:01 prompt0b.txt
+-rw-r--r-- 1 pi pi  108 Aug  3 15:16 prompt0c.txt
+-rw-r--r-- 1 pi pi  108 Aug  2 08:45 prompt1a.txt
+-rw-r--r-- 1 pi pi   59 Jun 16 19:53 prompt1.txt
+-rw-r--r-- 1 pi pi  104 Jul 28 10:35 prompt2a.txt
+-rw-r--r-- 1 pi pi   77 Jul 29 10:03 prompt2b.txt
+-rw-r--r-- 1 pi pi   88 Jul 29 15:34 prompt2c.txt
+-rw-r--r-- 1 pi pi   74 Jul 30 04:14 prompt2d.txt
+-rw-r--r-- 1 pi pi  113 Jul 30 16:36 prompt2e.txt
+-rw-r--r-- 1 pi pi   66 Jul 31 15:22 prompt2f.txt
+-rw-r--r-- 1 pi pi   82 Jul 31 15:21 prompt2g.txt
+-rw-r--r-- 1 pi pi   40 Jun 16 19:54 prompt2.txt
+-rw-r--r-- 1 pi pi  102 Jul  3 14:03 prompt4a.txt
+-rw-r--r-- 1 pi pi   61 Jul  5 13:22 prompt4.txt
+-rw-r--r-- 1 pi pi   56 Jun 28 06:34 prompt5.txt
+-rw-r--r-- 1 pi pi   44 Jun 27 10:31 prompt6.txt
+-rw-r--r-- 1 pi pi   44 Jun 27 10:33 prompt7.txt
+-rw-r--r-- 1 pi pi   41 Jun 27 10:34 prompt8.txt
+-rwxr-xr-x 1 pi pi  409 Jun 17 11:11 repomix.sh
+-rwxr-xr-x 1 pi pi  587 Jul 29 16:07 runprompt.sh
+drwxr-xr-x 1 pi pi    0 Jul 30 16:18 tests
+drwxr-xr-x 1 pi pi   12 Jun 15 12:30 .zig-cache
+total 0
+drwxr-xr-x 1 pi pi  12 Aug  3 15:23 .
+drwxr-xr-x 1 pi pi 670 Aug  3 15:17 ..
+drwxr-xr-x 1 pi pi  30 Aug  3 15:23 tmp102
+
+$ find artifacts/tmp102 -type f | sort && echo "---FEEDBACK---" && find feedback -type f 2>/dev/null | sort
+...output truncated...
+
+Full output saved to: /home/pi/.local/share/opencode/tool-output/tool_fc622be4b001PviTPcjWNNcDpI
+
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/gpt2/gpt2_parity.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/gpt2/gpt2_tester.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/gpt2/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/gpt2/parity_check_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/benchmark_all.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/benchmark_e2e.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/benchmark.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/convert_to_onnx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/dist_settings.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/llama_inputs.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/llama_parity.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/llama_torch.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/llama/quant_kv_dataloader.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/longformer/benchmark_longformer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/longformer/convert_to_onnx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/longformer/generate_test_data.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/longformer/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/longformer/longformer_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/phi2/convert_to_onnx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/phi2/inference_example.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/phi2/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/benchmark_sam2.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/convert_to_onnx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/image_decoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/image_encoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/mask_decoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/nvtx_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/prompt_encoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/sam2_demo.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/sam2_image_onnx_predictor.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/sam2/sam2_utils.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/benchmark_controlnet.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/benchmark.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/demo_txt2img.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/demo_txt2img_xl.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/demo_utils.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/diffusion_models.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/diffusion_schedulers.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/engine_builder_ort_cuda.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/engine_builder_ort_trt.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/engine_builder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/engine_builder_tensorrt.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/engine_builder_torch.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/optimize_pipeline.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/ort_optimizer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/pipeline_stable_diffusion.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/stable_diffusion/trt_utilities.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/t5/convert_to_onnx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/t5/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/t5/t5_decoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/t5/t5_encoder_decoder_init.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/t5/t5_encoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/t5/t5_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/benchmark_all.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/benchmark.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/convert_to_onnx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_chain.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_decoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_encoder_decoder_init.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_encoder.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_inputs.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/models/whisper/whisper_jump_times.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_exporter.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_bart.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_bert_keras.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_bert.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_bert_tf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_clip.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_conformer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_gpt2.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_mmdit.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_phi.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_sam2.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_t5.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_tnlr.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_unet.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_model_vae.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/onnx_utils.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/optimizer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/past_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/profile_result_processor.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/profiler.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/quantize_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/shape_infer_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/shape_optimizer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/onnxruntime/transformers/torch_onnx_export_helper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/licenses/LICENSE
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/licenses/LICENSE.APACHE
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/licenses/LICENSE.BSD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging-26.2.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/dependency_groups.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/direct_url.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/_elffile.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/errors.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/licenses/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/licenses/_spdx.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/_manylinux.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/markers.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/metadata.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/_musllinux.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/_parser.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/pylock.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/py.typed
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/requirements.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/specifiers.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/_structures.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/tags.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/_tokenizer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/utils.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/packaging/version.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/protobuf-7.35.1.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/protobuf-7.35.1.dist-info/LICENSE
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/protobuf-7.35.1.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/protobuf-7.35.1.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/protobuf-7.35.1.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/protobuf-7.35.1.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/__pycache__/_virtualenv.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/COPYING
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/entry_points.txt
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/README.md
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf-1.28.0.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm-1.28.0.dist-info/COPYING
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm-1.28.0.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm-1.28.0.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm-1.28.0.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm-1.28.0.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm-1.28.0.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/_build.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/document_layout.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/get_text_lines.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/multi_column.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/progress.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/__pycache__/document_layout.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/__pycache__/get_text_lines.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/__pycache__/multi_column.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/__pycache__/progress.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/__pycache__/pymupdf_rag.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/__pycache__/utils.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/pymupdf_rag.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/helpers/utils.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/llama/pdf_markdown_reader.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/analyze_page.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/compute_ocr_features.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/get_culled_pixmap.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/ocr_decision_model.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/paddleocr_api.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/paddletess_api.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/__pycache__/analyze_page.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/__pycache__/compute_ocr_features.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/__pycache__/get_culled_pixmap.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/__pycache__/tesseract_api.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/rapidocr_api.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/rapidtess_api.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/ocr/tesseract_api.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/__pycache__/versions_file.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf4llm/versions_file.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_apply_pages.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_build.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/extra.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_extra.so
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/features.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_features.so
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf_layout-1.28.0.dist-info/COPYING
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf_layout-1.28.0.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf_layout-1.28.0.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf_layout-1.28.0.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf_layout-1.28.0.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf_layout-1.28.0.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/_build.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/common_util.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/DocumentLayoutAnalyzer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/MultiProcessWrapper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/BoxRFDGNN.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/common_util.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/DefaultSorter.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/GlobalConfig.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/global_config.yaml
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/HTMLGenerator.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/ImageFeatureExtractorV1.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/ImageFeatureExtractorV2.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/LayoutProbAnalyzer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/MarkdownGenerator.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/MarkdownHTMLTableGenerator.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/BoxRFDGNN.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/common_util.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/DefaultSorter.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/GlobalConfig.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/HTMLGenerator.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/ImageFeatureExtractorV1.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/ImageFeatureExtractorV2.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/MarkdownGenerator.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/MarkdownHTMLTableGenerator.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractor.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractorV1A.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractorV1B.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractorV2A.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractorV2B.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractorV2.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/TableGridExtractorV3.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/__pycache__/table_grid_types.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractor.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractorV1A.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractorV1B.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractorV2A.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractorV2B.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractorV2.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/TableGridExtractorV3.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/onnx/table_grid_types.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/presidio/feature_computation.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/presidio/graph.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/presidio/__pycache__/feature_computation.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/_build.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/common_util.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/DocumentLayoutAnalyzer.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/MultiProcessWrapper.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_base.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_edge.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_ext.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_imf.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_jf.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_rf.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/pymupdf_util_yf.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__pycache__/roi_pooling.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_base.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_edge.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_ext.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_imf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_jf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_rf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/pymupdf_util_yf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/feature_imf1.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/feature_imf2.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/layout_imf1.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/layout_imf1.yaml
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/layout_rf2.4.1+imf1.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/layout_rf2.4.1+imf1.yaml
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/layout_rf2.4.1.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/layout_rf2.4.1.yaml
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v1a.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v1_old.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v1.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v1t.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v2_conn.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v2c.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v2_grid.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v3.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v4_do.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v4_ep.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/resources/onnx/table_grid_model_v4.onnx
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/roi_pooling.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/libmupdfcpp.so.29.0
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/libmupdf.so.29.0
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__main__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/classes2.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/classes.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/exceptions.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/extra.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/archive.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/band-writer.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/barcode.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/bidi.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/bitmap.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/buffer.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/color.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/compressed-buffer.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/compress.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/config.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/context.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/crypt.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/deskew.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/device.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/display-list.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/document.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/export.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/filter.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/font.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/geometry.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/getopt.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/glyph-cache.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/glyph.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/hash.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/heap.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/heap-imp.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/hyphen.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/image.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/json.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/link.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/log.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/options.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/outline.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/output.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/output-svg.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/path.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/pixmap.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/pool.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/separation.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/shade.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/store.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/story.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/story-writer.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/stream.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/string-util.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/structured-text.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/system.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/text.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/track-usage.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/transition.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/tree.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/types.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/util.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/version.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/write-pixmap.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/writer.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/fitz/xml.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/functions.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/helpers/mu-office-lib.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/helpers/mu-threads.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/helpers/pkcs7-openssl.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/html.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/internal.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/memento.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/annot.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/clean.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/cmap.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/crypt.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/document.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/event.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/font.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/form.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/image-rewriter.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/interpret.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/javascript.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/name-table.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/object.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/page.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/parse.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/recolor.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/resource.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/xref.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/pdf/zugferd.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/include/mupdf/ucdn.h
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf-devel/lib/libmupdf-threads.a
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/mupdf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_mupdf.so
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/_build.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/extra.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/features.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/mupdf.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/pymupdf.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/table.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/utils.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/__pycache__/_wxcolors.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/pymupdf.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/py.typed
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/table.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/tgif.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_tgif.so
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/utils.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_wxcolors.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/licenses/LICENSE
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/top_level.txt
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pyyaml-6.0.3.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/entry_points.txt
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/INSTALLER
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/licenses/LICENSE
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/METADATA
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/RECORD
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/REQUESTED
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/top_level.txt
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate-0.10.0.dist-info/WHEEL
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/tabulate/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/_virtualenv.pth
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/_virtualenv.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/composer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/constructor.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/cyaml.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/dumper.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/emitter.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/error.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/events.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/_yaml/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__init__.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/loader.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/nodes.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/parser.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/composer.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/constructor.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/cyaml.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/dumper.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/emitter.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/error.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/events.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/__init__.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/loader.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/nodes.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/parser.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/reader.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/representer.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/resolver.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/scanner.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/serializer.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/__pycache__/tokens.cpython-313.pyc
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/reader.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/representer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/resolver.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/scanner.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/serializer.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/tokens.py
+artifacts/tmp102/prompt0a/datasheet/.venv/lib/python3.13/site-packages/yaml/_yaml.cpython-313-aarch64-linux-gnu.so
+artifacts/tmp102/prompt0a/datasheet/.venv/.lock
+artifacts/tmp102/prompt0a/datasheet/.venv/pyvenv.cfg
+---FEEDBACK---
+feedback/tmp102/prompt0a.md
+
+$ find artifacts/tmp102 -type f -not -path '*/.venv/*' | sort && echo "---FEEDBACK---" && cat feedback/tmp102/prompt0a.md 2>/dev/null && echo "---PROMPT0A---" && cat prompt0a.txt 2>/dev/null
+artifacts/tmp102/outputs/esphome_component.txt
+artifacts/tmp102/outputs/spec_tmp102.md
+artifacts/tmp102/outputs/tmp102/__init__.py
+artifacts/tmp102/outputs/tmp102.mdx
+artifacts/tmp102/outputs/tmp102/sensor.py
+artifacts/tmp102/outputs/tmp102/tmp102.cpp
+artifacts/tmp102/outputs/tmp102/tmp102.h
+artifacts/tmp102/prompt0a/datasheet/.git/config
+artifacts/tmp102/prompt0a/datasheet/.git/description
+artifacts/tmp102/prompt0a/datasheet/.git/HEAD
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/applypatch-msg.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/commit-msg.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/fsmonitor-watchman.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/post-update.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/pre-applypatch.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/pre-commit.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/pre-merge-commit.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/prepare-commit-msg.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/pre-push.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/pre-rebase.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/pre-receive.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/push-to-checkout.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/sendemail-validate.sample
+artifacts/tmp102/prompt0a/datasheet/.git/hooks/update.sample
+artifacts/tmp102/prompt0a/datasheet/.gitignore
+artifacts/tmp102/prompt0a/datasheet/.git/info/exclude
+artifacts/tmp102/prompt0a/datasheet/main.py
+artifacts/tmp102/prompt0a/datasheet/pyproject.toml
+artifacts/tmp102/prompt0a/datasheet/.python-version
+artifacts/tmp102/prompt0a/datasheet/README.md
+artifacts/tmp102/prompt0a/datasheet/template_chip.md
+artifacts/tmp102/prompt0a/datasheet/tmp102_datasheet.md
+artifacts/tmp102/prompt0a/datasheet/tmp102.pdf
+artifacts/tmp102/prompt0a/datasheet/uv.lock
+---FEEDBACK---
+# Feedback: spec-from-datasheet for tmp102 (prompt0a)
+
+## What went well
+- `components.sh` detected existing `components/` and `esphome/` dirs and exited cleanly.
+- `rg -i tmp102 components` found the component doc immediately at `components/sensor/tmp102.mdx`.
+- esphome source code was found at `esphome/esphome/components/tmp102` and copied to outputs.
+- `analog.sh` returned a TI datasheet URL; direct curl download to TI succeeded
+  (1.1 MB valid PDF v1.4).
+- `uv init` + `uv add pymupdf4llm` and `uv run main.py` worked without issue.
+  Datasheet converted cleanly; tables extracted well with pymupdf4llm.
+- The TI datasheet is very well structured — register map, bit fields, and data
+  conversion tables all extract cleanly.
+
+## Obstacles / observations
+- The esphome tmp102.mdx does not contain a datasheet URL, so I had to use the
+  well-known TI product URL (`https://www.ti.com/lit/ds/symlink/tmp102.pdf`)
+  rather than deriving it from the docs. The skill assumes the doc file contains
+  the datasheet link; for this device it did not.
+- The `analog.sh` wayback URL returned a 2013 archive snapshot which is ancient;
+  I preferred the live TI download. The wayback fallback may be stale for TI parts.
+- No true blocking obstacles. Minor OCR noise in the markdown (e.g. `Figure
+  5-2. Shutdown Current` etc.) is expected and was ignored.
+
+## Suggestions for improvement
+- Step 2: when the esphome doc has no datasheet link, suggest a fallback: query
+  the component source (e.g. the `*.h`/`*.cpp`) or the manufacturer product page.
+- Consider recommending the direct TI download first before the wayback snapshot,
+  since TI serves its own datasheets directly.
+---PROMPT0A---
+Create spec markdown from datasheet for <device>
+
+→ Read artifacts/tmp102/outputs/esphome_component.txt
+→ Read artifacts/tmp102/outputs/spec_tmp102.md
+→ Read artifacts/tmp102/outputs/tmp102.mdx
+→ Read artifacts/tmp102/outputs/tmp102/__init__.py
+→ Read artifacts/tmp102/outputs/tmp102/sensor.py
+→ Read artifacts/tmp102/outputs/tmp102/tmp102.h
+→ Read artifacts/tmp102/outputs/tmp102/tmp102.cpp
+→ Read /home/pi/.config/opencode/skills/canonical-test-spec/references/sensor-classes.md
+→ Read /home/pi/.config/opencode/skills/canonical-test-spec/references/small-classes.md
+
+$ find /home/pi/Developer/wokwi-ai -name "test_spec_*.md" -not -path '*/.venv/*' 2>/dev/null; echo "---"; ls artifacts/
+---
+tmp102
+
+Let me check for any existing example test specs to match conventions.
+# Todos
+[✓] Gather inputs (esphome_component.txt, spec_tmp102.md, tmp102.mdx, component source)
+[•] Write test_spec_tmp102.md to artifacts/tmp102/outputs/
+[ ] Write feedback file feedback/tmp102/prompt0b.md
+
+All inputs gathered. Now creating the todo list and writing the Canonical Test Specification.
+← Write artifacts/tmp102/outputs/test_spec_tmp102.md
+Wrote file successfully.
+
+← Write feedback/tmp102/prompt0b.md
+Wrote file successfully.
+
+Now the feedback file.
+# Todos
+[✓] Gather inputs (esphome_component.txt, spec_tmp102.md, tmp102.mdx, component source)
+[✓] Write test_spec_tmp102.md to artifacts/tmp102/outputs/
+[✓] Write feedback file feedback/tmp102/prompt0b.md
+
+Done. Produced `artifacts/tmp102/outputs/test_spec_tmp102.md`.
+
+- **Device:** TMP102, Texas Instruments, I2C
+- **Capability:** Measure ambient temperature
+- **Observable:** `temperature`, float, °C, default 21.0
+- **Presentation:** label `Temperature`, precision 1, template `Temperature = {:.1f} C` (traced to `accuracy_decimals=1` and the `%.1f` log in `tmp102.cpp`)
+- **Excluded:** calibration, EEPROM, power management, alarm thresholds, interrupts, extended mode, high-speed mode, etc.
+- Includes a Sources table for full value traceability; no unknowns.
+
+Feedback written to `feedback/tmp102/prompt0b.md`.
