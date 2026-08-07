@@ -1,3 +1,5 @@
+set shell:= ["bash", "-c"]
+set windows-shell := ["powershell", "-c"]
 set fallback := true
 
 deepseek_pro := "nvidia/deepseek-ai/deepseek-v4-pro"
@@ -14,6 +16,8 @@ prompt2a device:  ( _execute "prompt2a"  device deepseek_flash   )
 prompt2b device:  ( _execute "prompt2b"  device deepseek_flash   )
 prompt2c device:  ( _execute "prompt2c"  device deepseek_flash   )
 prompt2d device:  ( _execute "prompt2d"  device deepseek_flash   )
+prompt2e device:
+    cd artifacts/{{device}}/outputs ; pwd ; esphome compile {{device}}.yaml
 
 _execute prompt device model:
     ./runprompt.sh {{ prompt }}.txt {{ device }} {{ model }}

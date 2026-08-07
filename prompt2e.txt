@@ -1,1 +1,1 @@
-using test-esphomeyaml skill, Create a std rust file test.rs as part of test harness for testing device <device>
+this prompt does not run - justfile for prompt2e compiles esphome yaml

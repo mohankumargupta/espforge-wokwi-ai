@@ -1,0 +1,38 @@
+esphome:
+  name: dut
+  on_boot:
+    - priority: 600
+      then:
+        - component.update: tmp102_temperature
+        - delay: 1s
+        - lambda: |
+            ESP_LOGD("test", "Temperature = %.1f C", id(tmp102_temperature).state);
+
+esp32: 
+  variant: esp32c3 # Use always
+  framework:
+    type: esp-idf
+
+#wifi:
+#  ssid: !secret wifi_ssid
+#  password: !secret wifi_password
+
+#api:
+#ota:
+#  platform: esphome
+logger:
+  hardware_uart: UART0
+
+
+
+
+i2c:
+  sda: 4
+  scl: 5
+
+sensor:
+  - platform: tmp102
+    id: tmp102_temperature
+    name: "Temperature"
+    address: 0x48
+    update_interval: 60s
