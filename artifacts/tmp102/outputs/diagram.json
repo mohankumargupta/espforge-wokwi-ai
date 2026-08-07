@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "author": "Raspberry Pi",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-c3-devkitm-1", "id": "esp", "top": -9.9, "left": -61.38, "attrs": {} },
+    { "type": "chip-chip", "id": "chip1", "top": 1.02, "left": 100.8, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "chip1:V+", "esp:3V3.1", "red", [] ],
+    [ "chip1:GND", "esp:GND.1", "black", [] ],
+    [ "chip1:SDA", "esp:4", "green", [] ],
+    [ "chip1:SCL", "esp:5", "green", [] ],
+    [ "chip1:ADD0", "esp:GND.1", "black", [] ]
+  ],
+  "dependencies": {}
+}
