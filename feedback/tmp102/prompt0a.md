@@ -1,28 +1,25 @@
-# Skill Feedback: spec-from-datasheet (tmp102)
+# Skill feedback: spec-from-datasheet for tmp102
 
-## What worked
-- The TMP102 esphome component name matches the device name, so `rg -i tmp102 components` found the mdx immediately; no fallback `rg` step needed.
-- `uv init` + `uv add pymupdf4llm` + `uv run main.py` pipeline worked cleanly and produced a well-structured 70 KB markdown with register tables, pin tables, and timing intact.
-- Copying the component source (`esphome/esphome/components/tmp102/`) and the mdx into outputs worked.
+## What went well
+- components.sh found existing components + esphome dirs and exited cleanly.
+- rg -i tmp102 components found the mdx immediately.
+- Datasheet URL extracted from esphome source (sensor.py / __init__.py) quickly.
+- analog.sh returned the wayback URL; web.archive.org download worked directly
+  (curl -sL), no need for qpdf.
+- pymupdf4llm extraction was clean, tables (register maps, temp data format,
+  electrical characteristics) survived as markdown tables with reasonable
+  fidelity.
 
-## Obstacles / improvements
-1. **Datasheet URL not in the mdx.** The ESPHome doc for TMP102 does not list a
-   datasheet URL. The skill's Step 2 (find a datasheet URL in the doc) cannot
-   be satisfied. I had to know the TI lit entry (`https://www.ti.com/lit/gpn/tmp102`)
-   from domain knowledge. Suggest the skill add a fallback: use a known part
-   URL (e.g. TI `lit/gpn/<device>`) or a web search for `<device> datasheet pdf`.
-2. **`analog.sh` is Analog Devices-specific.** It checks for `analog.com`; for a
-   TI device it just echoes the URL back. That was fine here because the TI
-   `lit/gpn` URL 302-redirects to the real PDF, but the waybackpy logic is
-   analog-only and confusing. Could rename/document as "datasheet URL resolver"
-   and note non-analog.org URLs are returned verbatim.
-3. **Block-diagram figure shows max temp confusion.** Table 6-2 lists `128` with
-   the same 12-bit pattern as `127.9375` (both `0111 1111 1111`); emulation
-   should treat the top of range as 127.94/128 boundary. Fine to note in spec.
-4. **Register map "reset" col for 16-bit regs** — the datasheet gives reset bytes
-   as two 8-bit fields (Config = 0x60 0x80), best recorded as 16-bit work 0x6080.
-   Template may benefit from a note that 16-bit regs have byte-pair resets.
-5. Growth suggestion: template's worked-examples table wants the stored register
-   value; the datasheet lists the 12-bit field hex, which is not the raw 16-bit
-   word. Spec must include the note that tests should left-shift by 4. Done, but
-   a skill-level reminder could be helpful.
+## Obstacles / gotchas
+- esphome source for tmp102 was at `esphome/esphome/components/tmp102` (the
+  esphome repo nests components under an inner `esphome/` package dir), so the
+  first `cp -r esphome/components/tmp102` failed. Needed `esphome/esphome/...`.
+- Datasheet text-only extraction dropped the pin diagram, but the picture-text
+  fallback ("Start of picture text") preserved the pin mapping (SCL 1 ... ADD0 4).
+- Tesseract OCR warning for pages 15-17 was noise; extraction succeeded.
+
+## Suggestions
+- components.sh step / instructions: make note of the double-nested
+  `esphome/esphome/components` path when copying component source.
+- Analog.sh requires `waybackpy` installed; if missing it fails silently
+  (checked, tool present).

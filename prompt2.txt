@@ -1,1 +1,0 @@
-create esphome yaml for device <device>

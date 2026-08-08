@@ -1,48 +1,288 @@
 
 > build · deepseek-v4-flash-free
 
-→ Skill "wokwi-chipjson"
+$ ls /home/pi/.config/opencode/skills/ && echo "---" && ls /home/pi/.agents/skills/ 2>/dev/null && echo "---" && ls /home/pi/Developer/wokwi-ai
+AGENTS.md
+canonical-test-spec
+collect-esphome-impl
+config.json
+create-crate-api
+data-conversions-complex-logic
+discover-crate
+espforge-compile
+espforge-compile-example
+espforge-create-device
+espforge-devices
+espforge-test-example
+grill-with-docs
+guis
+LICENSE
+README.md
+spec-from-datasheet
+wokwi-chip-diagram
+wokwi-customchip
+wokwi-test-harness
+---
+frontend-slides
+---
+AGENTS.md
+artifacts
+clean.sh
+components
+esphome
+feedback
+justfile
+logs
+prompt0a.txt
+prompt0b.txt
+prompt0c.txt
+prompt2a.txt
+prompt2c.txt
+prompt2d.txt
+prompt2e.txt
+prompt2f.txt
+prompt2g.txt
+prompt4a.txt
+prompt4.txt
+prompt5.txt
+prompt6.txt
+prompt7.txt
+prompt8.txt
+repomix.sh
+runprompt.sh
+tests
+
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/SKILL.md
+✱ Glob "**/*tmp102*" 7 matches
+
+# Todos
+[•] Read skill assets (chip.schema.json, diagram.json template, esp32c3.yaml)
+[ ] Read spec and test_spec in full for tmp102
+[ ] Create artifacts/tmp102/prompt2a directory and copy schema
+[ ] Generate chip.json and validate with check-jsonschema
+[ ] Copy chip.json to outputs dir
+[ ] Generate diagram.json from template
+[ ] Validate diagram.json with wokwi-cli lint
+
+$ ls -la /home/pi/.config/opencode/skills/wokwi-chip-diagram/ && echo "---assets---" && ls -la /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/
+total 4
+drwxr-xr-x 1 pi pi   48 Aug  9 03:40 .
+drwxr-xr-x 1 pi pi  676 Aug  9 04:07 ..
+drwxr-xr-x 1 pi pi   80 Aug  9 03:45 assets
+drwxr-xr-x 1 pi pi  110 Aug  9 03:46 references
+-rw-r--r-- 1 pi pi 3584 Aug  9 04:00 SKILL.md
+---assets---
+total 12
+drwxr-xr-x 1 pi pi   80 Aug  9 03:45 .
+drwxr-xr-x 1 pi pi   48 Aug  9 03:40 ..
+-rw-r--r-- 1 pi pi 2960 Aug  9 03:45 chip.schema.json
+-rw-r--r-- 1 pi pi  409 Aug  9 03:45 diagram.json
+-rw-r--r-- 1 pi pi 4035 Aug  9 03:45 esp32c3.yaml
 
 $ pwd
 /home/pi/Developer/wokwi-ai
 
-→ Read /home/pi/.config/opencode/skills/wokwi-chipjson/assets/chip.schema.json
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/diagram.json
+
+$ ls -la /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/
+total 36
+drwxr-xr-x 1 pi pi   110 Aug  9 03:46 .
+drwxr-xr-x 1 pi pi    48 Aug  9 03:40 ..
+-rw-r--r-- 1 pi pi  6301 Aug  9 03:46 diagramjson.md
+-rw-r--r-- 1 pi pi   286 Aug  9 03:46 esp32c3-devkit-m-1.json
+-rw-r--r-- 1 pi pi  1577 Aug  9 03:46 esp32c3.md
+-rw-r--r-- 1 pi pi 16564 Aug  9 03:46 wokwi.md
+
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/esp32c3.yaml
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/diagramjson.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/esp32c3-devkit-m-1.json
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/esp32c3.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/wokwi.md
+Now let me read the spec and test spec for tmp102 in full.
 → Read artifacts/tmp102/outputs/spec_tmp102.md
 → Read artifacts/tmp102/outputs/test_spec_tmp102.md
 
-$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a /home/pi/Developer/wokwi-ai/feedback/tmp102 && cp /home/pi/.config/opencode/skills/wokwi-chipjson/assets/chip.schema.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.schema.json && ls /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a
-chip.schema.json
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/ && echo "---prompt2a---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a 2>/dev/null || echo "prompt2a does not exist" && echo "---outputs---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/
+total 0
+drwxr-xr-x 1 pi pi  46 Aug  9 01:26 .
+drwxr-xr-x 1 pi pi  12 Aug  9 01:15 ..
+drwxr-xr-x 1 pi pi 140 Aug  9 01:25 outputs
+drwxr-xr-x 1 pi pi  18 Aug  9 01:15 prompt0a
+drwxr-xr-x 1 pi pi 130 Aug  9 01:37 prompt0c
+---prompt2a---
+prompt2a does not exist
+---outputs---
+total 24
+drwxr-xr-x 1 pi pi  140 Aug  9 01:25 .
+drwxr-xr-x 1 pi pi   46 Aug  9 01:26 ..
+-rw-r--r-- 1 pi pi    7 Aug  9 01:15 esphome_component.txt
+-rw-r--r-- 1 pi pi 9763 Aug  9 01:22 spec_tmp102.md
+-rw-r--r-- 1 pi pi 1480 Aug  9 01:25 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi   76 Aug  9 01:16 tmp102
+-rw-r--r-- 1 pi pi 1767 Aug  9 01:15 tmp102.mdx
 
+✱ Glob "artifacts/*/prompt2a/chip.json" 0 matches
+Let me check for existing examples of chip.json/diagram.json in prior artifacts, and the outputs directory state
+→ Read artifacts/tmp102/outputs/tmp102.mdx
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/ && echo "---prompt0c---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/
+total 16
+drwxr-xr-x 1 pi pi   76 Aug  9 01:16 .
+drwxr-xr-x 1 pi pi  140 Aug  9 01:25 ..
+-rw-r--r-- 1 pi pi  282 Aug  9 01:16 __init__.py
+-rw-r--r-- 1 pi pi 1204 Aug  9 01:16 sensor.py
+-rw-r--r-- 1 pi pi 1430 Aug  9 01:16 tmp102.cpp
+-rw-r--r-- 1 pi pi  370 Aug  9 01:16 tmp102.h
+---prompt0c---
+total 28
+drwxr-xr-x 1 pi pi  130 Aug  9 01:37 .
+drwxr-xr-x 1 pi pi   46 Aug  9 01:26 ..
+-rw-r--r-- 1 pi pi 8492 Aug  9 01:26 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug  9 01:26 build.zig.zon
+-rw-r--r-- 1 pi pi 4497 Aug  9 01:37 conversions_manifest.md
+drwxr-xr-x 1 pi pi   32 Aug  9 01:26 src
+drwxr-xr-x 1 pi pi   12 Aug  9 01:34 .zig-cache
+drwxr-xr-x 1 pi pi    6 Aug  9 01:36 zig-out
+
+Let me check how the custom chip firmware reads attrs, per the wokwi-customchip skill conventions, so the diagram attrs match
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/SKILL.md
+
+# Todos
+[✓] Read skill assets (chip.schema.json, diagram.json template, esp32c3.yaml)
+[✓] Read spec and test_spec in full for tmp102
+[•] Create artifacts/tmp102/prompt2a directory and copy schema
+[ ] Generate chip.json and validate with check-jsonschema
+[ ] Copy chip.json to outputs dir
+[ ] Generate diagram.json from template
+[ ] Validate diagram.json with wokwi-cli lint
+
+I have full context. Marking progress and creating directories + copying assets
+Let me look for existing examples of chip.json/diagram.json usage in the repo to
+$ rg -l '"controls"' /home/pi/Developer/wokwi-ai --glob '*.json' 2>/dev/null | head; echo "---"; rg -l 'chip-chip' /home/pi/Developer/wokwi-ai --glob '*.json' 2>/dev/null | head; echo "---tests---"; ls -R /home/pi/Developer/wokwi-ai/tests 2>/dev/null | head -50
+---
+---tests---
+/home/pi/Developer/wokwi-ai/tests:
+
+$ rg -l 'chip.json|diagram.json' /home/pi/.config/opencode/skills/ 2>/dev/null; echo "---"; ls /home/pi/.config/opencode/skills/wokwi-test-harness/
+/home/pi/.config/opencode/skills/wokwi-chip-diagram/references/wokwi.md
+/home/pi/.config/opencode/skills/wokwi-chip-diagram/references/diagramjson.md
+/home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/esp32c3.yaml
+/home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json
+/home/pi/.config/opencode/skills/wokwi-chip-diagram/SKILL.md
+/home/pi/.config/opencode/skills/wokwi-test-harness/assets/esp32c3.yaml
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/tutorial-7seg.md
+/home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml
+/home/pi/.config/opencode/skills/collect-esphome-impl/SKILL.md
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/gpio.md
+/home/pi/.config/opencode/skills/canonical-test-spec/SKILL.md
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/getting-started.md
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/framebuffer.md
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/attributes.md
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/chip-json.md
+/home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi-mcp23017/chip.zig
+/home/pi/.config/opencode/skills/wokwi-customchip/assets/chip.schema.json
+---
+assets
+references
+SKILL.md
+
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/chip-json.md
+Let me read the chip-json and attributes reference docs to understand the correct attrs convention
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/attributes.md
+Let me check the mcp23017 chip.zig example for how I2C address and attrs are handled in custom chips
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi-mcp23017/chip.zig
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/SKILL.md
+Let me check the wokwi-test-harness skill to understand how chip.json/diagram.json are consumed
+
+# Todos
+[✓] Read skill assets (chip.schema.json, diagram.json template, esp32c3.yaml)
+[✓] Read spec and test_spec in full for tmp102
+[•] Create artifacts/tmp102/prompt2a directory and copy schema
+[ ] Generate chip.json and validate with check-jsonschema
+[ ] Copy chip.json to outputs dir
+[ ] Generate diagram.json from template
+[ ] Validate diagram.json with wokwi-cli lint
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a /home/pi/Developer/wokwi-ai/feedback/tmp102 && cp /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.schema.json && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/
+total 4
+drwxr-xr-x 1 pi pi   32 Aug  9 04:15 .
+drwxr-xr-x 1 pi pi   62 Aug  9 04:15 ..
+-rw-r--r-- 1 pi pi 2960 Aug  9 04:15 chip.schema.json
+
+Now I'll create the artifacts dir and copy the schema, then verify tooling availability.
+$ which check-jsonschema wokwi-cli; check-jsonschema --version 2>&1 | head -1; wokwi-cli --version 2>&1 | head -1
+/home/linuxbrew/.linuxbrew/bin/check-jsonschema
+/home/pi/bin/wokwi-cli
+check-jsonschema, version 0.37.4
+0.26.1 (9d71b975b7eb)
+
+Tools available. Now writing chip
 ← Write artifacts/tmp102/prompt2a/chip.json
 Wrote file successfully.
 
-← Edit artifacts/tmp102/prompt2a/chip.json
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json
-@@ -2,9 +2,9 @@
- "name": "TMP102",
- "author": "Texas Instruments",
- "pins": [
-   "SCL",
--  "S",
-+  "GND",
-   "ALERT",
-   "ADD0",
-   "V+",
-   "SDA"
-
-
-$ check-jsonschema --schemafile /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.schema.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json && cp /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/chip.json && echo COPIED
+chip.json written. Now validating against the schema.
+$ check-jsonschema --schemafile /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.schema.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json
 ok -- validation done
-COPIED
 
-← Write feedback/tmp102/prompt2a.md
+Schema validation passed. Copying chip.json to outputs
+$ cp /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/chip.json && cat /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/chip.json
+{
+  "name": "chip",
+  "author": "Raspberry Pi",
+  "pins": [
+    "V+",
+    "GND",
+    "SDA",
+    "SCL"
+  ],
+  "controls": [
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "type": "range",
+      "min": -40,
+      "max": 125,
+      "step": 0.1
+    }
+  ]
+}
+
+chip.json copied. Now creating diagram.json in outputs (building
+← Write artifacts/tmp102/outputs/diagram.json
 Wrote file successfully.
 
-Done. Created `artifacts/tmp102/prompt2a/chip.json`, validated against the schema, copied to `outputs/chip.json`, and wrote feedback.
+Let me refine the diagram json — keep esp attrs unchanged from template and only set the chip's temperature attr matching chip.json's
+← Write artifacts/tmp102/outputs/diagram.json
+Wrote file successfully.
 
-**chip.json**
-- Pins (per spec): SCL, GND, ALERT, ADD0, V+, SDA
-- Control: `temperature` range −55→150 °C, step 0.0625 (resolvable, aligned with the test spec observable default 21.0)
+Now validating diagram.json with wokwi-cl
+$ cd /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs && wokwi-cli lint
+Wokwi CLI v0.26.1 (9d71b975b7eb)
+ℹ [unsupported-part] Part "esp" uses undocumented type "board-esp32-c3-devkitm-1". This part may change or be removed in future versions. (esp)
+
+Found 1 info
+
+Lint passed (single info, no errors). Let me verify final outputs and update progress
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/chip.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/diagram.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.schema.json
+-rw-r--r-- 1 pi pi  274 Aug  9 04:16 /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/chip.json
+-rw-r--r-- 1 pi pi  607 Aug  9 04:17 /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/diagram.json
+-rw-r--r-- 1 pi pi  274 Aug  9 04:16 /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.json
+-rw-r--r-- 1 pi pi 2960 Aug  9 04:15 /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/chip.schema.json
+
+# Todos
+[✓] Read skill assets (chip.schema.json, diagram.json template, esp32c3.yaml)
+[✓] Read spec and test_spec in full for tmp102
+[✓] Create artifacts/tmp102/prompt2a directory and copy schema
+[✓] Generate chip.json and validate with check-jsonschema
+[✓] Copy chip.json to outputs dir
+[✓] Generate diagram.json from template
+[✓] Validate diagram.json with wokwi-cli lint
+
+Done. Created both files from the TMP102 canonical test spec:
+
+- `artifacts/tmp102/prompt2a/chip.json` (+ schema copy) — pins `V+`, `GND`, `SDA`, `SCL`; controls: `temperature` slider (−40..125, step 0.1). Validated with `check-jsonschema`.
+- `artifacts/tmp102/outputs/chip.json` — copy of the chip json.
+- `artifacts/tmp102/outputs/diagram.json` — ESP32-C3 board + custom chip, serial preserved, wired I2C (`SDA`→esp:4, `SCL`→:esp:5 per esp32c3.yaml), power red/black, data green. Validated with `wokwi-cli lint` (only an info about the undocumented board part type).
+
+Note: default temperature attr set to `21.0` °C in diagram to match the spec's default observable.

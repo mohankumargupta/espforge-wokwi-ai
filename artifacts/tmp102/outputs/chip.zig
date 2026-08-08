@@ -1,36 +1,89 @@
-//! TMP102 – Digital Temperature Sensor with I2C Interface
-//! Wokwi Custom Chip · Zig 0.16 (no_std / WASM)
+//! TMP102 — digital temperature sensor (I2C) — Wokwi custom chip, Zig 0.16.
 //!
-//! Datasheet: TI SBOS397 (TMP102). SPDX-License-Identifier: MIT
+//! Implements the essentials required by the canonical test spec:
+//! I2C slave at 0x48 returning the temperature observable (default 21.0 °C)
+//! in the normal 12-bit register format. AL/THIGN logic, shutdown, one-shot,
+//! extended mode, ADD0 straps and general-call reset are excluded by the
+//! qa table and intentionally not emulated.
 //!
-//! Scope: implement the essentials required by the canonical test spec
-//! (`test_spec_tmp102.md`): I2C slave at 0x48 that reports the temperature via
-//! the 0x00 Temperature Register (big-endian, MSB-first, 12-bit signed value
-//! left-aligned at bits 15:4). The live temperature value comes from the
-//! `temperature` diagram control (default 21.0 °C). TLOW/THIGH and the
-//! Configuration register hold their reset defaults; extended mode, alert,
-//! one-shot, shutdown, fault queue and general-call reset are intentionally
-//! out of scope (see test spec "Excluded Features").
+//! Encoding/decoding of the register words is an explicit port of the
+//! validated conversions in
+//!   artifacts/tmp102/prompt0c/src/root.zig
+//! (`conversions_manifest.md`) and MUST NOT be re-derived from the datasheet.
 //!
-//! The register-encoding/decoding helpers here are ported VERBATIM from the
-//! canonical conversions module `artifacts/tmp102/prompt0c/src/root.zig`
-//! (registered as the single source of truth in
-//! `artifacts/tmp102/prompt0c/conversions_manifest.md`). They are NOT re-derived
-//! from text: the datasheet's register-map and bit-field tables were previously
-//! found to disagree (see feedback/tmp102/prompt0c.md).
+//! The Wokwi ABI (extern imports, exported chipInit, I2C callbacks) is gated
+//! behind `chip_mode = !builtin.is_test` so the same file compiles as a pure
+//! unit-test module for the native host (`zig build test`).
 
 const std = @import("std");
 const builtin = @import("builtin");
 
-/// Build-time flag: when compiling the host unit-test target `builtin.is_test`
-/// is true and the raw Wokwi ABI (extern imports + exported chipInit) is left
-/// out so the conversion functions can be unit tested on the host; when the
-/// business of emitting the WASM chip binary there's false and the chip is
-/// compiled as usual. This lets `chip.zig` carry BOTH the chip implementation
-/// AND its unit tests in one file.
 const chip_mode = !builtin.is_test;
 
-// ─── Wokwi ABI (only pulled in for the WASM chip build) ──────────────────────
+// ===========================================================================
+// Canonical conversions (ported verbatim from prompt0c/src/root.zig)
+// ===========================================================================
+
+/// Conversion scale: 1 LSB = 0.0625 C.
+const RESOLUTION: f32 = 0.0625;
+
+// Register map addresses (pointer bytes).
+const REG_TEMPERATURE: u8 = 0x00;
+const REG_CONFIGURATION: u8 = 0x01;
+const REG_LOW_LIMIT: u8 = 0x02;
+const REG_HIGH_LIMIT: u8 = 0x03;
+const REG_COUNT: u8 = 0x04;
+
+/// Power-up / general-call-reset value of the Configuration register.
+/// Byte 1 = 0x60 (R1,R0 = 11 -> 12-bit), Byte 2 = 0xA0 (CR1,CR0 = 10 -> 4 Hz,
+/// AL = 1 -> alert not asserted, EM = 0 -> normal mode).
+const CONFIG_RESET: u16 = 0x60A0;
+
+/// Reset value of the TLOW and THIGH registers (count << 4 for +75 / +80 °C).
+const TLOW_RESET: u16 = 0x4B00;
+const THIGH_RESET: u16 = 0x5000;
+
+/// Assemble a big-endian 16-bit register word from the two bytes read from
+/// the bus, MSB-first.
+fn bytesToWord(msb: u8, lsb: u8) u16 {
+    return (@as(u16, msb) << 8) | @as(u16, lsb);
+}
+
+/// Split a 16-bit register word into the two big-endian bus bytes, MSB-first.
+fn wordToBytes(reg: u16) [2]u8 {
+    return .{ @truncate(@as(u32, reg) >> 8), @truncate(reg) };
+}
+
+/// Decode a normal-mode (12-bit) temperature register word to degrees C.
+/// (Arithmetic shift so bit 15 sign-extends.)
+fn decodeTempNormal(reg: u16) f32 {
+    const count: i16 = @bitCast(reg);
+    return @as(f32, @floatFromInt(count >> 4)) * RESOLUTION;
+}
+
+/// Encode a temperature in degrees C to a normal-mode (12-bit) register word,
+/// left-aligned at bits 15:4, rounded to the nearest 0.0625 C LSB. Clamps to
+/// the 12-bit signed range [-128, 127.9375] C.
+fn encodeTempNormal(value: f32) u16 {
+    const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
+    const count = std.math.clamp(raw, -2048, 2047);
+    return @as(u16, @bitCast(@as(i16, @intCast(count)))) << 4;
+}
+
+// Configuration register (0x01) — write handling. Read-only fields:
+// R1/R0 (bits 15:... 14,13) and AL (bit 5) must keep their stored value.
+const CONFIG_READ_ONLY_MASK: u16 = 0x6020; // R1 + R0 + AL
+const CONFIG_WRITABLE_MASK: u16 = 0x9FD0; // OS,F1,F0,POL,TM,SD,CR1,CR0,EM
+
+/// Merge a written config word into the current one, preserving read-only bits
+/// and forcing the reserved lower nibble to 0 (both starts 0 in the reset).
+fn configMerge(current: u16, written: u16) u16 {
+    return (current & CONFIG_READ_ONLY_MASK) | (written & CONFIG_WRITABLE_MASK);
+}
+
+// ===========================================================================
+// Wokwi ABI primitives (only referenced in wasm builds)
+// ===========================================================================
 
 const Pin = i32;
 const I2cDev = u32;
@@ -45,23 +98,6 @@ const PinMode = enum(u32) {
     output_high = 17,
 };
 
-const PinValue = enum(u32) {
-    low = 0,
-    high = 1,
-};
-
-const Edge = enum(u32) {
-    rising = 1,
-    falling = 2,
-    both = 3,
-};
-
-const PinWatchConfig = extern struct {
-    user_data: ?*anyopaque,
-    edge: u32,
-    pin_change: *const fn (?*anyopaque, Pin, u32) callconv(.c) void,
-};
-
 const I2cConfig = extern struct {
     user_data: ?*anyopaque,
     address: u32,
@@ -71,316 +107,227 @@ const I2cConfig = extern struct {
     read: *const fn (?*anyopaque) callconv(.c) u8,
     write: *const fn (?*anyopaque, u8) callconv(.c) bool,
     disconnect: *const fn (?*anyopaque) callconv(.c) void,
-    reserved: [8]u32,
 };
 
-// Host-function imports (become WASM imports from "env"). Declared at container
-// scope: declarations emit no code by themselves, and everything that calls them
-// is reachable only from the exported chipInit, which is itself only compiled
-// when `chip_mode` is true.
 extern fn pinInit(name: [*:0]const u8, mode: u32) Pin;
 extern fn attrInit(name: [*:0]const u8, default_value: f64) u32;
 extern fn attrReadFloat(attr: u32) f64;
 extern fn i2cInit(config: *const I2cConfig) I2cDev;
 
-// ─── Register map (portable to both build modes) ──────────────────────────────
+const I2C_ADDRESS: u8 = 0x48; // ADD0 = GND, the only address under test.
 
-pub const REG_TEMPERATURE: u8 = 0x00;
-pub const REG_CONFIGURATION: u8 = 0x01;
-pub const REG_LOW_LIMIT: u8 = 0x02;
-pub const REG_HIGH_LIMIT: u8 = 0x03;
-pub const REG_COUNT: u8 = 4;
-
-/// Power-up / General-Call reset defaults.
-pub const CONFIG_RESET: u16 = 0x6080; // byte1 0x60, byte2 0x80 (CR=4 Hz)
-pub const TLOW_RESET: u16 = 0x4B00; // 75 °C
-pub const THIGH_RESET: u16 = 0x5000; // 80 °C
-
-pub const I2C_ADDRESS: u32 = 0x48; // ADD0 = GND (default strap)
-
-/// Conversion scale: 1 LSB = 0.0625 C.
-pub const RESOLUTION: f32 = 0.0625;
-
-/// Canonical default ambient temperature from the test spec.
-pub const DEFAULT_TEMP_C: f32 = 21.0;
-
-// =============================================================================
-// Canonical conversions  (ported verbatim from prompt0c/src/root.zig)
-// =============================================================================
-
-/// Assemble a big-endian 16-bit register word from the two bus bytes (MSB first).
-pub fn bytesToWord(msb: u8, lsb: u8) u16 {
-    return (@as(u16, msb) << 8) | @as(u16, lsb);
-}
-
-/// Split a 16-bit register word into the two big-endian bus bytes (MSB first).
-pub fn wordToBytes(reg: u16) [2]u8 {
-    return .{ @truncate(@as(u32, reg) >> 8), @truncate(reg) };
-}
-
-/// Decode a normal-mode (12-bit) temperature register word to degrees C.
-pub fn decodeTempNormal(reg: u16) f32 {
-    const count: i16 = @bitCast(reg);
-    return @as(f32, @floatFromInt(count >> 4)) * RESOLUTION;
-}
-
-/// Encode a temperature in degrees C to a normal-mode (12-bit) register word,
-/// left-aligned at bits 15:4, rounded to the nearest 0.0625 C LSB. Clamps to the
-/// 12-bit signed range [-128, 127.9375] C.
-pub fn encodeTempNormal(value: f32) u16 {
-    const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
-    const count = clamp(raw, -2048, 2047);
-    return @as(u16, @bitCast(@as(i16, @intCast(count)))) << 4;
-}
-
-/// Decode an extended-mode (13-bit) temperature register word to degrees C.
-pub fn decodeTempExtended(reg: u16) f32 {
-    const count: i16 = @bitCast(reg);
-    return @as(f32, @floatFromInt(count >> 3)) * RESOLUTION;
-}
-
-/// Encode a temperature to an extended-mode (13-bit) register word (bits 15:3,
-/// with the extended-marker bit 0 set). Clamps to [-256, 255.9375] C.
-pub fn encodeTempExtended(value: f32) u16 {
-    const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
-    const count = clamp(raw, -4096, 4095);
-    const base: u16 = @as(u16, @bitCast(@as(i16, @intCast(count)))) << 3;
-    return base | 0x0001;
-}
-
-/// Clamp a value to [min, max] (local helper kept out of the std import graph).
-pub fn clamp(v: i32, min: i32, max: i32) i32 {
-    return if (v < min) min else if (v > max) max else v;
-}
-
-// Configuration register field helpers (ported verbatim).
-pub fn getBit(reg: u16, bit: u4) bool {
-    return ((reg >> bit) & 1) == 1;
-}
-
-pub fn setBit(reg: u16, bit: u4, value: bool) u16 {
-    const bit_value: u16 = @as(u16, 1) << bit;
-    if (value) return reg | bit_value;
-    return reg & ~bit_value;
-}
-
-pub fn configShutdown(reg: u16) bool {
-    return getBit(reg, 8);
-}
-
-pub fn configExtendedMode(reg: u16) bool {
-    return getBit(reg, 4);
-}
-
-pub fn conversionRateField(reg: u16) u2 {
-    return @truncate(reg >> 6);
-}
-
-pub fn conversionRateHz(reg: u16) f32 {
-    return switch (conversionRateField(reg)) {
-        0 => 0.25,
-        1 => 1.0,
-        2 => 4.0,
-        3 => 8.0,
-    };
-}
-
-// =============================================================================
-// Chip state machine
-// =============================================================================
+// ===========================================================================
+// Chip state
+// ===========================================================================
 
 const ChipState = struct {
     i2c: I2cDev = 0,
-    temp_attr: u32 = 0, // live ambient temperature control (deg C)
-    config: u16 = CONFIG_RESET,
-    low_limit: u16 = TLOW_RESET,
-    high_limit: u16 = THIGH_RESET,
-    // I2C register pointer (16-bit registers, no auto-increment per protocol).
-    has_reg_ptr: bool = false,
-    reg_ptr: u8 = REG_TEMPERATURE,
-    // Selects which byte of the current 16-bit register the next READ returns.
-    read_byte_idx: u8 = 0,
-    // Selects which byte of a register write transaction is expected next.
-    write_word: u16 = 0,
-    write_msb_next: bool = true,
+    scl: Pin = 0,
+    sda: Pin = 0,
+    temperature_attr: u32 = 0,
+
+    // Data register file (temperatures read-only), power-up defaults.
+    regs: [REG_COUNT]u16 = .{ 0x0000, CONFIG_RESET, TLOW_RESET, THIGH_RESET },
+
+    // Pointer register selection (P1:P0) remembered until next write.
+    pointer: u8 = 0,
+    has_pointer: bool = false,
+
+    // Read-transaction byte index into the selected 16-bit register.
+    read_index: u8 = 0,
+
+    // Partial-write accumulator for 16-bit register writes (MSB then LSB).
+    write_reg: u8 = 0,
+    write_byte: u8 = 0,
+    write_pending: bool = false,
 };
 
-var global_chip: ChipState = undefined;
+var chip: ChipState = .{};
 
-fn readWord(chip: *ChipState, reg: u8) u16 {
-    const active = configExtendedMode(chip.config);
-    return switch (reg) {
-        REG_TEMPERATURE => blk: {
-            const c: f32 = @floatCast(attrReadFloat(chip.temp_attr));
-            break :blk if (active) encodeTempExtended(c) else encodeTempNormal(c);
-        },
-        REG_CONFIGURATION => chip.config,
-        REG_LOW_LIMIT => chip.low_limit,
-        REG_HIGH_LIMIT => chip.high_limit,
-        else => 0,
+fn apiVersion() callconv(.c) u32 {
+    return 1;
+}
+
+fn chipInit() callconv(.c) void {
+    chip = .{};
+
+    chip.scl = pinInit("SCL", @intFromEnum(PinMode.input));
+    chip.sda = pinInit("SDA", @intFromEnum(PinMode.input));
+
+    chip.temperature_attr = attrInit("temperature", 21.0);
+
+    const cfg = I2cConfig{
+        .user_data = &chip,
+        .address = I2C_ADDRESS,
+        .scl = chip.scl,
+        .sda = chip.sda,
+        .connect = onI2cConnect,
+        .read = onI2cRead,
+        .write = onI2cWrite,
+        .disconnect = onI2cDisconnect,
     };
-}
-
-fn readRegByte(chip: *ChipState) u8 {
-    const word = readWord(chip, chip.reg_ptr);
-    const bytes = wordToBytes(word);
-    const b = bytes[chip.read_byte_idx & 1];
-    chip.read_byte_idx +%= 1;
-    return b;
-}
-
-fn writeRegWord(chip: *ChipState, reg: u8, word: u16) void {
-    switch (reg) {
-        REG_CONFIGURATION => chip.config = word,
-        REG_LOW_LIMIT => chip.low_limit = word,
-        REG_HIGH_LIMIT => chip.high_limit = word,
-        // REG_TEMPERATURE is read-only.
-        else => {},
-    }
-}
-
-// ─── Wokwi callbacks ──────────────────────────────────────────────────────────
-
-fn onI2cConnect(user_data: ?*anyopaque, address: u32, read: bool) callconv(.c) bool {
-    _ = read;
-    const chip: *ChipState = @ptrCast(@alignCast(user_data));
-    if (address != I2C_ADDRESS) return false; // NACK
-    chip.read_byte_idx = 0;
-    return true; // ACK
-}
-
-fn onI2cRead(user_data: ?*anyopaque) callconv(.c) u8 {
-    const chip: *ChipState = @ptrCast(@alignCast(user_data));
-    return readRegByte(chip);
-}
-
-fn onI2cWrite(user_data: ?*anyopaque, byte: u8) callconv(.c) bool {
-    const chip: *ChipState = @ptrCast(@alignCast(user_data));
-    if (!chip.has_reg_ptr) {
-        // First byte of a write transaction selects the register pointer.
-        chip.reg_ptr = byte % REG_COUNT;
-        chip.has_reg_ptr = true;
-        chip.read_byte_idx = 0;
-        chip.write_word = 0;
-        chip.write_msb_next = true;
-    } else if (chip.write_msb_next) {
-        // Second byte = MSB of the 16-bit register word.
-        chip.write_word = @as(u16, byte) << 8;
-        chip.write_msb_next = false;
-    } else {
-        // Third byte = LSB; assemble and commit the word.
-        const word = chip.write_word | byte;
-        writeRegWord(chip, chip.reg_ptr, word);
-        chip.write_word = 0;
-        chip.write_msb_next = true;
-    }
-    return true; // ACK
-}
-
-fn onI2cDisconnect(user_data: ?*anyopaque) callconv(.c) void {
-    const chip: *ChipState = @ptrCast(@alignCast(user_data));
-    chip.has_reg_ptr = false;
+    chip.i2c = i2cInit(&cfg);
 }
 
 comptime {
     if (chip_mode) {
         @export(&chipInit, .{ .name = "chipInit" });
+        @export(&apiVersion, .{ .name = "__wokwi_api_version_1" });
     }
 }
 
-fn chipInit() callconv(.c) void {
-    const chip = &global_chip;
-    chip.* = ChipState{};
+// ===========================================================================
+// Register access
+// ===========================================================================
 
-    // Ambient temperature read from the `temperature` diagram control.
-    chip.temp_attr = attrInit("temperature", DEFAULT_TEMP_C);
+/// Live temperature in C, read fresh from the diagram control attribute.
+fn currentTemperature() f32 {
+    return @floatCast(attrReadFloat(chip.temperature_attr));
+}
 
-    const i2c_cfg = I2cConfig{
-        .user_data = chip,
-        .address = I2C_ADDRESS,
-        .scl = pinInit("SCL", @intFromEnum(PinMode.input)),
-        .sda = pinInit("SDA", @intFromEnum(PinMode.input)),
-        .connect = onI2cConnect,
-        .read = onI2cRead,
-        .write = onI2cWrite,
-        .disconnect = onI2cDisconnect,
-        .reserved = [_]u32{0} ** 8,
+/// Register word addressed by the current pointer. Temperature is always
+/// encoded live in normal (12-bit) mode from the current control value.
+fn readRegisterWord(self: *ChipState) u16 {
+    return switch (self.pointer) {
+        REG_TEMPERATURE => blk: {
+            const t = currentTemperature();
+            break :blk encodeTempNormal(t);
+        },
+        REG_CONFIGURATION => self.regs[REG_CONFIGURATION],
+        REG_LOW_LIMIT => self.regs[REG_LOW_LIMIT],
+        REG_HIGH_LIMIT => self.regs[REG_HIGH_LIMIT],
+        else => 0,
     };
-    chip.i2c = i2cInit(&i2c_cfg);
 }
 
-// =============================================================================
-// Unit tests — register-encoding helpers vs. concrete worked examples
-// (mirrors the verified cases in prompt0c/src/root.zig; the canonical pin of
-// 21.0 C is asserted as a register word of 0x1500 exactly per the test spec).
-// =============================================================================
+/// Accept a data byte for the register currently selected by the pointer.
+/// 16-bit registers need two bytes (MSB then LSB); temperature is read-only.
+fn writeRegisterByte(self: *ChipState, byte: u8) void {
+    if (self.pointer == REG_TEMPERATURE) return;
 
-test "byte order is MSB-first" {
-    try std.testing.expectEqual(@as(u16, 0x6400), bytesToWord(0x64, 0x00));
-    try std.testing.expectEqualSlices(u8, &.{ 0x64, 0x00 }, &wordToBytes(0x6400));
-    for (0..0x10000) |i| {
-        const r: u16 = @intCast(i);
-        const b = wordToBytes(r);
-        try std.testing.expectEqual(r, bytesToWord(b[0], b[1]));
+    if (!self.write_pending) {
+        self.write_pending = true;
+        self.write_reg = self.pointer;
+        self.write_byte = byte;
+        return;
     }
+    if (self.write_reg != self.pointer) {
+        self.write_pending = false;
+        return;
+    }
+    const word: u16 = bytesToWord(self.write_byte, byte);
+    switch (self.pointer) {
+        REG_CONFIGURATION => self.regs[REG_CONFIGURATION] = configMerge(self.regs[REG_CONFIGURATION], word),
+        REG_LOW_LIMIT => self.regs[REG_LOW_LIMIT] = word,
+        REG_HIGH_LIMIT => self.regs[REG_HIGH_LIMIT] = word,
+        else => {},
+    }
+    self.write_pending = false;
 }
 
-test "canonical default temperature encodes to 0x1500 (21.0 C -> register word)" {
-    // count = 21.0 / 0.0625 = 336 = 0x150 -> left-aligned at bits 15:4 = 0x1500.
-    try std.testing.expectEqual(@as(u16, 0x1500), encodeTempNormal(DEFAULT_TEMP_C));
-    try std.testing.expectApproxEqAbs(DEFAULT_TEMP_C, decodeTempNormal(0x1500), 0.0001);
+// ===========================================================================
+// I2C callbacks
+// ===========================================================================
+
+fn onI2cConnect(user_data: ?*anyopaque, address: u32, read: bool) callconv(.c) bool {
+    const self: *ChipState = @ptrCast(@alignCast(user_data));
+    if (address != I2C_ADDRESS) return false; // NACK — only answer our address.
+
+    self.read_index = 0;
+    if (!read) {
+        // A fresh write transaction: next byte is the pointer register.
+        self.has_pointer = false;
+        self.write_pending = false;
+    }
+    return true; // ACK
 }
 
-test "decode normal-mode register word (12-bit) from spec table" {
-    const cases = [_]struct { reg: u16, c: f32 }{
-        .{ .reg = 0x7FF0, .c = 127.9375 },
-        .{ .reg = 0x6400, .c = 100.0 },
-        .{ .reg = 0x5000, .c = 80.0 },
-        .{ .reg = 0x4B00, .c = 75.0 },
-        .{ .reg = 0x3200, .c = 50.0 },
-        .{ .reg = 0x1900, .c = 25.0 },
-        .{ .reg = 0x0040, .c = 0.25 },
-        .{ .reg = 0x0000, .c = 0.0 },
-        .{ .reg = 0xFFC0, .c = -0.25 },
-        .{ .reg = 0xE700, .c = -25.0 },
-        .{ .reg = 0xC900, .c = -55.0 },
+fn onI2cRead(user_data: ?*anyopaque) callconv(.c) u8 {
+    const self: *ChipState = @ptrCast(@alignCast(user_data));
+    const bytes = wordToBytes(readRegisterWord(self));
+    const idx = self.read_index;
+    if (idx < 2) self.read_index += 1;
+    return switch (idx) {
+        0 => bytes[0],
+        1 => bytes[1],
+        else => 0,
     };
-    for (cases) |case| {
-        try std.testing.expectApproxEqAbs(case.c, decodeTempNormal(case.reg), 0.0001);
+}
+
+fn onI2cWrite(user_data: ?*anyopaque, byte: u8) callconv(.c) bool {
+    const self: *ChipState = @ptrCast(@alignCast(user_data));
+    if (!self.has_pointer) {
+        self.pointer = byte & 0x03;
+        self.has_pointer = true;
+        self.write_pending = false;
+    } else {
+        writeRegisterByte(self, byte);
+    }
+    return true; // ACK
+}
+
+fn onI2cDisconnect(user_data: ?*anyopaque) callconv(.c) void {
+    const self: *ChipState = @ptrCast(@alignCast(user_data));
+    self.has_pointer = false;
+    self.write_pending = false;
+}
+
+// ===========================================================================
+// Unit tests — exact register words vs canonical conversions
+// ===========================================================================
+
+test "temperature default observable 21.0 C encodes to 0x1500" {
+    // 21.0 / 0.0625 = 336 counts (0x150), left-aligned to 0x1500.
+    try std.testing.expectEqual(@as(u16, 0x1500), encodeTempNormal(21.0));
+    try std.testing.expectApproxEqAbs(21.0, decodeTempNormal(0x1500), 0.0001);
+    // Bytes appear on the bus MSB-first.
+    try std.testing.expectEqual([2]u8{ 0x15, 0x00 }, wordToBytes(encodeTempNormal(21.0)));
+}
+
+test "spec worked examples round-trip in normal mode" {
+    const values = [_]struct { c: f32, word: u16 }{
+        .{ .c = 127.9375, .word = 0x7FF0 },
+        .{ .c = 100.0, .word = 0x6400 },
+        .{ .c = 80.0, .word = 0x5000 },
+        .{ .c = 75.0, .word = 0x4B00 },
+        .{ .c = 25.0, .word = 0x1900 },
+        .{ .c = 0.25, .word = 0x0040 },
+        .{ .c = 0.0, .word = 0x0000 },
+        .{ .c = -0.25, .word = 0xFFC0 },
+        .{ .c = -25.0, .word = 0xE700 },
+        .{ .c = -55.0, .word = 0xC900 },
+    };
+    for (values) |v| {
+        try std.testing.expectApproxEqAbs(v.c, decodeTempNormal(v.word), 0.0001);
+        try std.testing.expectEqual(v.word, encodeTempNormal(v.c));
     }
 }
 
-test "encode normal-mode register word (12-bit) matches spec table" {
-    try std.testing.expectEqual(@as(u16, 0x6400), encodeTempNormal(100.0));
-    try std.testing.expectEqual(@as(u16, 0x5000), encodeTempNormal(80.0));
-    try std.testing.expectEqual(@as(u16, 0x4B00), encodeTempNormal(75.0));
-    try std.testing.expectEqual(@as(u16, 0x3200), encodeTempNormal(50.0));
-    try std.testing.expectEqual(@as(u16, 0x1900), encodeTempNormal(25.0));
-    try std.testing.expectEqual(@as(u16, 0x0040), encodeTempNormal(0.25));
-    try std.testing.expectEqual(@as(u16, 0x0000), encodeTempNormal(0.0));
-    try std.testing.expectEqual(@as(u16, 0xFFC0), encodeTempNormal(-0.25));
-    try std.testing.expectEqual(@as(u16, 0xE700), encodeTempNormal(-25.0));
-    try std.testing.expectEqual(@as(u16, 0xC900), encodeTempNormal(-55.0));
-}
-
-test "encode normal mode clamps to 12-bit signed range" {
+test "normal mode clamps to the 12-bit signed range" {
     try std.testing.expectEqual(@as(u16, 0x7FF0), encodeTempNormal(128.0));
     try std.testing.expectEqual(@as(u16, 0x8000), encodeTempNormal(-128.1));
 }
 
-test "extended mode registers match manifest layout" {
-    // 150 C -> count 2400 = 0x960 @ bits 15:3 -> 0x4B00 | marker = 0x4B01.
-    try std.testing.expectEqual(@as(u16, 0x4B01), encodeTempExtended(150.0));
-    // 21 C -> count 336 @ bits 15:3 -> 0x0A80 | marker = 0x0A81.
-    try std.testing.expectEqual(@as(u16, 0x0A81), encodeTempExtended(DEFAULT_TEMP_C));
-    try std.testing.expectApproxEqAbs(DEFAULT_TEMP_C, decodeTempExtended(0x0A81), 0.0001);
+test "byte-order helpers assemble big-endian words" {
+    try std.testing.expectEqual(@as(u16, 0x6400), bytesToWord(0x64, 0x00));
+    try std.testing.expectEqual([2]u8{ 0x60, 0xA0 }, wordToBytes(CONFIG_RESET));
 }
 
-test "register defaults and reset values" {
-    try std.testing.expectEqual(@as(u16, 0x6080), CONFIG_RESET);
-    try std.testing.expectEqual(@as(u16, 0x4B00), TLOW_RESET); // 75 C
-    try std.testing.expectEqual(@as(u16, 0x5000), THIGH_RESET); // 80 C
-    try std.testing.expectEqual(false, configShutdown(CONFIG_RESET));
-    try std.testing.expectEqual(false, configExtendedMode(CONFIG_RESET));
-    try std.testing.expectEqual(@as(f32, 4.0), conversionRateHz(CONFIG_RESET)); // CR = 10b
+test "power-up register defaults" {
+    try std.testing.expectEqual(@as(u16, 0x60A0), CONFIG_RESET);
+    try std.testing.expectEqual(@as(u16, 0x4B00), TLOW_RESET); // +75 C
+    try std.testing.expectEqual(@as(u16, 0x5000), THIGH_RESET); // +80 C
+    try std.testing.expectEqual(@as(u16, 0x0000), encodeTempNormal(0.0));
+}
+
+test "config write preserves read-only fields and reserved bits" {
+    // Writing all-zero clears only writable fields; R1/R0 (bits 14,13) and
+    // AL (bit 5) keep their reset values and the reserved nibble stays zero.
+    try std.testing.expectEqual(@as(u16, 0x6020), configMerge(CONFIG_RESET, 0x0000));
+    // Writing back the default writable fields (CR1:CR0 = 10) rebuilds 0x60A0.
+    try std.testing.expectEqual(@as(u16, 0x60A0), configMerge(CONFIG_RESET, 0x00A0));
+    // Writing the one-shot bit (OS, bit 15) is honoured next to preserved bits.
+    try std.testing.expectEqual(@as(u16, 0xE020), configMerge(CONFIG_RESET, 0x8000));
+    // Setting every bit leaves the read-only and reserved fields clear.
+    try std.testing.expectEqual(@as(u16, 0x9FD0), configMerge(0x0000, 0xFFFF));
 }

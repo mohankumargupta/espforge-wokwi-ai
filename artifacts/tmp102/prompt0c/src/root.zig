@@ -1,14 +1,14 @@
 //! TMP102 data conversions and reference algorithms.
 //!
 //! This module is the **single source of truth** for the register-level bit
-//! layout of the TMP102 temperature sensor (TI datasheet SBOS397; Tables 6-2/6-3,
-//! 6-8/6-9 and 6-10/6-11). Any downstream skill that encodes or decodes TMP102
-//! register words MUST reuse or port these exact functions rather than
-//! re-deriving the bit layout.
+//! layout of the TMP102 temperature sensor (TI datasheet SBOS397; tables 6-2/6-3
+//! and 6-8/6-9). Any downstream skill that encodes or decodes TMP102 register
+//! words MUST reuse or port these exact functions rather than re-deriving the
+//! bit layout.
 //!
-//! Data is read/written over I2C **MSB-first** (big-endian). The 16-bit
-//! temperature result is a signed, two's-complement value left-justified in the
-//! register word. One LSB equals 0.0625 C.
+//! Register words are I2C **MSB-first** (big-endian). The 16-bit temperature
+//! result is a signed, two's-complement value left-justified in the register
+//! word; one LSB equals 0.0625 C.
 const std = @import("std");
 
 /// Conversion scale: 1 LSB = 0.0625 C.
@@ -20,15 +20,17 @@ pub const REG_CONFIGURATION: u8 = 0x01;
 pub const REG_LOW_LIMIT: u8 = 0x02;
 pub const REG_HIGH_LIMIT: u8 = 0x03;
 
-/// Power-up/reset value of the configuration register (byte1 0x60, byte2 0x80).
-pub const CONFIG_RESET: u16 = 0x6080;
+/// Power-up / general-call-reset value of the Configuration register.
+/// Byte 1 = 0x60 (R1,R0 = 11 -> 12-bit), Byte 2 = 0xA0 (CR1,CR0 = 10 -> 4 Hz,
+/// AL = 1 -> alert not asserted, EM = 0 -> normal mode).
+pub const CONFIG_RESET: u16 = 0x60A0;
 
 // ===========================================================================
-// Byte order (the register is transmitted MSB-first over the I2C bus)
+// Byte order (register words are transmitted MSB-first over the I2C bus)
 // ===========================================================================
 
 /// Assemble a big-endian 16-bit register word from the two bytes read from the
-/// bus, MSB-first (byte1 = most significant byte).
+/// bus, MSB-first (first byte read is the most significant byte).
 pub fn bytesToWord(msb: u8, lsb: u8) u16 {
     return (@as(u16, msb) << 8) | @as(u16, lsb);
 }
@@ -38,11 +40,19 @@ pub fn wordToBytes(reg: u16) [2]u8 {
     return .{ @truncate(@as(u32, reg) >> 8), @truncate(reg) };
 }
 
+/// Sign-extend the low N bits of `value` (N in 1..16) into a full i16.
+/// Standard for reading N-bit two's-complement temperature counts.
+pub fn signExtend(value: u16, comptime n: u5) i16 {
+    const target: i16 = @bitCast(value);
+    const shift: u5 = @intCast(16 - @as(u16, n));
+    return target << shift >> shift;
+}
+
 // ===========================================================================
 // Temperature conversions - Normal mode (12-bit, EM = 0)
 //
-// The 12-bit two's-complement value T11..T0 is left-aligned in bits 15:4; the
-// lower nibble (bits 3:0) always reads 0. Decode via an arithmetic shift so the
+// The 12-bit two's-complement value T11..T0 is LEFT-aligned in bits 15:4 and
+// the lower nibble (bits 3:0) reads 0. Decode via an arithmetic shift so the
 // sign bit (bit 15) sign-extends automatically:
 //   temp_C = ((i16)reg >> 4) * 0.0625
 // ===========================================================================
@@ -54,8 +64,8 @@ pub fn decodeTempNormal(reg: u16) f32 {
 }
 
 /// Encode a temperature in degrees C to a normal-mode (12-bit) register word,
-/// left-aligned at bits 15:4, rounded to the nearest 0.0625 C LSB.
-/// Clamps to the 12-bit signed range [-128, 127.9375] C.
+/// left-aligned at bits 15:4, rounded to the nearest 0.0625 C LSB. Clamps to
+/// the 12-bit signed range [-128, 127.9375] C.
 pub fn encodeTempNormal(value: f32) u16 {
     const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
     const count = std.math.clamp(raw, -2048, 2047);
@@ -63,12 +73,14 @@ pub fn encodeTempNormal(value: f32) u16 {
 }
 
 // ===========================================================================
-// Temperature - Extended mode (13-bit, EM = 1)
+// Temperature conversions - Extended mode (13-bit, EM = 1)
 //
 // The 13-bit two's-complement value T12..T0 occupies bits 15:3 (left-aligned);
-// bit 0 of the register word (D0 of byte 2) is set to 1 to flag the extended
-// data format. Decode via an arithmetic shift of the signed register word:
+// bit 2:1 of the register word read 0 and bit 0 (D0 of byte 2) reads 1 as the
+// extended-format marker. Decode via an arithmetic shift:
 //   temp_C = ((i16)reg >> 3) * 0.0625
+// The spec's "150 C = 0x0960" examples are the 13-bit COUNT, not a register
+// word; the register word stores count << 3 (plus the bit-0 marker).
 // ===========================================================================
 
 pub fn decodeTempExtended(reg: u16) f32 {
@@ -77,22 +89,35 @@ pub fn decodeTempExtended(reg: u16) f32 {
 }
 
 /// Encode a temperature (degrees C) to an extended-mode (13-bit) register word,
-/// left-aligned at bits 15:3 with the extended marker set in bit 0.
-/// Round-clamped to the 13-bit signed range [-256, 255.9375] C.
+/// left-aligned at bits 15:3 with the extended marker set in bit 0. Round-
+/// clamped to the 13-bit signed range [-256, 255.9375] C.
 pub fn encodeTempExtended(value: f32) u16 {
     const raw: i32 = @intFromFloat(@round(value / RESOLUTION));
     const count = std.math.clamp(raw, -4096, 4095);
     const base: u16 = @as(u16, @bitCast(@as(i16, @intCast(count)))) << 3;
-    // Bit 0 (D0 of byte 2) flags the extended data format.
+    // Bit 0 (D0 of byte 2) flags the extended data format and reads as 1.
     return base | 0x0001;
 }
 
 // ===========================================================================
 // Configuration register (0x01) - field helpers
 //
-// Byte 1 (MSB):  D7..D0 = OS, R1, R0, F1, F0, POL, TM, SD
-// Byte 2 (LSB):  D7..D0 = CR1, CR0, AL, EM, -, -, -, -
+// Byte 1 (MSB):  OS R1 R0 F1 F0 POL TM SD   -> bits 15..8
+// Byte 2 (LSB):  CR1 CR0 AL EM - - - -     -> bits 7..4 defined, 3..0 zero
 // ===========================================================================
+
+const B_OS: u4 = 15; // One-shot start
+const B_R1: u4 = 14; // Resolution MSB (read-only)
+const B_R0: u4 = 13; // Resolution LSB (read-only)
+const B_F1: u4 = 12; // Fault queue MSB
+const B_F0: u4 = 11; // Fault queue LSB
+const B_POL: u4 = 10; // ALERT polarity
+const B_TM: u4 = 9; // Thermostat mode
+const B_SD: u4 = 8; // Shutdown
+const B_CR1: u4 = 7; // Conversion rate MSB
+const B_CR0: u4 = 6; // Conversion rate LSB
+const B_AL: u4 = 5; // Alert status (read-only)
+const B_EM: u4 = 4; // Extended mode
 
 /// Read bit `bit` (0..15) of a 16-bit register word.
 pub fn getBit(reg: u16, bit: u4) bool {
@@ -106,87 +131,98 @@ pub fn setBit(reg: u16, bit: u4, value: bool) u16 {
     return reg & ~bit_value;
 }
 
-/// Overtemperature-alert polarity (POL): 0 = active-low, 1 = active-high.
+/// Overtemperature-alert polarity (POL): false = active-low, true = active-high.
 pub fn configPolarity(reg: u16) bool {
-    return getBit(reg, 10);
+    return getBit(reg, B_POL);
 }
-/// Thermostat mode (TM): 0 = comparator, 1 = interrupt.
+
+/// Thermostat mode (TM): false = comparator, true = interrupt.
 pub fn configThermostatMode(reg: u16) bool {
-    return getBit(reg, 9);
+    return getBit(reg, B_TM);
 }
-/// Shutdown mode (SD): 1 = shutdown / low power.
+
+/// Shutdown mode (SD): true = shutdown / low power.
 pub fn configShutdown(reg: u16) bool {
-    return getBit(reg, 8);
+    return getBit(reg, B_SD);
 }
-/// Extended Mode (EM): 0 = 12-bit, 1 = 13-bit.
+
+/// Extended mode (EM): true = 13-bit temperature result.
 pub fn configExtendedMode(reg: u16) bool {
-    return getBit(reg, 4);
+    return getBit(reg, B_EM);
 }
 
-/// Extract the 2-bit conversion-rate field (CR1:CR0) from bits 7:6.
+/// Conversion-rate field (CR1:CR0) as a 2-bit index, bits 7:6.
+/// 00->0.25 Hz, 01->1 Hz, 10->4 Hz (reset), 11->8 Hz.
 pub fn conversionRateField(reg: u16) u2 {
-    return @truncate(reg >> 6);
+    return @intCast((reg >> 6) & 0b11);
 }
 
-/// Map the CR1:CR0 field to the conversion rate in Hz:
-///   00 = 0.25 Hz, 01 = 1 Hz, 10 = 4 Hz (reset default), 11 = 8 Hz.
+/// Conversion-rate field to conversions-per-second.
 pub fn conversionRateHz(reg: u16) f32 {
     return switch (conversionRateField(reg)) {
-        0 => 0.25,
-        1 => 1.0,
-        2 => 4.0,
-        3 => 8.0,
+        0b00 => 0.25,
+        0b01 => 1.0,
+        0b10 => 4.0,
+        0b11 => 8.0,
     };
 }
 
-/// Map the F1:F0 fault-queue field (bits 12:11) to the required number of
-/// consecutive fault measurements: 00=1, 01=2, 10=4, 11=6.
+/// Fault-queue field (F1:F0), bits 12:11, as a 2-bit index.
+/// 00->1, 01->2, 10->4, 11->6 consecutive faults.
+pub fn faultQueueField(reg: u16) u2 {
+    return @intCast((reg >> 11) & 0b11);
+}
+
+/// Fault-queue field to the number of consecutive temperature readings above
+/// /below the limits that must occur before the ALERT output asserts.
 pub fn faultQueueCount(reg: u16) u8 {
-    const f: u2 = @truncate(reg >> 11);
-    return switch (f) {
-        0 => 1,
-        1 => 2,
-        2 => 4,
-        3 => 6,
+    return switch (faultQueueField(reg)) {
+        0b00 => 1,
+        0b01 => 2,
+        0b10 => 4,
+        0b11 => 6,
     };
 }
 
 // ===========================================================================
-// Tests
+// Transport - I2C address selection (ADD0 pin)
 // ===========================================================================
 
-test "byte order is inverse" {
-    // 100 C -> bytes [0x64, 0x00] big-endian.
-    try std.testing.expectEqual(@as(u16, 0x6400), bytesToWord(0x64, 0x00));
-    try std.testing.expectEqualSlices(u8, &.{ 0x64, 0x00 }, &wordToBytes(0x6400));
-    for (0..0x10000) |i| {
-        const r: u16 = @intCast(i);
-        const b = wordToBytes(r);
-        try std.testing.expectEqual(r, bytesToWord(b[0], b[1]));
-    }
-}
+/// 7-bit slave addresses selected by the ADD0 pin strap.
+pub const Add0Addr = struct {
+    pub const gnd: u7 = 0x48; // ADD0 = GND (default)
+    pub const vcc: u7 = 0x49; // ADD0 = V+
+    pub const sda: u7 = 0x4A; // ADD0 = SDA
+    pub const scl: u7 = 0x4B; // ADD0 = SCL
+};
 
-test "decode normal-mode register word (12-bit) from spec table" {
-    // Register word equals (count << 4); values from the canonical spec.
-    const cases = [_]struct { reg: u16, c: f32 }{
-        .{ .reg = 0x7FF0, .c = 127.9375 }, // ~128 (12-bit max)
-        .{ .reg = 0x6400, .c = 100.0 },
-        .{ .reg = 0x5000, .c = 80.0 }, // THIGH reset
-        .{ .reg = 0x4B00, .c = 75.0 }, // TLOW reset
-        .{ .reg = 0x3200, .c = 50.0 },
-        .{ .reg = 0x1900, .c = 25.0 },
-        .{ .reg = 0x0040, .c = 0.25 },
-        .{ .reg = 0x0000, .c = 0.0 },
-        .{ .reg = 0xFFC0, .c = -0.25 },
-        .{ .reg = 0xE700, .c = -25.0 },
-        .{ .reg = 0xC900, .c = -55.0 },
+/// Number of the ADD0 strap (0 = GND .. 3 = SCL) for a slave address.
+pub fn add0Index(add: u7) !usize {
+    return switch (add) {
+        0x48 => 0,
+        0x49 => 1,
+        0x4A => 2,
+        0x4B => 3,
+        else => error.InvalidAdd0,
     };
-    for (cases) |case| {
-        try std.testing.expectApproxEqAbs(case.c, decodeTempNormal(case.reg), 0.0001);
-    }
 }
 
-test "encode normal-mode register word (12-bit) matches spec table" {
+test "verify spec worked examples, normal mode" {
+    try std.testing.expectApproxEqAbs(127.9375, decodeTempNormal(0x7FF0), 0.0001);
+    try std.testing.expectApproxEqAbs(100.0, decodeTempNormal(0x6400), 0.0001);
+    try std.testing.expectApproxEqAbs(80.0, decodeTempNormal(0x5000), 0.0001);
+    try std.testing.expectApproxEqAbs(75.0, decodeTempNormal(0x4B00), 0.0001);
+    try std.testing.expectApproxEqAbs(50.0, decodeTempNormal(0x3200), 0.0001);
+    try std.testing.expectApproxEqAbs(25.0, decodeTempNormal(0x1900), 0.0001);
+    try std.testing.expectApproxEqAbs(0.25, decodeTempNormal(0x0040), 0.0001);
+    try std.testing.expectApproxEqAbs(0.0, decodeTempNormal(0x0000), 0.0001);
+    try std.testing.expectApproxEqAbs(-0.25, decodeTempNormal(0xFFC0), 0.0001);
+    try std.testing.expectApproxEqAbs(-25.0, decodeTempNormal(0xE700), 0.0001);
+    try std.testing.expectApproxEqAbs(-55.0, decodeTempNormal(0xC900), 0.0001);
+}
+
+test "encode normal mode round-trips spec worked examples" {
+    try std.testing.expectEqual(@as(u16, 0x7FF0), encodeTempNormal(127.9375));
     try std.testing.expectEqual(@as(u16, 0x6400), encodeTempNormal(100.0));
     try std.testing.expectEqual(@as(u16, 0x5000), encodeTempNormal(80.0));
     try std.testing.expectEqual(@as(u16, 0x4B00), encodeTempNormal(75.0));
@@ -200,63 +236,95 @@ test "encode normal-mode register word (12-bit) matches spec table" {
 }
 
 test "encode normal mode clamps to 12-bit signed range" {
-    // 128 C clamps to +127.9375 (0x7FF0); -128.1 C clamps to -128 (0x8000).
     try std.testing.expectEqual(@as(u16, 0x7FF0), encodeTempNormal(128.0));
     try std.testing.expectEqual(@as(u16, 0x8000), encodeTempNormal(-128.1));
 }
 
-test "canonical observable 21.0 C round-trip (normal mode)" {
-    // count = 21.0 / 0.0625 = 336 = 0x150 -> register word 0x1500.
-    try std.testing.expectEqual(@as(u16, 0x1500), encodeTempNormal(21.0));
-    try std.testing.expectApproxEqAbs(21.0, decodeTempNormal(0x1500), 0.0001);
-}
-
-test "decode extended-mode (13-bit) from spec worked examples" {
-    // count13 left-aligned at bits 15:3 + EM marker in bit 0.
-    const cases = [_]struct { c: f32, count13: i32 }{
-        .{ .c = 150.0, .count13 = 2400 },
-        .{ .c = 128.0, .count13 = 2048 },
-        .{ .c = 100.0, .count13 = 1600 },
-        .{ .c = 25.0, .count13 = 400 },
-        .{ .c = -0.25, .count13 = -4 },
-        .{ .c = -25.0, .count13 = -400 },
-    };
-    for (cases) |case| {
-        const reg: u16 = (@as(u16, @bitCast(@as(i16, @intCast(case.count13)))) << 3) | 0x0001;
-        try std.testing.expectApproxEqAbs(case.c, decodeTempExtended(reg), 0.0001);
-    }
-}
-
-test "encode extended-mode (13-bit) round-trips" {
-    // 150 C -> count 2400 = 0x960 @ bits 15:3 -> 0x4B00 | marker = 0x4B01.
+test "decode/encode extended (13-bit) mode" {
+    // 0x4B01 = count 2400 (0x0960) << 3 | 1  ->  2400 * 0.0625 = 150 C
+    try std.testing.expectApproxEqAbs(150.0, decodeTempExtended(0x4B01), 0.0001);
     try std.testing.expectEqual(@as(u16, 0x4B01), encodeTempExtended(150.0));
-    // 21.0 C -> count 336 = 0x150 @ bits 15:3 -> 0x0A80 | marker = 0x0A81.
-    try std.testing.expectEqual(@as(u16, 0x0A81), encodeTempExtended(21.0));
-    // Marker bit must not affect the decoded temperature.
-    try std.testing.expectApproxEqAbs(21.0, decodeTempExtended(0x0A81), 0.0001);
+
+    // 0x0801 = count 2048 (0x0800) << 3 | 1  -> 128 C
+    try std.testing.expectApproxEqAbs(128.0, decodeTempExtended(0x4001), 0.0001);
+    try std.testing.expectEqual(@as(u16, 0x4001), encodeTempExtended(128.0));
+
+    // -55 C -> count -880 = 0x1C90 in 13 bits -> word 0xE480, marker -> 0xE481
+    try std.testing.expectApproxEqAbs(-55.0, decodeTempExtended(0xE481), 0.0001);
+    try std.testing.expectEqual(@as(u16, 0xE481), encodeTempExtended(-55.0));
+
+    // decode is independent of the extended bit-0 marker
+    try std.testing.expectApproxEqAbs(150.0, decodeTempExtended(0x4B00), 0.0001);
 }
 
-test "config reset value field decoding" {
-    // Reset config 0x6080: byte1 0110 0000, byte2 1000 0000.
-    try std.testing.expectEqual(@as(u16, 0x6080), CONFIG_RESET);
-    try std.testing.expectEqual(false, configShutdown(0x6080));
-    try std.testing.expectEqual(false, configExtendedMode(0x6080));
-    try std.testing.expectEqual(@as(f32, 4.0), conversionRateHz(0x6080)); // CR = 10
+test "extended mode clamps at 13-bit signed range" {
+    try std.testing.expectEqual(@as(u16, 0x7FF9), encodeTempExtended(255.9375));
+    try std.testing.expectEqual(@as(u16, 0x8001), encodeTempExtended(-256.0));
 }
 
-test "config field accessors, setBit, fault queue, conversion rate" {
-    // SD set via setBit.
-    const sd = setBit(0x0000, 8, true);
-    try std.testing.expect(configShutdown(sd));
-    try std.testing.expectEqual(false, configShutdown(setBit(sd, 8, false)));
-    // F1:F0 fields.
-    const f = setBit(setBit(0x0000, 12, true), 11, true);
-    try std.testing.expectEqual(@as(u8, 6), faultQueueCount(f));
+test "config register reset value and bit-field accessors" {
+    try std.testing.expectEqual(@as(u16, 0x60A0), CONFIG_RESET);
+
+    // Byte 1: OS R1 R0 F1 F0 POL TM SD
+    try std.testing.expect(getBit(CONFIG_RESET, 14)); // R1 = 1 (12-bit)
+    try std.testing.expect(getBit(CONFIG_RESET, 13)); // R0 = 1
+    try std.testing.expect(!configPolarity(CONFIG_RESET));
+    try std.testing.expect(!configThermostatMode(CONFIG_RESET));
+    try std.testing.expect(!configShutdown(CONFIG_RESET));
+    try std.testing.expect(!configExtendedMode(CONFIG_RESET));
+
+    // Byte 2: CR1 CR0 AL EM
+    try std.testing.expectEqual(@as(u2, 0b10), conversionRateField(CONFIG_RESET));
+    try std.testing.expectApproxEqAbs(4.0, conversionRateHz(CONFIG_RESET), 0.0001);
+    try std.testing.expect(getBit(CONFIG_RESET, 5)); // AL reads 1 when not asserted
+}
+
+test "configuration field setters and conversions" {
+    var reg = CONFIG_RESET;
+
+    reg = setBit(reg, B_SD, true);
+    try std.testing.expect(configShutdown(reg));
+
+    reg = setBit(reg, B_EM, true);
+    try std.testing.expect(configExtendedMode(reg));
+
+    reg = setBit(reg, B_POL, true);
+    try std.testing.expect(configPolarity(reg));
+
+    reg = setBit(reg, B_TM, true);
+    try std.testing.expect(configThermostatMode(reg));
+
+    // fault queue map: F1:F0 00->1 01->2 10->4 11->6
     try std.testing.expectEqual(@as(u8, 1), faultQueueCount(0x0000));
-    // Conversion rate mapping 00..11.
-    var rates: [4]f32 = undefined;
-    inline for (0..4) |i| {
-        rates[i] = conversionRateHz(@as(u16, i) << 6);
-    }
-    try std.testing.expectEqual([4]f32{ 0.25, 1.0, 4.0, 8.0 }, rates);
+    try std.testing.expectEqual(@as(u8, 2), faultQueueCount(setBit(0, B_F0, true)));
+    try std.testing.expectEqual(@as(u8, 4), faultQueueCount(setBit(0, B_F1, true)));
+    try std.testing.expectEqual(@as(u8, 6), faultQueueCount(0x1800)); // F1,F0 = 11
+
+    // conversion rate map: 00->0.25 01->1 10->4 11->8
+    try std.testing.expectApproxEqAbs(0.25, conversionRateHz(0x0000), 0.0001);
+    try std.testing.expectApproxEqAbs(1.0, conversionRateHz(0x0040), 0.0001);
+    try std.testing.expectApproxEqAbs(4.0, conversionRateHz(0x0080), 0.0001);
+    try std.testing.expectApproxEqAbs(8.0, conversionRateHz(0x00C0), 0.0001);
+}
+
+test "ADD0 address straps" {
+    try std.testing.expectEqual(@as(u7, 0x48), Add0Addr.gnd);
+    try std.testing.expectEqual(@as(u7, 0x49), Add0Addr.vcc);
+    try std.testing.expectEqual(@as(u7, 0x4A), Add0Addr.sda);
+    try std.testing.expectEqual(@as(u7, 0x4B), Add0Addr.scl);
+    try std.testing.expectEqual(@as(usize, 0), try add0Index(0x48));
+    try std.testing.expectEqual(@as(usize, 3), try add0Index(0x4B));
+    try std.testing.expectError(error.InvalidAdd0, add0Index(0x55));
+}
+
+test "byte order helpers round-trip" {
+    try std.testing.expectEqual(@as(u16, 0x6400), bytesToWord(0x64, 0x00));
+    try std.testing.expectEqual([2]u8{ 0x64, 0x00 }, wordToBytes(0x6400));
+}
+
+test "signExtend of 12- and 13-bit counts" {
+    try std.testing.expectEqual(@as(i16, 400), signExtend(0x190, 12));
+    try std.testing.expectEqual(@as(i16, -400), signExtend(0xE70, 12));
+    try std.testing.expectEqual(@as(i16, 2400), signExtend(0x960, 13));
+    try std.testing.expectEqual(@as(i16, -880), signExtend(0x1C90, 13));
 }

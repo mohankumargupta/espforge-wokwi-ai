@@ -1,32 +1,31 @@
-# Feedback: canonical-test-spec skill (device tmp102)
+# Skill feedback: canonical-test-spec for tmp102
 
 ## What went well
+- Inputs were already present in `<outputs_dir>` (esphome_component.txt,
+  tmp102.mdx, tmp102/ source, spec_tmp102.md), so the skill could be executed
+  directly from pre-existing artifacts from the spec-from-datasheet stage.
+- spec_tmp102.md gave authoritative datasheet-derived values (transport I2C,
+  °C units, 0.0625°C resolution, address 0x48) with no need to re-consult the
+  datasheet.
+- ESPHome source (sensor.py, tmp102.cpp) supplied presentation defaults:
+  unit_of_measurement=UNIT_CELSIUS, accuracy_decimals=1,
+  label "Temperature" (LOG_SENSOR), and the log format "Got
+  Temperature=%.1f°C" -> template "Temperature = {:.1f} C".
 
-- Inputs (chip spec, ESPHome docs `.mdx`, component source `sensor.py`,
-  `tmp102.cpp`, `tmp102.h`) were all present and sufficient to produce the
-  specification without guessing.
-- The default of 21.0 °C is exactly representable at the device's 0.0625 °C
-  resolution, giving a clean deterministic value.
-- The ESPHome source was the authoritative source for precision (`accuracy_decimals=1`)
-  and the presentation label ("Temperature").
-
-## Obstacles / notes
-
-- The spec file `spec_tmp102.md` defines precision implicitly (0.0625 °C from
-  the datasheet) while ESPHome exposes `accuracy_decimals=1`. The canonical
-  presentation uses the ESPHome `accuracy_decimals=1` value (matches the
-  downstream firmware generator), but a datapoint reading "1 decimal" differs
-  from the datasheet's raw resolution. Worth noting so downstream skills do
-  not conflate register resolution (0.0625) with presentation precision (1).
-- The chip spec lists THIGH/TLOW defaults of 80/75 °C; these are excluded from
-  the canonical test but kept for completeness of the source trace.
-- The power-up conversion delay (~10 ms) and the ESPHome `0x00` write-then-read
-  sequence appear in the inputs; both are downstream timing/protocol concerns
-  and were correctly excluded per the Non-Goals section.
+## Obstacles / gotchas
+- The skill template uses YAML code blocks with `observables:` as a top-level
+  key but also renders paragraphs of prose; the spec ended up as a hybrid
+  (prose sections plus yaml blocks). Minor structural tension — downstream
+  skills will need to know that only the yaml blocks are normative.
+- The skill examples show `device:` and `observables:` as separate yaml blocks
+  under one heading; kept them as separate blocks to match the examples, but a
+  single canonical document outline would reduce ambiguity.
+- units: the spec source uses "°C" but the skill example uses bare "C".
+  Chose "C" to match the skill's canonical units vocabulary; noted for
+  downstream generators that this maps to °C.
 
 ## Suggestions
-
-- Consider adding an explicit field distinguishing "sensor resolution" from
-  "presentation precision" to avoid ambiguity for downstream generators.
-- The spec was straightforward (a single observable temperature sensor), so no
-  additional template sections were required.
+- Consider specifying whether yaml blocks are the only normative parts of the
+  document (and whether prose should be stripped for machine parsing).
+- Consider adding an explicit `source:` section listing which input artifacts
+  supplied each field (traceability).

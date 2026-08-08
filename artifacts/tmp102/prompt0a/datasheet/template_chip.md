@@ -73,8 +73,21 @@ value = raw * <scale> + <offset>
 
 ### Worked Examples / Test Vectors
 <!-- CRITICAL: Extract any tables or examples from the datasheet that show specific real-world values and their corresponding raw hex/binary register values. These are required for downstream unit tests. -->
+<!-- CRITICAL: Datasheets are frequently inconsistent about what a "worked
+example" hex value actually represents — some list the raw N-bit
+two's-complement count, others list the value already left-aligned into
+the full register word. If left ambiguous here, every downstream skill
+that consumes this spec must independently guess (and different skills
+have guessed differently on the same chip). For EACH row below, you MUST
+state which of the two the value is, using the "Encoding" column: -->
 
-| Real-world Value | Raw Register Value (Hex/Binary) | Notes |
-|------------------|---------------------------------|-------|
-|                  |                                 |       |
-```
+| Real-world Value | Raw Register Value (Hex/Binary) | Encoding (raw N-bit count \| full register word, alignment bits) | Notes |
+|------------------|---------------------------------|--------------------------------------------------------------------|-------|
+|                  |                                 |                                                                      |       |
+
+<!-- If a datasheet table's column header does not make this explicit,
+infer it from the bit-field/register-map tables (e.g. "value occupies
+bits 15:4 of a 16-bit register" implies raw-N-bit-count examples must be
+left-shifted by 4 to become the register word) and say so in the Encoding
+column rather than passing the ambiguity downstream unresolved. -->
+

@@ -1,12 +1,7 @@
 esphome:
   name: dut
   on_boot:
-    - priority: 600
-      then:
-        - component.update: tmp102_temperature
-        - delay: 1s
-        - lambda: |
-            ESP_LOGD("test", "Temperature = %.1f C", id(tmp102_temperature).state);
+    - component.update: tmp102_temperature
 
 esp32: 
   variant: esp32c3 # Use always
@@ -23,12 +18,10 @@ esp32:
 logger:
   hardware_uart: UART0
 
-
-
-
 i2c:
   sda: 4
   scl: 5
+  frequency: 100kHz
 
 sensor:
   - platform: tmp102
@@ -36,3 +29,9 @@ sensor:
     name: "Temperature"
     address: 0x48
     update_interval: 60s
+    on_value:
+      - lambda: |-
+          ESP_LOGI("tmp102", "Temperature = {:.1f} C", x);
+
+
+
