@@ -1,0 +1,22 @@
+{
+  "name": "TMP102",
+  "author": "Raspberry Pi",
+  "pins": [
+    "SCL",
+    "GND",
+    "ALERT",
+    "ADD0",
+    "V+",
+    "SDA"
+  ],
+  "controls": [
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "type": "range",
+      "min": -40,
+      "max": 125,
+      "step": 0.0625
+    }
+  ]
+}

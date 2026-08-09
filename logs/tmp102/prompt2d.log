@@ -1,0 +1,284 @@
+[0m
+> build · deepseek-v4-flash-free
+[0m
+[0m→ [0mSkill "wokwi-customchip"
+[0m
+[0m$ [0mpwd
+/home/pi/Developer/wokwi-ai
+[0m
+[0m# [0mTodos
+[•] Read spec and test_spec in full
+[ ] Read conversions_src (prompt0c/src/main.zig) for canonical conversions
+[ ] Study MCP23017 example chip.zig and wokwi_api.zig
+[ ] Generate zig 0.16 custom chip code chip.zig
+[ ] Add unit tests to chip.zig
+[ ] Copy assets (build.zig, wokwi_api.zig) to artifacts_dir
+[ ] Run zig fmt, zig build, zig build test
+[ ] Copy artifacts to outputs_dir
+[ ] Write feedback file
+[0m
+[0m$ [0mls -la artifacts/tmp102/ && echo "---OUTPUTS---" && ls -la artifacts/tmp102/outputs/ && echo "---PROMPT0C---" && ls -la artifacts/tmp102/prompt0c/ 2>/dev/null && echo "---FEEDBACK---" && ls -la feedback/tmp102/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  78 Aug 10 04:51 .
+drwxr-xr-x 1 pi pi  12 Aug  9 21:49 ..
+drwxr-xr-x 1 pi pi 238 Aug 10 04:54 outputs
+drwxr-xr-x 1 pi pi  18 Aug  9 21:49 prompt0a
+drwxr-xr-x 1 pi pi 130 Aug 10 04:29 prompt0c
+drwxr-xr-x 1 pi pi  50 Aug 10 04:38 prompt2a
+drwxr-xr-x 1 pi pi  36 Aug 10 04:53 prompt2c
+---OUTPUTS---
+total 40
+drwxr-xr-x 1 pi pi   238 Aug 10 04:54 .
+drwxr-xr-x 1 pi pi    78 Aug 10 04:51 ..
+-rw-r--r-- 1 pi pi   304 Aug 10 04:38 chip.json
+-rw-r--r-- 1 pi pi   602 Aug 10 04:39 diagram.json
+-rw-r--r-- 1 pi pi     7 Aug  9 21:49 esphome_component.txt
+drwxr-xr-x 1 pi pi    68 Aug 10 04:54 qa_test
+-rw-r--r-- 1 pi pi 10670 Aug  9 22:10 spec_tmp102.md
+-rw-r--r-- 1 pi pi  3368 Aug  9 22:19 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi    76 Aug  9 21:51 tmp102
+-rw-r--r-- 1 pi pi  1767 Aug  9 21:49 tmp102.mdx
+-rw-r--r-- 1 pi pi   579 Aug 10 04:54 tmp102.yaml
+-rw-r--r-- 1 pi pi   271 Aug 10 04:54 wokwi.toml
+---PROMPT0C---
+total 24
+drwxr-xr-x 1 pi pi  130 Aug 10 04:29 .
+drwxr-xr-x 1 pi pi   78 Aug 10 04:51 ..
+-rw-r--r-- 1 pi pi 8492 Aug 10 04:21 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug 10 04:21 build.zig.zon
+-rw-r--r-- 1 pi pi 3437 Aug 10 04:29 conversions_manifest.md
+drwxr-xr-x 1 pi pi   32 Aug 10 04:21 src
+drwxr-xr-x 1 pi pi   12 Aug 10 04:23 .zig-cache
+drwxr-xr-x 1 pi pi    6 Aug 10 04:24 zig-out
+---FEEDBACK---
+total 20
+drwxr-xr-x 1 pi pi  110 Aug 10 04:54 .
+drwxr-xr-x 1 pi pi   12 Aug  9 21:49 ..
+-rw-r--r-- 1 pi pi 3066 Aug  9 22:11 prompt0a.md
+-rw-r--r-- 1 pi pi 3116 Aug  9 22:20 prompt0b.md
+-rw-r--r-- 1 pi pi 1918 Aug 10 04:30 prompt0c.md
+-rw-r--r-- 1 pi pi 1415 Aug 10 04:39 prompt2a.md
+-rw-r--r-- 1 pi pi 2586 Aug 10 04:54 prompt2c.md
+[0m
+[0m→ [0mRead artifacts/tmp102/outputs/spec_tmp102.md
+[0m→ [0mRead artifacts/tmp102/outputs/test_spec_tmp102.md
+[0m→ [0mRead artifacts/tmp102/prompt0c/src/main.zig
+[0m→ [0mRead artifacts/tmp102/prompt0c/conversions_manifest.md
+[0m
+[0m$ [0mls -la /home/pi/.config/opencode/skills/wokwi-customchip/ && echo "---assets---" && ls -laR /home/pi/.config/opencode/skills/wokwi-customchip/assets/ && echo "---prompt2a---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2a/ && echo "---prompt2c---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2c/
+total 8
+drwxr-xr-x 1 pi pi   48 Jul 29 12:53 .
+drwxr-xr-x 1 pi pi  676 Aug  9 04:07 ..
+drwxr-xr-x 1 pi pi  104 Aug  5 15:24 assets
+drwxr-xr-x 1 pi pi   18 Jul 29 12:53 references
+-rw-r--r-- 1 pi pi 4762 Aug  7 13:22 SKILL.md
+---assets---
+/home/pi/.config/opencode/skills/wokwi-customchip/assets/:
+total 12
+drwxr-xr-x 1 pi pi  104 Aug  5 15:24 .
+drwxr-xr-x 1 pi pi   48 Jul 29 12:53 ..
+-rw-r--r-- 1 pi pi 2727 Aug  8 18:45 build.zig
+-rw-r--r-- 1 pi pi 2959 Jul 29 12:53 chip.schema.json
+-rw-r--r-- 1 pi pi 3032 Aug  5 15:24 wokwi_api.zig
+drwxr-xr-x 1 pi pi   16 Aug  5 15:23 wokwi-mcp23017
+
+/home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi-mcp23017:
+total 20
+drwxr-xr-x 1 pi pi    16 Aug  5 15:23 .
+drwxr-xr-x 1 pi pi   104 Aug  5 15:24 ..
+-rw-r--r-- 1 pi pi 20437 Aug  5 15:23 chip.zig
+---prompt2a---
+total 8
+drwxr-xr-x 1 pi pi   50 Aug 10 04:38 .
+drwxr-xr-x 1 pi pi   78 Aug 10 04:51 ..
+-rw-r--r-- 1 pi pi  304 Aug 10 04:38 chip.json
+-rw-r--r-- 1 pi pi 2960 Aug 10 04:37 chip.schema.json
+---prompt2c---
+total 4
+drwxr-xr-x 1 pi pi  36 Aug 10 04:53 .
+drwxr-xr-x 1 pi pi  78 Aug 10 04:51 ..
+drwxr-xr-x 1 pi pi  68 Aug 10 04:53 qa_test
+-rw-r--r-- 1 pi pi 579 Aug 10 04:52 tmp102.yaml
+[0m
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi-mcp23017/chip.zig
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi_api.zig
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/assets/build.zig
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/i2c.md
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/getting-started.md
+[0m→ [0mRead artifacts/tmp102/prompt2a/chip.json
+[0m→ [0mRead feedback/tmp102/prompt2c.md
+[0m→ [0mRead artifacts/tmp102/outputs/diagram.json
+[0m→ [0mRead artifacts/tmp102/outputs/wokwi.toml
+[0m→ [0mRead artifacts/tmp102/outputs/tmp102.yaml
+[0m
+[0m$ [0mls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/ && cat /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/*.cpp 2>/dev/null | head -200
+total 16
+drwxr-xr-x 1 pi pi   76 Aug  9 21:51 .
+drwxr-xr-x 1 pi pi  238 Aug 10 04:54 ..
+-rw-r--r-- 1 pi pi  282 Aug  9 21:51 __init__.py
+-rw-r--r-- 1 pi pi 1204 Aug  9 21:51 sensor.py
+-rw-r--r-- 1 pi pi 1430 Aug  9 21:51 tmp102.cpp
+-rw-r--r-- 1 pi pi  370 Aug  9 21:51 tmp102.h
+#include "tmp102.h"
+#include "esphome/core/log.h"
+#include "esphome/core/hal.h"
+
+namespace esphome::tmp102 {
+
+static const char *const TAG = "tmp102";
+
+static const uint8_t TMP102_ADDRESS = 0x48;
+static const uint8_t TMP102_REGISTER_TEMPERATURE = 0x00;
+static const uint8_t TMP102_REGISTER_CONFIGURATION = 0x01;
+static const uint8_t TMP102_REGISTER_LOW_LIMIT = 0x02;
+static const uint8_t TMP102_REGISTER_HIGH_LIMIT = 0x03;
+
+static const float TMP102_CONVERSION_FACTOR = 0.0625;
+
+void TMP102Component::dump_config() {
+  ESP_LOGCONFIG(TAG, "TMP102:");
+  LOG_I2C_DEVICE(this);
+  if (this->is_failed()) {
+    ESP_LOGE(TAG, ESP_LOG_MSG_COMM_FAIL);
+  }
+  LOG_UPDATE_INTERVAL(this);
+  LOG_SENSOR("  ", "Temperature", this);
+}
+
+void TMP102Component::update() {
+  if (this->write(&TMP102_REGISTER_TEMPERATURE, 1) != i2c::ERROR_OK) {
+    this->status_set_warning();
+    return;
+  }
+  this->set_timeout("read_temp", 50, [this]() {
+    int16_t raw_temperature;
+    if (this->read(reinterpret_cast<uint8_t *>(&raw_temperature), 2) != i2c::ERROR_OK) {
+      this->status_set_warning();
+      return;
+    }
+    raw_temperature = i2c::i2ctohs(raw_temperature);
+    raw_temperature = raw_temperature >> 4;
+    float temperature = raw_temperature * TMP102_CONVERSION_FACTOR;
+    ESP_LOGD(TAG, "Got Temperature=%.1f°C", temperature);
+
+    this->publish_state(temperature);
+    this->status_clear_warning();
+  });
+}
+
+}  // namespace esphome::tmp102
+[0m
+[0m$ [0mls -la /home/pi/.config/opencode/skills/wokwi-customchip/references/ /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/
+/home/pi/.config/opencode/skills/wokwi-customchip/references/:
+total 0
+drwxr-xr-x 1 pi pi  18 Jul 29 12:53 .
+drwxr-xr-x 1 pi pi  48 Jul 29 12:53 ..
+drwxr-xr-x 1 pi pi 230 Jul 29 12:53 chips-api
+
+/home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/:
+total 60
+drwxr-xr-x 1 pi pi   230 Jul 29 12:53 .
+drwxr-xr-x 1 pi pi    18 Jul 29 12:53 ..
+-rw-r--r-- 1 pi pi  1995 Jul 29 12:53 analog.md
+-rw-r--r-- 1 pi pi  2343 Jul 29 12:53 attributes.md
+-rw-r--r-- 1 pi pi  4759 Jul 29 12:53 chip-json.md
+-rw-r--r-- 1 pi pi  1277 Jul 29 12:53 framebuffer.md
+-rw-r--r-- 1 pi pi  5071 Jul 29 12:53 getting-started.md
+-rw-r--r-- 1 pi pi  3555 Jul 29 12:53 gpio.md
+-rw-r--r-- 1 pi pi  3004 Jul 29 12:53 i2c.md
+-rw-r--r-- 1 pi pi  3542 Jul 29 12:53 spi.md
+-rw-r--r-- 1 pi pi  2104 Jul 29 12:53 time.md
+-rw-r--r-- 1 pi pi 11723 Jul 29 12:53 tutorial-7seg.md
+-rw-r--r-- 1 pi pi  2462 Jul 29 12:53 uart.md
+[0m
+[0m✱ [0mGlob "**/chip.zig"[90m 0 matches[0m
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/assets/chip.schema.json
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/attributes.md
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/chip-json.md
+[0m
+[0m$ [0mzig version && which zig
+0.16.0
+/home/linuxbrew/.linuxbrew/bin/zig
+[0m
+[0m→ [0mRead feedback/tmp102/prompt0c.md
+[0m→ [0mRead feedback/tmp102/prompt0a.md
+[0m
+[0m# [0mTodos
+[✓] Read spec and test_spec in full
+[✓] Read conversions_src (prompt0c/src/main.zig) for canonical conversions
+[✓] Study MCP23017 example chip.zig and wokwi_api.zig
+[•] Generate zig 0.16 custom chip code chip.zig
+[ ] Add unit tests to chip.zig
+[ ] Copy assets (build.zig, wokwi_api.zig) to artifacts_dir
+[ ] Run zig fmt, zig build, zig build test
+[ ] Copy artifacts to outputs_dir
+[ ] Write feedback file
+[0m
+[0m$ [0mmkdir -p /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d /home/pi/Developer/wokwi-ai/feedback/tmp102 && cp /home/pi/.config/opencode/skills/wokwi-customchip/assets/build.zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/build.zig && cp /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi_api.zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/wokwi_api.zig && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/
+total 8
+drwxr-xr-x 1 pi pi   44 Aug 10 04:59 .
+drwxr-xr-x 1 pi pi   94 Aug 10 04:59 ..
+-rw-r--r-- 1 pi pi 2727 Aug 10 04:59 build.zig
+-rw-r--r-- 1 pi pi 3032 Aug 10 04:59 wokwi_api.zig
+[0m
+Now creating the artifacts directory, copying the skill assets, and writing `
+[0m← [0mWrite artifacts/tmp102/prompt2d/chip.zig
+Wrote file successfully.
+[0m
+[0m$ [0mzig fmt chip.zig
+(no output)
+[0m
+[0m$ [0mzig build
+(no output)
+[0m
+`zig build` succeeded (wasm). Now the host unit
+[0m$ [0mzig build test
+(no output)
+[0m
+[0m$ [0mls -la chip.wasm && zig build test --summary all 2>&1 | tail -20
+-rwxr-xr-x 1 pi pi 572639 Aug 10 05:00 chip.wasm
+Build Summary: 3/3 steps succeeded; 13/13 tests passed
+test success
++- run test 13 pass (13 total) 18ms MaxRSS:3M
+   +- compile test Debug native cached 76ms MaxRSS:59M
+[0m
+[0m$ [0mcp /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/build.zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/chip.zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/chip.wasm /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt2d/wokwi_api.zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/ && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/
+total 632
+drwxr-xr-x 1 pi pi    316 Aug 10 05:01 .
+drwxr-xr-x 1 pi pi     94 Aug 10 04:59 ..
+-rw-r--r-- 1 pi pi   2727 Aug 10 05:01 build.zig
+-rw-r--r-- 1 pi pi    304 Aug 10 04:38 chip.json
+-rwxr-xr-x 1 pi pi 572639 Aug 10 05:01 chip.wasm
+-rw-r--r-- 1 pi pi  21755 Aug 10 05:01 chip.zig
+-rw-r--r-- 1 pi pi    602 Aug 10 04:39 diagram.json
+-rw-r--r-- 1 pi pi      7 Aug  9 21:49 esphome_component.txt
+drwxr-xr-x 1 pi pi     68 Aug 10 04:54 qa_test
+-rw-r--r-- 1 pi pi  10670 Aug  9 22:10 spec_tmp102.md
+-rw-r--r-- 1 pi pi   3368 Aug  9 22:19 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi     76 Aug  9 21:51 tmp102
+-rw-r--r-- 1 pi pi   1767 Aug  9 21:49 tmp102.mdx
+-rw-r--r-- 1 pi pi    579 Aug 10 04:54 tmp102.yaml
+-rw-r--r-- 1 pi pi   3032 Aug 10 05:01 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 10 04:54 wokwi.toml
+[0m
+All 13 tests pass. Copying artifacts to outputs.
+[0m← [0mWrite feedback/tmp102/prompt2d.md
+Wrote file successfully.
+[0m
+[0m# [0mTodos
+[✓] Read spec and test_spec in full
+[✓] Read conversions_src (prompt0c/src/main.zig) for canonical conversions
+[✓] Study MCP23017 example chip.zig and wokwi_api.zig
+[✓] Generate zig 0.16 custom chip code chip.zig
+[✓] Add unit tests to chip.zig
+[✓] Copy assets (build.zig, wokwi_api.zig) to artifacts_dir
+[✓] Run zig fmt, zig build, zig build test
+[✓] Copy artifacts to outputs_dir
+[✓] Write feedback file
+[0m
+Done. TMP102 Wokwi custom chip created at `artifacts/tmp102/prompt2d/chip.zig` (copied to `outputs/`).
+
+- **Conversions reuse**: `prompt0c/src/main.zig` functions ported verbatim (no re-derivation); 13/13 unit tests pass, including the canonical default `21.0 C -> 0x1500`.
+- **Essentials per test spec**: I2C slave at `0x48` (via `address` attr), pointer register (P1:P0, no auto-increment), temperature register from `temperature` attr (default 21.0), plus Config/TLOW/THIGH with documented reset defaults. ALERT/EM/SD/oneshot excluded.
+- **Validation**: `zig fmt` clean, `zig build` emits `chip.wasm`, `zig build test` 13/13 green.
+- Feedback written to `feedback/tmp102/prompt2d.md` (notes ADD0-vs-address ambiguity, `wokwi_api.zig` filename, attrInit ABI).
