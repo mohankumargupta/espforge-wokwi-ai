@@ -22,3 +22,8 @@ prompt2e device:
 _execute prompt device model:
     ./runprompt.sh {{ prompt }}.txt {{ device }} {{ model }}
 
+prompt0 device: (prompt0a device) (prompt0b device) (prompt0c device)
+prompt2 device: (prompt2a device) (prompt2c device) (prompt2d device) (prompt2e device)
+
+
+    

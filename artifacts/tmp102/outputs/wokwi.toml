@@ -1,9 +1,0 @@
-[wokwi]
-version = 1
-firmware = '.esphome/build/dut/.pioenvs/dut/firmware.bin'
-elf = '.esphome/build/dut/.pioenvs/dut/firmware.elf'
-rfc2217ServerPort = 4000
-
-[[chip]]
-name = 'chip'  # To use the chip in diagram.json, add a part with "chip-chip" type.
-binary = 'chip.wasm'

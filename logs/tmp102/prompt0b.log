@@ -1,64 +1,120 @@
 [0m
 > build · deepseek-v4-flash-free
 [0m
-I'll start by loading the canonical-test
 [0m→ [0mSkill "canonical-test-spec"
-[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/sensor-classes.md
-[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/small-classes.md
-Now let me establish the context variables.
+I'll start by establishing the context and reading the skill's reference materials
 [0m
 [0m$ [0mpwd
 /home/pi/Developer/wokwi-ai
 [0m
-[0m$ [0mls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs 2>/dev/null || echo "NO OUTPUTS DIR"; ls -la /home/pi/Developer/wokwi-ai/feedback/tmp102 2>/dev/null || echo "NO FEEDBACK DIR"
+[0m$ [0mls -la artifacts/tmp102/ 2>/dev/null && echo "---" && ls -la artifacts/tmp102/outputs/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  30 Aug  9 21:49 .
+drwxr-xr-x 1 pi pi  12 Aug  9 21:49 ..
+drwxr-xr-x 1 pi pi 102 Aug  9 22:06 outputs
+drwxr-xr-x 1 pi pi  18 Aug  9 21:49 prompt0a
+---
 total 20
-drwxr-xr-x 1 pi pi  102 Aug  9 01:21 .
-drwxr-xr-x 1 pi pi   30 Aug  9 01:15 ..
--rw-r--r-- 1 pi pi    7 Aug  9 01:15 esphome_component.txt
--rw-r--r-- 1 pi pi 9763 Aug  9 01:22 spec_tmp102.md
-drwxr-xr-x 1 pi pi   76 Aug  9 01:16 tmp102
--rw-r--r-- 1 pi pi 1767 Aug  9 01:15 tmp102.mdx
-total 4
-drwxr-xr-x 1 pi pi   22 Aug  9 01:22 .
-drwxr-xr-x 1 pi pi   12 Aug  9 01:15 ..
--rw-r--r-- 1 pi pi 1298 Aug  9 01:22 prompt0a.md
+drwxr-xr-x 1 pi pi   102 Aug  9 22:06 .
+drwxr-xr-x 1 pi pi    30 Aug  9 21:49 ..
+-rw-r--r-- 1 pi pi     7 Aug  9 21:49 esphome_component.txt
+-rw-r--r-- 1 pi pi 10670 Aug  9 22:10 spec_tmp102.md
+drwxr-xr-x 1 pi pi    76 Aug  9 21:51 tmp102
+-rw-r--r-- 1 pi pi  1767 Aug  9 21:49 tmp102.mdx
 [0m
+[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/small-classes.md
+[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/sensor-classes.md
 [0m→ [0mRead artifacts/tmp102/outputs/esphome_component.txt
 [0m→ [0mRead artifacts/tmp102/outputs/spec_tmp102.md
+Now let me read the inputs for tmp102
 [0m→ [0mRead artifacts/tmp102/outputs/tmp102.mdx
-[0m→ [0mRead feedback/tmp102/prompt0a.md
-Let me read all the inputs in full
 [0m
-[0m$ [0mls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/tmp102/
+[0m$ [0mls -la artifacts/tmp102/outputs/tmp102/
 total 16
-drwxr-xr-x 1 pi pi   76 Aug  9 01:16 .
-drwxr-xr-x 1 pi pi  102 Aug  9 01:21 ..
--rw-r--r-- 1 pi pi  282 Aug  9 01:16 __init__.py
--rw-r--r-- 1 pi pi 1204 Aug  9 01:16 sensor.py
--rw-r--r-- 1 pi pi 1430 Aug  9 01:16 tmp102.cpp
--rw-r--r-- 1 pi pi  370 Aug  9 01:16 tmp102.h
+drwxr-xr-x 1 pi pi   76 Aug  9 21:51 .
+drwxr-xr-x 1 pi pi  102 Aug  9 22:06 ..
+-rw-r--r-- 1 pi pi  282 Aug  9 21:51 __init__.py
+-rw-r--r-- 1 pi pi 1204 Aug  9 21:51 sensor.py
+-rw-r--r-- 1 pi pi 1430 Aug  9 21:51 tmp102.cpp
+-rw-r--r-- 1 pi pi  370 Aug  9 21:51 tmp102.h
 [0m
-[0m→ [0mRead artifacts/tmp102/outputs/tmp102/__init__.py
-[0m→ [0mRead artifacts/tmp102/outputs/tmp102/sensor.py
-[0m→ [0mRead artifacts/tmp102/outputs/tmp102/tmp102.cpp
 [0m→ [0mRead artifacts/tmp102/outputs/tmp102/tmp102.h
-All inputs read. Now creating the outputs directory check and writing the spec.
+[0m→ [0mRead artifacts/tmp102/outputs/tmp102/tmp102.cpp
+[0m→ [0mRead artifacts/tmp102/outputs/tmp102/sensor.py
+[0m→ [0mRead artifacts/tmp102/outputs/tmp102/__init__.py
 [0m
-[0m$ [0mmkdir -p /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs /home/pi/Developer/wokwi-ai/feedback/tmp102 && echo "dirs ready"
-dirs ready
+[0m$ [0mfind . -name "test_spec_*.md" -not -path "*/node_modules/*" 2>/dev/null
+(no output)
 [0m
+[0m$ [0mls -la artifacts/tmp102/prompt0a/ && echo "---feedback---" && ls -la feedback 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  18 Aug  9 21:49 .
+drwxr-xr-x 1 pi pi  30 Aug  9 21:49 ..
+drwxr-xr-x 1 pi pi 204 Aug  9 21:56 datasheet
+---feedback---
+total 0
+drwxr-xr-x 1 pi pi  12 Aug  9 21:49 .
+drwxr-xr-x 1 pi pi 578 Aug  9 03:52 ..
+drwxr-xr-x 1 pi pi  22 Aug  9 22:11 tmp102
+[0m
+[0m$ [0mls -la artifacts/tmp102/prompt0a/datasheet/ | head -30 && echo "---" && ls -la feedback/tmp102/
+total 1260
+drwxr-xr-x 1 pi pi     204 Aug  9 21:56 .
+drwxr-xr-x 1 pi pi      18 Aug  9 21:49 ..
+-rw-r--r-- 1 pi pi     639 Aug  9 21:54 main.py
+-rw-r--r-- 1 pi pi     183 Aug  9 21:53 pyproject.toml
+-rw-r--r-- 1 pi pi       5 Aug  9 21:53 .python-version
+-rw-r--r-- 1 pi pi       0 Aug  9 21:53 README.md
+-rw-r--r-- 1 pi pi    3528 Aug  9 21:54 template_chip.md
+-rw-r--r-- 1 pi pi   70086 Aug  9 21:56 tmp102_datasheet.md
+-rw-r--r-- 1 pi pi 1151760 Aug  9 21:53 tmp102.pdf
+-rw-r--r-- 1 pi pi   43235 Aug  9 21:53 uv.lock
+drwxr-xr-x 1 pi pi      96 Aug  9 21:53 .venv
+---
+total 4
+drwxr-xr-x 1 pi pi   22 Aug  9 22:11 .
+drwxr-xr-x 1 pi pi   12 Aug  9 21:49 ..
+-rw-r--r-- 1 pi pi 3066 Aug  9 22:11 prompt0a.md
+[0m
+[0m→ [0mRead feedback/tmp102/prompt0a.md
+[0m
+[0m# [0mTodos
+[✓] Read skill in full (done: skill + references small-classes/sensor-classes)
+[✓] Read all inputs: esphome_component.txt, spec_tmp102.md, tmp102.mdx, tmp102 component source
+[•] Extract traceable facts for each spec section (device, capability, observable, default, exclusion, presentation)
+[ ] Write canonical test spec to artifacts/tmp102/outputs/test_spec_tmp102.md
+[ ] Write feedback file feedback/tmp102/prompt0b.md
+[0m
+I have all inputs. Let me set up the task checklist and produce the specification
 [0m← [0mWrite artifacts/tmp102/outputs/test_spec_tmp102.md
 Wrote file successfully.
 [0m
-Now writing the feedback file.
+[0m# [0mTodos
+[✓] Read skill in full (done: skill + references small-classes/sensor-classes)
+[✓] Read all inputs: esphome_component.txt, spec_tmp102.md, tmp102.mdx, tmp102 component source
+[✓] Extract traceable facts for each spec section (device, capability, observable, default, exclusion, presentation)
+[✓] Write canonical test spec to artifacts/tmp102/outputs/test_spec_tmp102.md
+[•] Write feedback file feedback/tmp102/prompt0b.md
+[0m
 [0m← [0mWrite feedback/tmp102/prompt0b.md
 Wrote file successfully.
 [0m
-Done. Canonical Test Specification produced at `artifacts/tmp102/outputs/test_spec_tmp102.md` and feedback written to `feedback/tmp102/prompt0b.md`.
+Now the feedback file:
+[0m# [0mTodos
+[✓] Read skill in full (done: skill + references small-classes/sensor-classes)
+[✓] Read all inputs: esphome_component.txt, spec_tmp102.md, tmp102.mdx, tmp102 component source
+[✓] Extract traceable facts for each spec section (device, capability, observable, default, exclusion, presentation)
+[✓] Write canonical test spec to artifacts/tmp102/outputs/test_spec_tmp102.md
+[✓] Write feedback file feedback/tmp102/prompt0b.md
+[0m
+Done. Produced `artifacts/tmp102/outputs/test_spec_tmp102.md` from the Canonical Test Specification skill.
 
-Key decisions, all traceable to inputs:
-- **Device**: TMP102 / Texas Instruments / I2C (spec_tmp102.md)
-- **Primary capability**: measure ambient temperature
-- **Observable**: `temperature`, float, C, default `21.0` (sensible steady-state room temp)
-- **Presentation**: label "Temperature", precision `1` (from `sensor.py` `accuracy_decimals=1` and `tmp102.cpp` `%.1f°C`), units C, template `"Temperature = {:.1f} C"`
-- **Excluded**: ALERT/thermostat, shutdown/one-shot, extended mode, conversion rate, fault queue, ADD0 addressing, general call reset
+Key decisions, all traceable:
+- **Device:** TMP102 / Texas Instruments / I2C (from spec + datasheet)
+- **Capability:** measure ambient temperature
+- **Observable:** `temperature`, float, units `C`, default `21.0` (only one observable — datasheet/exerp and matching ESPHome sensor id)
+- **Exclusions:** calibration, TLOW/THIGH alarms, ALERT pin, one-shot, shutdown, conversion rate, extended mode, fault queue, general-call reset, SMBus alert, diagnostics
+- **Presentation:** `Temperature = {:.1f} C` — precision 1 traced to `accuracy_decimals=1` and `%.1f` in `tmp102.cpp`
+- Included a "Traceable Source" table mapping every value to its origin
+
+Feedback written to `feedback/tmp102/prompt0b.md` (notes on the default-traceability carve-out and template-unit normalization).

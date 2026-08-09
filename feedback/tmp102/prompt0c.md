@@ -1,40 +1,41 @@
-# Feedback — prompt0c (data-conversions-complex-logic): TMP102
+# Skill Feedback — data-conversions-complex-logic (prompt0c)
 
-## What went well
-- The canonical spec (`spec_tmp102.md`) now contains a worked-value table with
-  a **critical encoding note** clarifying that Table 5 HEX values are raw N-bit
-  counts and the register word is `count << 4` (12-bit) — this removed the
-  previous session's biggest ambiguity. Every value in that table round-trips
-  cleanly through `decodeTempNormal` / `encodeTempNormal`.
-- Downstream reuse is natural: `src/root.zig` is the `prompt0c` module root, so
-  it is already importable as the single source of truth for register bit
-  layout. `zig build test` and `zig build` both pass cleanly.
+Device: tmp102 · Date: 2026-08-10
 
-## Obstacles / ambiguities
-1. **Config register reset changed in the spec** since the last run: `0x6080`
-   → `0x60A0` (byte2 now `0xA0`, i.e. AL=1 and CR1,CR0=10 for the default 4 Hz).
-   I followed the new spec. Any stale artifact that assumed `0x6080` (e.g. the
-   previous prompt0c git HEAD, which also had an older `actionAdd0` naming and
-   bit positions) must be re-synced — the previous commit's
-   `conversions_manifest.md`/`root.zig` in git HEAD is outdated.
-2. **Extended (13-bit) mode marker**: the spec clearly documents bit 0 of byte
-   2 reads `1` and bits 2:1 read `0`, but it does not explicitly say whether
-   encode must *set* the bit-0 marker. I chose to set it (matches datasheet
-   Table 6-8/6-9 layout) while documenting that decode ignores it. Downstream
-   test harnesses comparing full words must account for the `| 0x0001` marker
-   or compare decoded temperatures instead.
-3. **`std.math.clamp` argument types**: encode paths need the raw rounded count
-   as `i32` so both the 12-bit clamp `[-2048,2047]` and 13-bit clamp
-   `[-4096,4095]` fit without overflow before casting back to `i16`.
-4. `signExtend` takes a runtime `u5` width via `@intCast(16 - bits)`; only
-   widths 12/13 are used here but the helper is generic. `@intCast` on a
-   comptime-known `bits` requires the target `u5` — fine, but a future caller
-   passing width 16 would compute shift 0, which is still correct.
+## What worked
+
+- The skill's flow (read spec -> `zig init` -> add functions + unit tests ->
+  `zig build`) was clear and sufficient. No ambiguity about artifacts.
+
+## Obstacles / notes
+
+1. **Zig 0.16 API churn surfaced late.** The std testing assertions
+   (`std.testing.expect*`, `expectApproxEqRel`) return error unions in 0.16
+   and must be `try`'d; the generated template's "fuzz example" test also
+   relies on the new `std.testing.fuzz`/`Smith` API. None of the `zig init`
+   template or build files indicate this. A skill note that "0.16 test
+   asserts need `try`" would have saved several compile-fix cycles.
+
+2. **Datasheet HEX column is unsigned two's complement.** Table 6-2 lists the
+   negative counts (e.g. `0xE70`, `0xC90`) as raw unsigned hex, not signed
+   decimal. Deriving the expected signed count from the raw hex via the
+   `signExtend` primitive (rather than hard-coding signed integers) keeps the
+   test faithful to the datasheet and cross-checks the primitive. Worth a
+   hint in the skill.
+
+3. **Clamping on encode is a judgment call.** 128 C = 2048 counts overflows
+   12-bit signed, so `temperatureCToRegisterWord12(128)` clamps to `0x7FF0`
+   (127.9375 C). The spec lists both 128 and 127.9375 as `0x7FF`; the skill
+   doesn't say whether to clamp or error on overflow. We chose clamp + a
+   documented test. A policy sentence would help downstream skills that need
+   identical behavior.
+
+4. **Workdir-creation wrinkle.** The Bash tool fails if `workdir` doesn't
+   exist yet, so the target dir had to be `mkdir`'d from the original cwd
+   before `cd`-ing in for `zig init`. (Project-level tooling note, not a
+   skill defect.)
 
 ## Suggestions
-- Consider standardising the extended-mode marker convention (set-or-don't-set
-  bit 0) in the canonical spec so all downstream skills (chip emulation, test
-  harness) assert the same register word bytes.
-- The spec's TLOW/THIGH reset values (`0x4B00`, `0x5000`) are documented in the
-  register map but not in the Data Conversion section; linking them to the
-  `count << 4` normal-mode layout would help downstream reuse.
+
+- Add a short "Zig 0.16 notes" section (try on asserts; Smith/fuzz API).
+- State the overflow/clamp policy for encode functions explicitly.

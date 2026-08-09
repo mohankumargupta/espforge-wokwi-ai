@@ -1,31 +1,52 @@
-# Skill feedback: canonical-test-spec for tmp102
+# Skill Feedback: canonical-test-spec (prompt0b) — tmp102
 
-## What went well
-- Inputs were already present in `<outputs_dir>` (esphome_component.txt,
-  tmp102.mdx, tmp102/ source, spec_tmp102.md), so the skill could be executed
-  directly from pre-existing artifacts from the spec-from-datasheet stage.
-- spec_tmp102.md gave authoritative datasheet-derived values (transport I2C,
-  °C units, 0.0625°C resolution, address 0x48) with no need to re-consult the
-  datasheet.
-- ESPHome source (sensor.py, tmp102.cpp) supplied presentation defaults:
-  unit_of_measurement=UNIT_CELSIUS, accuracy_decimals=1,
-  label "Temperature" (LOG_SENSOR), and the log format "Got
-  Temperature=%.1f°C" -> template "Temperature = {:.1f} C".
+## What worked
 
-## Obstacles / gotchas
-- The skill template uses YAML code blocks with `observables:` as a top-level
-  key but also renders paragraphs of prose; the spec ended up as a hybrid
-  (prose sections plus yaml blocks). Minor structural tension — downstream
-  skills will need to know that only the yaml blocks are normative.
-- The skill examples show `device:` and `observables:` as separate yaml blocks
-  under one heading; kept them as separate blocks to match the examples, but a
-  single canonical document outline would reduce ambiguity.
-- units: the spec source uses "°C" but the skill example uses bare "C".
-  Chose "C" to match the skill's canonical units vocabulary; noted for
-  downstream generators that this maps to °C.
+- The skill flow is straightforward: read the inputs listed under `<outputs_dir>`
+  and render a single `test_spec_<device>.md`. The example-driven YAML sections
+  (device, observables, assumptions, presentation) map directly onto the TMP102
+  inputs with no guesswork.
+- The reference files (`sensor-classes.md`, `small-classes.md`) were not
+  strictly needed for TMP102 (single `temperature` observable, units `C`), but
+  they confirm the vocabulary is stable for downstream skills.
+- The template-string warning about language-specific format syntax is
+  important and worth keeping: TMP102's own ESPHome component publishes with
+  `accuracy_decimals=1` and logs `%.1f`, matching the canonical template.
 
-## Suggestions
-- Consider specifying whether yaml blocks are the only normative parts of the
-  document (and whether prose should be stripped for machine parsing).
-- Consider adding an explicit `source:` section listing which input artifacts
-  supplied each field (traceability).
+## Obstacles / issues
+
+1. **Traceability of the default (21.0).** The skill says "Choose sensible
+   real-world defaults" but also "every value must have a traceable source" and
+   "do not invent values." A default like 21.0 is explicitly a convention, not a
+   datasheet value. I recorded it in a "Traceable Source" table as a
+   "deterministic ambient-room convention" rather than attributing it to the
+   datasheet. It would help if the skill explicitly carved out the default from
+   the "must exist in a source" rule (it already nudges this by saying "Choose
+   sensible real-world defaults.").
+2. **No guidance on the `default` value vs a "test input".** The spec picks a
+   default the sensor will report, but downstream test harnesses need to know
+   it is *both* what the simulator should emit *and* what the harness asserts.
+   A one-line statement that the default is the deterministic asserted value
+   would remove ambiguity.
+3. **`observables` id naming is free-form.** No canonical registry of
+   observable ids is mandated; I used `temperature` which matches the ESPHome
+   sensor id and the reference vocabulary. Fine, but worth pinning the rule:
+   "use the low-case sensor-term found in the component/docx."
+4. `spec_tmp102.md` is rich enough that I had to actively resist pulling
+   protocol/register details (Extended Mode, fault queue, ALERT, TLOW/THIGH)
+   into the spec — the Excluded Features list is the right valve for that, and
+   it worked cleanly.
+
+## Improvements suggested
+
+- Add a short "Deterministic Test Input" line to the observables section
+  clarifying that `default` is both the emulated sensor output and the expected
+  value (what reaches the assertion), making the deterministic intent explicit.
+- Optionally provide a canonical observable-id registry (small list) so skills
+  agree on identifiers like `temperature`, `pressure`, `humidity` without
+  each skill re-deriving them.
+- Consider stating explicitly that "C" (rather than "°C") is the canonical unit
+  string for temperature in the presentation template, since the datasheet and
+  ESPHome use °C but the example template uses `C`. I followed the example verbatim.
+- The "Status: unknown" recommendation exists but there is no worked example of
+  a partial/unknown spec; a small worked case would clarify when to emit status.

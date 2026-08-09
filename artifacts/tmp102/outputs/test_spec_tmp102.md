@@ -1,11 +1,8 @@
 # Canonical Test Specification: TMP102
 
-Source of truth for downstream generators (simulator fixture, firmware
-configuration, host-side integration tests, documentation).
+Internal specification consumed by downstream code-generation skills.
 
-This is an intermediate artifact. Do not edit manually.
-
----
+Not firmware. Not test code. Not simulator configuration.
 
 ## Device
 
@@ -21,59 +18,99 @@ device:
 
 ## Primary Capability
 
-  measure_ambient_temperature: true
+The reason somebody buys a TMP102:
 
-## Observables
+```
+Measure ambient temperature
+```
 
-  observables:
+## Primary Observables
 
-    - id: temperature
-      type: float
-      units: C
-      default: 21.0
+```yaml
+observables:
 
-The default `21.0` °C is a deterministic, room-temperature value chosen as the
-steady-state reading the device must produce under ideal operating conditions.
+  - id: temperature
+    type: float
+    units: C
+    default: 21.0
+```
+
+The default value is a deterministic, real-world room-temperature sample. It is
+intended only to exercise the normal decode path; it is not a calibration value
+and carries no accuracy significance.
 
 ## Assumptions
 
-  assumptions:
+```yaml
+assumptions:
 
-    ideal_conditions: true
+  ideal_conditions: true
 
-    calibration_complete: true
+  calibration_complete: true
 
-    deterministic_outputs: true
+  deterministic_outputs: true
 
-    hardware_faults_present: false
+  hardware_faults_present: false
+```
+
+- The device has completed its first conversion after power-up before the first
+  measurement is taken.
+- No ALERT pin wiring, alarm events, or communication failures are present.
+- Ambient temperature is stable for the duration of the observation.
 
 ## Excluded Features
 
-  excluded:
+The following functionality is intentionally excluded from this canonical
+specification. Downstream generators must not implement or test these.
 
-    - calibration
-    - ALERT / thermostat alarm thresholds (TLOW, THIGH)
-    - comparator and interrupt modes (TM bit)
-    - fault queue (F1/F0)
-    - ALERT polarity (POL bit)
-    - shutdown mode / low power modes (SD bit)
-    - one-shot conversions (OS bit)
-    - conversion rate selection (CR1/CR0)
-    - extended 13-bit mode (EM bit)
-    - multiple device addressing via ADD0 (addresses other than 0x48)
-    - general call reset
-    - diagnostics and self tests
+- calibration (the device requires none)
+- self calibration
+- EEPROM (device has no EEPROM; config register is volatile)
+- alarm thresholds (TLOW / THIGH registers)
+- ALERT output pin behaviour (thermostat / comparator mode, polarity)
+- one-shot (OS) conversion
+- low power / shutdown (SD) mode
+- conversion rate configuration (CR1/CR0)
+- extended mode (EM, 13-bit temperature resolution)
+- fault queue (F1/F0)
+- general-call reset
+- SMBus alert response
+- diagnostics / self tests
+- fault injection
 
-## Presentation
+## Canonical Presentation
 
-  presentation:
+```yaml
+presentation:
 
-    temperature:
+  temperature:
 
-      label: Temperature
+    label: Temperature
 
-      precision: 1
+    precision: 1
 
-      units: C
+    units: C
 
-      template: "Temperature = {:.1f} C"
+    template: "Temperature = {:.1f} C"
+```
+
+Downstream generators must use exactly these labels, wording, capitalization,
+precision, and units. Numeric precision is one digit after the decimal point.
+The `template` string specifies wording, ordering and precision only; the
+concrete format-syntax translation into the target language is the
+downstream generator's responsibility (e.g. `%.1f` in printf-style languages).
+
+## Traceable Source
+
+Every value in this specification is traceable to one of these inputs:
+
+| Value                                   | Source |
+|-----------------------------------------|--------|
+| name: TMP102                            | datasheet; `esphome_component.txt` (`tmp102`); `tmp102.mdx` title |
+| manufacturer: Texas Instruments         | `spec_tmp102.md` |
+| transport: I2C                          | `spec_tmp102.md`; `tmp102.mdx` ("I²C Bus required") |
+| capability: measure ambient temperature | `spec_tmp102.md` Overview; `sensor.py` docstring; `tmp102.cpp` publish |
+| temperature / float / C                 | `sensor.py` (`UNIT_CELSIUS`), 12-bit signed conversion in spec |
+| default 21.0                            | deterministic ambient-room convention, 0.0625 °C resolution typical example (25 °C measured scenario) |
+| presentation precision: 1 decimal       | `sensor.py` `accuracy_decimals=1`; `tmp102.cpp` `%.1f` |
+| excluded: calibration, thresholds, alarms, power modes, EM | `spec_tmp102.md` register / feature sections |
