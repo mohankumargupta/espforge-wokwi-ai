@@ -1,30 +1,46 @@
-# prompt2a — wokwi chip.json + diagram.json for TMP102
+# Feedback: wokwi-chip-diagram (prompt2a) — TMP102
 
-## Status
-PASS
+## Summary
 
-## Inputs
-- `<test_spec>`: `artifacts/tmp102/outputs/test_spec_tmp102.md`
-- `<spec>`: `artifacts/tmp102/outputs/spec_tmp102.md`
-- Template: `wokwi-chip-diagram/assets/diagram.json`, `assets/esp32c3.yaml`
+Created `chip.json` and `diagram.json` for a Wokwi custom chip emulating the
+TMP102 I2C temperature sensor, sourced from the Canonical Test Specification.
 
-## Outputs
-- `artifacts/tmp102/prompt2a/chip.json` (schema-validated with `check-jsonschema`)
-- `artifacts/tmp102/outputs/chip.json`
-- `artifacts/tmp102/outputs/diagram.json` (passes `wokwi-cli lint`)
+- `artifacts/tmp102/prompt2a/chip.json` — validated against the skill's
+  `chip.schema.json`, copied to `artifacts/tmp102/outputs/chip.json`.
+- `artifacts/tmp102/outputs/diagram.json` — built on the skill template
+  (ESP32-C3 DevKitM-1 + `chip-chip` + serial monitor), validated with
+  `wokwi-cli lint` (passes, 1 informational note about the template's board part).
 
-## Decisions
-- **Pins** (from spec physical pin table, in pin-number order SCL GND ALERT ADD0 V+ SDA):
-  V+, GND, SDA, SCL wired to MCU; ADD0/ALERT kept as spec pins but unconnected
-  (address fixed at 0x48; ALERT behavior excluded by test spec).
-- **Controls**: single `range` control `temperature` (-40..125 °C, step 0.0625 = LSB).
-  Matches test spec observable `temperature` (float, C, default 21.0).
-- **Diagram**: kept template MCU + custom chip + serial monitor connections;
-  added `attrs: { "address": "0x48" }` to `chip1`; wired per `esp32c3.yaml`
-  primary I2C bus SDA=4, SCL=5, power 3V3.1 / GND.1.
-- **Wire colors**: red=V+ (3V3.1), black=GND (GND.1), green=SDA (4), blue=SCL (5).
+## Design decisions
 
-## Validation
-- `check-jsonschema --schemafile prompt2a/chip.schema.json prompt2a/chip.json` → ok
-- `wokwi-cli lint` (in outputs/) → 1 info (undocumented `board-esp32-c3-devkitm-1`
-  part type, template-inherited); no errors/warnings.
+- **Pins** (`chip.json`): all 6 physical SOT563 pins from spec_tmp102.md in
+  datasheet order, pin 1 first — `SCL, GND, ALERT, ADD0, V+, SDA`.
+- **Control**: one environmental control, `temperature` (range −40…+125 °C,
+  step 0.25, the datasheet's operating range and resolution), mirroring the
+  test spec's single observable.
+- **Wiring** (from `esp32c3.yaml` canonical profile):
+  - I2C1: `esp:4` → `chip1:SDA`, `esp:5` → `chip1:SCL` (green)
+  - Power: `esp:3V3.1` → `chip1:V+` (red), `esp:GND.1` → `chip1:GND` (black)
+  - `esp:GND.1` → `chip1:ADD0` (black) — straps the device to its default
+    slave address 0x48. This is a **wiring** parameter, so it lives in the
+    `connections` array and is deliberately **not** in `attrs` (per skill rule;
+    an attrs override previously parsed to 0 and bricked bus responsing).
+  - `ALERT` left unconnected — alert/interrupt is excluded by the test spec.
+- **attrs**: only the environmental attribute `temperature: "25.0"` (plain
+  decimal, the test spec's canonical `default` from the +25 °C / `0x1900`
+  vector), on the existing `chip1` part.
+
+## Notes / obstacles
+
+1. `prompt2d/attributes.md` (wokwi-customchip output) does not exist yet for
+   tmp102, so the authoritative environmental-vs-wiring classification was
+   unavailable. Classification was instead derived from the test spec's
+   excluded-features list: only `temperature` is environmental; everything else
+   (address via ADD0, ALERT, config) is excluded or wiring-derived. When
+   prompt2d runs later, its classification is expected to agree; if it
+   disagrees, `diagram.json`'s `attrs`/`connections` should be re-derived from
+   it.
+2. `check-jsonschema` and `wokwi-cli` were both available system-wide; no
+   installs needed.
+3. `wokwi-cli lint` emits one `info` ("unsupported-part" undocumented board
+   part type) — this comes from the skill's own template and is expected.

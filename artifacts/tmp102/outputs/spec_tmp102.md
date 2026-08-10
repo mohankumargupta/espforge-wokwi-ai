@@ -1,197 +1,221 @@
 # Chip Spec: TMP102
 
-**Manufacturer:** Texas Instruments
-**Category:** temperature
-**Transports:** I2C
+**Manufacturer:** Texas Instruments  
+**Category:** temperature  
+**Transports:** I²C
 
 ## Overview
 
-The TMP102 is a low-power digital temperature sensor designed as a drop-in
-replacement for NTC/PTC thermistors. It integrates a band-gap temperature
-sensor, a 12-bit ADC (13-bit in Extended Mode), a two-wire / SMBus / I2C
-serial interface, and an SMBus-compatible ALERT output. It provides
-±0.5 °C typical (±2 °C max from -25 °C to 85 °C) accuracy without requiring
-calibration or external signal conditioning, a resolution of 0.0625 °C, and a
-typical quiescent current of 4.8 µA (7.5 µA max) during continuous
-4-conversions-per-second operation. It operates from a 1.4 V to 3.6 V supply
-and is specified over a temperature range of -40 °C to 125 °C. The ADD0 pin
-selects between four I2C addresses, so up to four TMP102 devices can share one
-bus. The device is available in a 1.6 mm x 1.6 mm SOT-563 package and is NIST
-traceable. It is used for power-supply temperature monitoring, thermostats,
-battery management, and general temperature measurement.
+The TMP102 is a low-power, two-wire (I²C) serial output digital temperature
+sensor in a tiny SOT563 (6-pin) package. It reads temperature to a resolution
+of 0.0625°C with a 12-bit ADC (13-bit in Extended mode), requires no external
+components (only bus pull-ups and an optional 0.01µF bypass capacitor), and is
+specified for operation over -40°C to +125°C. It is SMBus and two-wire
+interface compatible, supports up to four devices on one bus via the ADD0
+address pin, and features an ALERT pin (SMBus Alert) plus Shutdown and One-Shot
+modes for reduced power consumption. It draws 10µA active / 1µA shutdown (max).
+Used for thermal management/protection, battery management, notebooks, and
+general temperature measurement.
 
 ## Transport Configuration
 
-### I2C
-
-- **Address:** `0x48` (default, ADD0 = GND). Alternates: `0x49` (ADD0 = V+), `0x4A` (ADD0 = SDA), `0x4B` (ADD0 = SCL)
-- **Max clock:** 400 kHz (fast mode); up to 2.85 MHz (high-speed mode, requires HS-mode controller code from host)
-- **Endianness / Byte Order:** Big-Endian (MSB first)
+### I²C
+- **Address:** `0x48` (default) — `0x49`/`0x4A`/`0x4B` (alternates, selected by ADD0 pin)
+- **Max clock:** 400 kHz (Fast mode); 3.4 MHz (High-Speed mode, V+ > 1.7V); 2.75 MHz (High-Speed mode, V+ < 1.7V). Minimum SCL: 1 kHz (below this the 30 ms SCL-low timeout resets the interface).
+- **Endianness / Byte Order:** Big-Endian (MSB byte first, then LSB byte)
 - **Protocol Quirks:**
-  - 8-bit pointer register; only bits P1:P0 are significant (values `0x00`-`0x03`). P2-P7 must be 0 during writes.
-  - The pointer does **not** auto-increment during block reads. A read returns the register selected by the last pointer value written; the pointer is remembered until the next write.
-  - To change the register for a read, write the pointer byte first (target address R/W=0, then pointer byte), then issue a **repeated START** followed by the target address with R/W=1.
-  - Data bytes are sent MSB first; the temperature LSB byte may be omitted if not needed.
-  - SCL held low for >30 ms (typ, 40 ms max) between START and STOP resets the serial interface, so SCL frequency must stay >= 1 kHz.
-  - The device is a bus target only and never drives SCL. Negative temperatures are represented in two's complement.
+  - The device operates as a slave only and never drives SCL.
+  - Register access is via an internal 8-bit Pointer Register (two LSBs select the data register). The pointer value is latched by a write and remembered until changed, so repeated reads of the same register need no pointer re-write.
+  - A read of a register that follows a write pointer byte requires a (repeated) START: write address (R/W=0) + pointer byte, then START + address (R/W=1) to read.
+  - All data bytes are transmitted MSB first.
+  - The Temperature/THIGH/TLOW registers are 16-bit two-byte quanta ("word" format). A single-byte read of the MSB only is also allowed (terminate with NACK/STOP).
+  - Supports General Call reset (0000110). Responds to Hs-mode master code (00001xxx, no ACK). Supports SMBus Alert Response (00011001).
+  - SDA open-drain, requires external pull-up.
 
 ### SPI
-
-- Not supported.
+Not applicable — the TMP102 has no SPI interface.
 
 ## Physical pins names and functions
 
+SOT563 (DRL package), 6 pins. Top view, pin 1 = SCL.
+
 | Pin Number | Pin Name | Description
 |------------|----------|------------
-| 1 | SCL | Serial clock input (I)
-| 2 | GND | Ground
-| 3 | ALERT | Overtemperature alert, open-drain output, requires pull-up (O)
-| 4 | ADD0 | Address select, connect to GND, V+, SDA, or SCL (I)
-| 5 | V+ | Supply voltage, 1.4 V to 3.6 V (I)
-| 6 | SDA | Serial data, open-drain I/O, requires pull-up (I/O)
+| 1          | SCL      | Serial clock input (two-wire/SMBus clock). Pull-up required.
+| 2          | GND      | Ground
+| 3          | ALERT    | Alert/alarm output (open-drain). Pull-up required. SMBus Alert capable; polarity configurable (POL bit).
+| 4          | ADD0     | Address select pin ("Address 0"). Sets device slave address; can be tied to GND, V+, SDA, or SCL.
+| 5          | V+       | Power supply, 1.4V to 3.6V
+| 6          | SDA      | Serial data, open-drain bidirectional I/O. Pull-up required.
 
 ## Bus and addressing Rules
 
-The TMP102 is an I2C/SMBus target only. The ADD0 pin selects one of four
-device addresses, allowing up to four devices on a single bus:
+- Slave address is 7 bits: `1001` + A1 + A0 + RW. A1/A0 are determined by the ADD0 pin connection, allowing up to four TMP102 devices on one bus.
 
-| ADD0 connection | Bus address (7-bit) |
-|-----------------|---------------------|
-| GND             | `0x48` (100 1000)   |
-| V+              | `0x49` (100 1001)   |
-| SDA             | `0x4A` (100 1010)   |
-| SCL             | `0x4B` (100 1011)   |
+| ADD0 Pin Connection | A1 A0 | Two-Wire Slave Address (Binary) | Slave Address (Hex, 7-bit) |
+|---------------------|-------|---------------------------------|----------------------------|
+| Ground              | 0 0   | 1001000                         | 0x48 (default)             |
+| V+                  | 0 1   | 1001001                         | 0x49                        |
+| SDA                 | 1 0   | 1001010                         | 0x4A                        |
+| SCL                 | 1 1   | 1001011                         | 0x4B                        |
 
-- Recommended 5 k-ohm pull-up resistors on SDA, SCL, and ALERT.
-- 0.01 µF supply bypass capacitor recommended.
-- The device responds to the two-wire general call address (0x00) when the
-  eighth bit is 0; second byte `0x06` resets internal registers to power-up
-  values.
-- SMBus Alert Response address `0001 1000` (0x18) acknowledges when ALERT is
-  active and returns the device's target address on SDA.
-
-## Register Map
-
-Register access uses an 8-bit pointer register (only P1-P0 decode, values
-`0x00`-`0x03`) written before any access. The pointer does not auto-increment.
-
-| Address | Name         | R/W | Reset    | Description |
-|---------|--------------|-----|----------|-------------|
-| `0x00`  | Temperature  | R   | `0x0000` | 12-bit (13-bit in Extended Mode) conversion result, MSB-first 2 bytes <sup>1</sup> |
-| `0x01`  | Configuration| R/W | `0x60A0` | OS, R1/R0, F1/F0, POL, TM, SD, CR1/CR0, AL, EM |
-| `0x02`  | TLOW         | R/W | `0x4B00` | Low temperature limit register (12/13-bit) |
-| `0x03`  | THIGH        | R/W | `0x5000` | High temperature limit register (12/13-bit) |
-
-1. The temperature register reads 0x0000 (0 °C) until the first conversion
-   completes (typically 10 ms after power-up).
-
-### Temperature Register formatting
-
-Decoded as a 12-bit two's-complement count (13-bit in Extended Mode, EM=1)
-left-aligned within the 16-bit two-byte word:
-
-- Byte 1 (MSB): D7-D0 = T11..T4 (T11 is the sign bit); in EM, (T12)..(T5).
-- Byte 2 (LSB): D7-D0 = T3, T2, T1, T0, 0, 0, 0, 0 — in EM: (T4)..(T0), 0, 0, 1.
-  - D0 of Byte 2 = 0 in Normal Mode, 1 in Extended Mode (used to distinguish formats).
-- Bits D3-D0 (normal) are always 0. The temperature occupies bits 15:4 of the 16-bit word.
-
-### Bit Fields
-
-#### `CONFIGURATION` (`0x01`) — Byte 1 (MSB, written/read first)
-
-| Bits | Name | Description |
-|------|------|-------------|
-| D7 | OS | One-shot start (write 1 starts one conversion in Shutdown; reads 0 during conversion) |
-| D6 | R1 | Converter resolution (read-only, TMP102 fixed at 1 = 12-bit) |
-| D5 | R0 | Converter resolution (read-only, fixed at 1) |
-| D4 | F1 | Fault queue bit 1 (consecutive faults before alert) |
-| D3 | F0 | Fault queue bit 0 |
-| D2 | POL | ALERT polarity (0 = active low default, 1 = active high) |
-| D1 | TM | Thermostat mode (0 = comparator, 1 = interrupt) |
-| D0 | SD | Shutdown mode (1 = shut down after current conversion, 0 = continuous) |
-
-Reset value: `0x60` (0110 0000).
-
-#### `CONFIGURATION` (`0x01`) — Byte 2 (LSB)
-
-| Bits | Name | Description |
-|------|------|-------------|
-| D7 | CR1 | Conversion rate bit 1 (00=0.25 Hz, 01=1 Hz, 10=4 Hz default, 11=8 Hz) |
-| D6 | CR0 | Conversion rate bit 0 |
-| D5 | AL | ALERT status (read-only; 1 = normal state, 0 = alert active, POL-inverted) |
-| D4 | EM | Extended Mode (0 = 12-bit, 1 = 13-bit) |
-| D3-D0 | - | Always read 0 |
-
-Reset value: `0xA0` (1010 0000).
+- Clock speeds: 1 kHz to 400 kHz (Fast mode); up to 3.4 MHz (Hs-mode, V+ > 1.7V) or 2.75 MHz (V+ < 1.7V).
+- SCL, SDA, and ALERT pins require external pull-up resistors (typical for a two-wire bus).
+- SCL held low for 30 ms (typ) triggers a serial-interface timeout reset (device releases bus and waits for START).
 
 ## Interrupts / Alert Pins
 
-- **Pin Type:** Open-drain (requires external pull-up, e.g. 5 kΩ)
-- **Polarity:** Configurable via POL bit (default active-low; POL=1 inverts -> active high)
-- **Latch Behavior:**
-  - Comparator mode (TM=0): ALERT activates when temp >= THIGH for the programmed
-    number of consecutive faults and stays active until temp < TLOW for the same count.
-  - Interrupt mode (TM=1): ALERT activates on the THIGH fault condition and stays
-    active until cleared (see below); it re-arms again when temp < TLOW.
-- **Clear Mechanism:** Interrupt mode — cleared by any register read, by a
-  successful response to the SMBus Alert Response address (a device that loses
-  the alert arbitration keeps ALERT active), by entering Shutdown mode, or by
-  General-Call reset. Comparator mode — cleared automatically when the
-  temperature falls below TLOW.
+- **Pin Type:** Open-drain (requires external pull-up of ~5kΩ or less; an RC filter RF < 5kΩ / CF > 10nF may be added on V+ for noise)
+- **Polarity:** Configurable via the POL bit. POL = 0 → Active-Low (default); POL = 1 → Active-High (state inverted).
+- **Latch Behavior:** Depends on Thermostat Mode (TM bit):
+  - **Comparator mode (TM = 0):** ALERT asserts when temperature ≥ THIGH for the programmed consecutive faults; deasserts when temperature falls below TLOW for the same number of faults (self-clearing, no read required; ignores state of TM for the AL status bit).
+  - **Interrupt mode (TM = 1):** ALERT asserts when temperature ≥ THIGH for consecutive faults; stays asserted until cleared (see below); re-asserts only after temperature falls below TLOW then exceeds THIGH again.
+- **Clear Mechanism:** In Interrupt mode, cleared by (a) a read operation of any register, (b) a successful response to the SMBus Alert Response address (device returns its slave address, with LSB indicating THIGH/TLOW cause), or (c) placing the device in Shutdown mode. A General Call reset returns the device to Comparator mode (TM = 0). If multiple devices respond to the SMBus Alert command, the lowest address wins arbitration and clears its ALERT.
+- **Fault Queue (F1/F0):** consecutive fault count before ALERT asserts: 1, 2, 4, or 6.
+- **AL bit (config register bit 5):** read-only, reports comparator-mode status (inverted by POL).
+
+## Register Map
+
+Registers are selected via the Pointer Register (two LSBs, P7:P2 must be 0 during writes). Power-up pointer value = `00` (Temperature register). All 16-bit registers are written/read as two bytes, MSB first.
+
+| Address | Name        | R/W | Reset      | Description |
+|---------|-------------|-----|------------|-------------|
+| `0x00`  | Temperature | R   | 0x0000     | Most recent conversion result, 12-bit (Normal mode) or 13-bit (Extended mode), two's complement, left-aligned. Reads 0°C until first conversion completes. |
+| `0x01`  | Configuration| R/W | 0x60A0   | 16-bit control register. Byte 1 (MSB) compatible with TMP75/TMP275 config register. |
+| `0x02`  | TLOW        | R/W | 0x4B00    | Low-limit temperature; same data format as Temperature register. Reset = +75°C. |
+| `0x03`  | THIGH       | R/W | 0x5000    | High-limit temperature; same data format as Temperature register. Reset = +80°C. |
+
+### Pointer Register Byte
+
+| P7 | P6 | P5 | P4 | P3 | P2 | P1 | P0 |
+|----|----|----|----|----|----|----|----|
+| 0  | 0  | 0  | 0  | 0  | 0  | Register select bits |
+
+| P1 | P0 | Register |
+|----|----|----------|
+| 0  | 0  | Temperature Register (Read Only) |
+| 0  | 1  | Configuration Register (Read/Write) |
+| 1  | 0  | TLOW Register (Read/Write) |
+| 1  | 1  | THIGH Register (Read/Write) |
+
+### Bit Fields
+
+#### `Temperature` (`0x00`) — two bytes
+
+Byte 1 (MSB): D7..D0 = T11..T4 (Normal) / T12..T5 (Extended)
+Byte 2 (LSB): D7..D0 = T3..T0, then 0,0,0,0 (Normal) / T4..T0 then 0,0,1 (Extended)
+
+**Byte 1 (MSB first)**
+
+| Bits | Name | Description |
+|------|------|-------------|
+| 7:0  | T11:T4 | Temperature magnitude bits 11:4 (12-bit Normal). Extended mode: T12:T5 (13-bit). |
+|       | (T12:T5) | |
+
+**Byte 2 (LSB last)**
+
+| Bits | Name | Description |
+|------|------|-------------|
+| 7:4  | T3:T0 | Temperature magnitude bits 3:0 (Normal). Extended mode: T4:T1. |
+| 3:1  | —     | Always read `0`. |
+| 0    | —     | Data-format flag: `0` = Normal mode (EM=0), `1` = Extended mode (EM=1). |
+
+Data is 12-bit (13-bit in Extended mode) two's complement, left-aligned in the
+16-bit register word (bits 15:4 in Normal; bits 15:3 in Extended). One LSB =
+0.0625°C. Negative numbers are two's complement. Unused bits always read 0
+(except extended-mode bit 0 which is 1). The register is read-only.
+
+#### `Configuration` (`0x01`) — 16-bit R/W, reset 0x60A0
+
+**Byte 1 (MSB), bits 15:8 — same bit layout as TMP75/TMP275 configuration**
+
+| Bits | Name | Description |
+|------|------|-------------|
+| 15   | OS    | One-Shot / Conversion Ready. In Shutdown mode, writing 1 starts one conversion; reads 0 during conversion, 1 when idle. (RW) |
+| 14:13| R1:R0 | Converter Resolution — read-only, set to `11` at start-up (12-bit resolution). (RO) |
+| 12:11| F1:F0 | Fault queue: 00=1, 01=2, 10=4, 11=6 consecutive faults to trigger ALERT. |
+| 10   | POL   | ALERT polarity: 0 = active-low, 1 = active-high (inverts). |
+| 9    | TM    | Thermostat mode: 0 = Comparator, 1 = Interrupt. |
+| 8    | SD    | Shutdown mode: 1 = shut down after current conversion, 0 = continuous conversion. |
+
+Reset value byte 1: `0110 0000` = 0x60.
+
+**Byte 2 (LSB), bits 7:0**
+
+| Bits | Name | Description |
+|------|------|-------------|
+| 7:6  | CR1:CR0 | Conversion rate: 00=0.25 Hz, 01=1 Hz, 10=4 Hz (default), 11=8 Hz. |
+| 5    | AL    | Alert status (read-only). 1 until temp ≥ THIGH for programmed faults, then 0 (for POL=0); unaffected by TM. State inverted by POL. |
+| 4    | EM    | Extended mode: 0 = Normal (12-bit), 1 = Extended (13-bit, allows >+128°C). |
+| 3:0  | —     | Reserved, write `0`. |
+
+Reset value byte 2: `1010 0000` = 0xA0.
+
+#### `TLOW` / `THIGH` (`0x02` / `0x03`) — 16-bit R/W
+
+Same data format as the Temperature register (12-bit Normal / 13-bit Extended),
+two's complement, left-aligned, MSB byte first. Power-up reset: THIGH = +80°C
+(0x5000), TLOW = +75°C (0x4B00).
 
 ## Initialization Sequence & State Machine for emulating chip, timings
 
-1. Power-up / General-Call reset: registers load defaults. Config = `0x60A0`
-   (continuous conversion, 4 Hz, comparator mode, active-low alert, fault=1).
-2. First conversion starts immediately at power-up; the first result is
-   available after 10 ms typical (15 ms max). Until then the temperature
-   register reads 0 °C.
-3. Continuous-conversion mode produces one result every 250 ms..4 s depending
-   on CR1/CR0, each completed conversion taking ~10 ms.
-4. For a temperature read: write pointer byte `0x00`, then read 2 bytes
-   (MSB first) with a repeated START. Read completes in < 20 µs after a
-   fresh conversion.
-5. One-shot mode (SD=1, then OS=1): single conversion ~10 ms, returns to
-   shutdown; >= 80 conversions per second are possible this way.
-6. If SCL is held low > 30 ms (typ), the serial interface resets and SDA is
-   released; the host must then re-send a START.
+1. Apply power (1.4V–3.6V) or issue General Call reset (0x0000110). Device starts a conversion immediately upon power-up/reset.
+2. Wait for first conversion to complete before reading: 26 ms typical, 35 ms max. Until the first conversion completes, Temperature register reads 0°C.
+3. Read the Temperature register (pointer 0x00) as two bytes, MSB first. (Repeated START needed after pointer write.)
+4. After each conversion, device powers down and waits for the interval set by CR1/CR0 (conversion rate), then converts again:
+   - CR1:CR0 = 00 → 0.25 Hz (one conversion every 4 s)
+   - CR1:CR0 = 01 → 1 Hz
+   - CR1:CR0 = 10 → 4 Hz (default) — active quiescent current 7µA typ during delay, 40µA typ during conversion
+   - CR1:CR0 = 11 → 8 Hz
+5. Typical conversion time: 26 ms (min 26 typ, max 35 ms per EC table; timing diagram shows 26ms). Internal MCU wait timer must account for first-conversion latency (26–35 ms).
+6. One-Shot mode: set SD=1, then write OS=1 to start a single conversion; OS reads 0 during conversion; device returns to shutdown on completion; read result after ~26 ms.
+7. ALERT comparison: each new conversion result is compared against THIGH/TLOW and the fault queue (F1/F0) updates; if comparator/interrupt conditions met, ALERT pin asserts (open-drain, pulled low for POL=0).
+8. Shutdown: with SD=1, device completes current conversion then goes to shutdown (<0.5µA); any read is still possible via the serial interface.
 
 ## Data Conversion
 
-- **Data Type:** Two's complement, 12-bit signed (+ 13-bit Extended Mode variant)
-- **Alignment:** 12-bit value left-aligned in a 16-bit two-byte register word
-  (occupies bits 15:4; the low nibble D3-D0 reads 0). In Extended Mode the
-  13-bit value occupies bits 15:3 and the register's D0 reads 1.
-- **Resolution / LSB:** 0.0625 °C per count
+- **Data Type:** Two's complement (signed integer count)
+- **Alignment:** 12-bit value left-aligned in a 16-bit register word: data occupies bits 15:4, bits 3:0 = 0 (Normal mode). In Extended mode the 13-bit value occupies bits 15:3, bit 0 = 1 (mode flag). The datasheet's "Digital Output (Binary)/Hex" columns list the raw 12-bit (or 13-bit) count, not the full 16-bit register word.
+- **Scale:** 0.0625 °C/LSB
 
 ```
-temperature_C = (int16_t)register_word >> 4;   /* 12-bit sign-extended count */
-temperature_C = sign_extended_12bit_count * 0.0625;
+temp_c = raw_count * 0.0625
 ```
 
-Decoding example: 25 °C -> 0x190 = 400 counts -> 400 x 0.0625 = 25.0 °C.
--25 °C -> |25 / 0.0625| = 400 = 0x190; two's complement of 0x190 is 0xE70.
+- Positive values: convert to 12-bit left-justified binary with MSB = 0 (no two's complement applied). E.g. (+50°C) / (0.0625 °C/count) = 800 = 0x320 = `0011 0010 0000`.
+- Negative values: take absolute value count, two's complement it, and set MSB = 1. E.g. |-25°C| / 0.0625 = 400 = 0x190 = `0001 1001 0000`; two's complement → `1110 0110 1111` + 1 = `1110 0111 0000` = 0xE70.
 
 ### Worked Examples / Test Vectors
 
-All rows below come from datasheet Table 6-2 (12-bit format, EM = 0). The
-datasheet **HEX** column lists the 12-bit count; the value as it appears in the
-16-bit register word is that count left-shifted into bits 15:4.
+Table 5 (12-bit data format). "Raw Register Value" below is the datasheet's
+**raw 12-bit two's-complement count**; the Full Register Word column shows how
+it appears left-aligned in bits 15:4 of the 16-bit temperature word (bits 3:0 = 0).
 
 | Real-world Value | Raw Register Value (Hex/Binary) | Encoding (raw N-bit count \| full register word, alignment bits) | Notes |
 |------------------|---------------------------------|--------------------------------------------------------------------|-------|
-| 128 °C           | `0x7FF`                         | raw 12-bit count; register word = `0x7FF0` (count << 4)           | Max positive count; datasheet lists both 128 and 127.9375 as 0x7FF |
-| 100 °C           | `0x640`                         | raw 12-bit count; register word = `0x6400` (<< 4) | |
-| 80 °C            | `0x500`                         | raw 12-bit count; register word = `0x5000` (<< 4) | |
-| 75 °C            | `0x4B0`                         | raw 12-bit count; register word = `0x4B00` (<< 4) | TLOW default = 75 °C |
-| 50 °C            | `0x320`                         | raw 12-bit count; register word = `0x3200` (<< 4) | 50/0.0625 = 800 = 0x320 |
-| 25 °C            | `0x190`                         | raw 12-bit count; register word = `0x1900` (<< 4) | 25/0.0625 = 400 = 0x190 |
-| 0.25 °C          | `0x004`                         | raw 12-bit count; register word = `0x0040` (<< 4) | |
-| 0 °C             | `0x000`                         | raw 12-bit count; register word = `0x0000` (<< 4) | |
-| -0.25 °C         | `0xFFC`                         | raw 12-bit two's complement; register word = `0xFFC0` (<< 4) | 0xFFC = -4 counts |
-| -25 °C           | `0xE70`                         | raw 12-bit two's complement; register word = `0xE700` (<< 4) | 400 counts; two's complement of 0x190 |
-| -55 °C           | `0xC90`                         | raw 12-bit two's complement; register word = `0xC900` (<< 4) | |
+| +128             | 0x7FF / `0111 1111 1111`         | raw 12-bit count                                                   | Two distinct table rows both map to 0x7FF (datasheet shows 128 and 127.9375 both = 0x7FF; 12-bit cannot represent +128 exactly — wraps to 127.9375) |
+| +127.9375        | 0x7FF / `0111 1111 1111`         | raw 12-bit count                                                   | 0x7FF * 0.0625 = 127.9375 |
+| +100             | 0x640 / `0110 0100 0000`         | raw 12-bit count → register word 0x6400                            | 1600 * 0.0625 = 100 |
+| +80              | 0x500 / `0101 0000 0000`         | raw 12-bit count → register word 0x5000                            | 1280 * 0.0625 = 80 |
+| +75              | 0x4B0 / `0100 1011 0000`         | raw 12-bit count → register word 0x4B00                            | 1200 * 0.0625 = 75 |
+| +50              | 0x320 / `0011 0010 0000`         | raw 12-bit count → register word 0x3200                            | 800 * 0.0625 = 50 |
+| +25              | 0x190 / `0001 1001 0000`         | raw 12-bit count → register word 0x1900                            | 400 * 0.0625 = 25 |
+| +0.25            | 0x004 / `0000 0000 0100`         | raw 12-bit count → register word 0x0040                            | 4 * 0.0625 = 0.25 |
+| 0                | 0x000 / `0000 0000 0000`         | raw 12-bit count → register word 0x0000                            | 0 |
+| -0.25            | 0xFFC / `1111 1111 1100`         | raw 12-bit count → register word 0xFFC0                            | two's complement of 4 |
+| -25              | 0xE70 / `1110 0111 0000`         | raw 12-bit count → register word 0xE700                            | two's complement of 0x190 |
+| -55              | 0xC90 / `1100 1001 0000`         | raw 12-bit count → register word 0xC900                            | two's complement of 0x370 (880 * 0.0625 = 55) |
 
-The datasheet also gives a 13-bit (Extended Mode) table (Table 6-3); those
-values are three bits wider and the register word will place the 13-bit count
-in bits 15:3 with the LSB of byte 2 set to 1.
+Table 6 (13-bit Extended-mode data format). Data occupies bits 15:3 of the word;
+bit 0 of the word = 1 in Extended mode. Reference rows:
+
+| Real-world Value | Raw Register Value (Hex/Binary) | Encoding (raw N-bit count \| full register word, alignment bits) | Notes |
+|------------------|---------------------------------|--------------------------------------------------------------------|-------|
+| +150             | 0x0960 / `0 1001 0110 0000`      | raw 13-bit count → register word 0x0960<<3 with bit0=1 = 0x4B01   | 2400 * 0.0625 = 150 |
+| +128             | 0x0800 / `0 1000 0000 0000`      | raw 13-bit count → word data bits 15:3                            | 2048 * 0.0625 = 128 |
+| +100             | 0x0640 / `0 0110 0100 0000`      | raw 13-bit count                                                    | 1600 * 0.0625 = 100 |
+| +25              | 0x0190 / `0 0001 1001 0000`      | raw 13-bit count                                                    | 400 * 0.0625 = 25 |
+| 0                | 0x0000 / `0 0000 0000 0000`      | raw 13-bit count                                                    | 0 |
+| -0.25            | 0x1FFC / `1 1111 1111 1100`      | raw 13-bit count                                                    | two's complement of 4 |
+| -25              | 0x1E70 / `1 1110 0111 0000`      | raw 13-bit count                                                    | two's complement of 0x190 |
+| -55              | 0x1C90 / `1 1100 1001 0000`      | raw 13-bit count                                                    | two's complement of 0x370 |

@@ -1,102 +1,89 @@
-# Feedback: prompt2d (wokwi-customchip) for tmp102
+# Feedback: wokwi-customchip (prompt2d) — TMP102
 
 ## Summary
 
-Generated a Wokwi custom chip (`chip.zig`, Zig 0.16, wasm32-freestanding) for
-the TMP102 I2C temperature sensor, implementing only the essentials needed to
-support the canonical test spec (temperature read path). `zig build` produces
-`chip.wasm`; `zig build test` passes 13/13 host-side unit tests.
+Zig 0.16 Wokwi custom chip created at `artifacts/tmp102/prompt2d/chip.zig`,
+validated with `zig build` (chip.wasm builds for wasm32-freestanding) and
+`zig build test` — **15/15 tests pass, zero failures**. Deliverables
+(`build.zig`, `chip.zig`, `chip.wasm`, `wokwi_api.zig`) copied to
+`artifacts/tmp102/outputs/`.
 
-## Inputs used
+Behaviour (essentials to satisfy test_spec_tmp102.md):
+- I²C slave whose address is derived from the `ADD0` strap pin
+  (`pinInit("ADD0", input_pulldown)`; grounded 0x48, tied to V+ 0x49).
+  The canonical `temperature` attr is read live on every register read.
+- Register set: 0x00 Temperature (read-only, live from attr), 0x01 Config
+  (reset 0x60A0, R/W), 0x02 TLOW (0x4B00), 0x03 THIGH (0x5000).
+- Pointer register latched and remembered until changed (spec quirk);
+  reads emit MSB first (big-endian); 16-bit R/W writes assembled byte-wise.
+- ALERT pin exists but stays released/high-Z (excluded from canonical test).
 
-- `<spec>` = `artifacts/tmp102/outputs/spec_tmp102.md`
-- `<test_spec>` = `artifacts/tmp102/outputs/test_spec_tmp102.md`
-- `<conversions_src>` = `artifacts/tmp102/prompt0c/src/main.zig`
-- `<conversions_manifest>` = `artifacts/tmp102/prompt0c/conversions_manifest.md`
-- skill assets: `assets/build.zig`, `assets/wokwi_api.zig`,
-  `assets/wokwi-mcp23017/chip.zig`, `references/chips-api/{i2c,attributes,
-  chip-json,getting-started}.md`
-- `artifacts/tmp102/prompt2a/chip.json`, `outputs/{diagram.json,tmp102.yaml,
-  wokwi.toml}`, `outputs/tmp102/tmp102.cpp` (ESPHome driver I2C sequence)
+## Step 0 — conversions reuse
 
-## Step 0: conversions reuse (as-is)
+`conversions_src` (`artifacts/tmp102/prompt0c/src/root.zig`) was reused
+**as-is**: all register-encoding functions (encode/decode Normal+Extended,
+sign extension, byte order, fault queue, conversion rate, Config packing,
+`slaveAddress`) were ported **verbatim** into `chip.zig`, with only the
+Wokwi-ABI parts gated behind `chip_mode = !builtin.is_test`. No re-derivation.
+The `test_spec` default (+25 C -> word `0x1900` -> raw 0x190 -> 400 * 0.0625)
+is asserted in its own test against the ported `encodeTempNormal`.
 
-`<conversions_src>` was reused **as-is** — every encode/decode helper
-(`signExtend`, `count12FromWord`, `count12ToWord`, `temperatureCFromWord`,
-`temperatureCToRegisterWord12`, `bytesToWord`, `wordToBytes`,
-`temperatureCFromBytes`, `temperatureCFromMsbByteOnly`, extended-mode and
-auto-detect variants) was ported verbatim, changing only syntax (no logic
-changes). The unit tests were ported 1:1 from the same source and pass
-unchanged, confirming the encoding was not re-derived (the datasheet register
-map / bit-field disagreement documented in `feedback/tmp102/prompt0c.md` was
-not re-encountered).
+## Verified
 
-## Design decisions / assumptions
+- `zig fmt chip.zig` OK.
+- `zig build` OK (wasm32-freestanding, ReleaseSmall, chip.wasm emitted).
+- `zig build test --summary all`: `15/15 tests passed`.
 
-1. **Temperature source = `temperature` attribute (float), default 21.0 C.**
-   The canonical observable default is 21.0; the harness `diagram.json` does
-   not set it, so the chip defaults to 21.0 -> register word `0x1500` ->
-   bus bytes `[0x15, 0x00]` -> `Temperature = 21.0 C`. The attribute is
-   re-read on every temperature-register read so a Wokwi range control
-   updates the value live.
-2. **I2C address = `address` attribute, default 0x48.** The harness
-   `diagram.json` sets `"address": "0x48"`; the chip filters in
-   `onI2cConnect` and NACKs everything else (pattern from MCP23017 with
-   `i2cInit` address=0). ADD0 is initialized as an input but NOT used to
-   resolve the address — with the address attr authoritative, ADD0 wiring
-   is moot for the canonical test. Flagging: if a future harness relies on
-   hardware ADD0 wiring without an `address` attr, this chip would still use
-   the 0x48 default.
-3. **Pointer does not auto-increment** (datasheet quirk). A 2-byte read
-   returns MSB then LSB of the selected register (via `read_index`), then
-   wraps for extra bytes. `has_reg_ptr` is reset on write-connect/disconnect
-   so the first byte of any write transaction is the pointer, while the
-   current pointer value persists between transactions (EspHome: write
-   pointer `0x00`, then read 2 bytes -> works).
-4. **Excluded features not implemented** (per test spec): ALERT behaviour,
-   TLOW/THIGH thresholds (registers exist with documented defaults `0x4B00`/
-   `0x5000` and are R/W, but no alert logic), config `0x60A0` present with
-   basic two-byte R/W, shutdown/one-shot/EM/conversion-rate ignored. The
-   ESPHome driver only writes the pointer and reads 2 bytes, so these are
-   not exercised.
-5. **No first-conversion delay.** Spec/test-spec assume conversion complete
-   at first read (10 ms power-up window is a real-device behaviour the
-   harness deliberately abstracts away), so the temperature register returns
-   the encoded value immediately.
-6. **`chip_mode` gating** per `build.zig`'s documented pattern
-   (`!builtin.is_test` gating the `@export` of `chipInit`) so the same file
-   compiles for host `zig build test` without unresolved wasm imports. The
-   extern ABI declarations (camelCase names, `attrInit(name, f64)`,
-   `attrReadFloat`) follow the skill's `wokwi_api.zig` asset.
+## Observations / assumptions
 
-## Validation
+1. **`chip_mode` gating + `@export` was necessary and works.** The skill's
+   build.zig guidance to gate wasm ABI code behind `!builtin.is_test` was
+   exact; `export fn chipInit` would otherwise break the host test link.
+   The MCP23017 reference does not contain tests, so `chip_mode` is missing
+   there — the build.zig comment block is the real spec for this, and it
+   worked first try.
 
-- `zig fmt chip.zig` -> no changes.
-- `zig build` -> wasm build succeeds; `chip.wasm` emitted (572 KB).
-- `zig build test --summary all` -> 13/13 tests pass.
-- Key test: "default observable: 21.0 C encodes to 0x1500" asserts
-  `temperatureCToRegisterWord12(21.0) == 0x1500`, matching the canonical
-  observable default.
+2. **`__wokwi_api_version_1` export had to be added to `chip.zig`.** Neither
+   `build.zig` (root_source_file = chip.zig only) nor the MCP23017 example
+   provide the required Wokwi version symbol; the skill's `wokwi_api.zig`
+   does, but nothing compiles it unless chip.zig `@import`s it. I added the
+   `export fn __wokwi_api_version_1()` inline (returns 1) so chip.wasm is
+   loadable without coupling chip.zig to wokwi_api.zig's ABI struct shapes.
+   Recommend the skill state this explicitly.
 
-## Obstacles / observations
+3. **`wokwi_api.zig`'s `I2CConfig` callbacks are typed `?*anyopaque`, which
+   cannot accept function-pointer literals.** I followed the MCP23017
+   reference instead (typed `*const fn ... callconv(.c)` fields + trailing
+   `reserved: [8]u32`). The wokwi_api.zig struct as-written is not directly
+   usable with `i2cInit` in Zig; flagging so the skill knows its API file and
+   its worked example disagree on struct shape.
 
-- The skill's file list says `wokwi-api.zig` but the asset is
-  `wokwi_api.zig`; I copied/kept the underscore name in both the artifacts
-  dir and the outputs dir.
-- `attrInit`'s signature differs between the C reference (`attr_init`/u32)
-  and the Zig asset (`attrInit(name, f64)` + `attrReadFloat`); I followed
-  the Zig asset since chip.zig declares its own externs and must match the
-  import names the host actually provides.
-- The `controls` range in `prompt2a/chip.json` (-40..125, step 0.0625) is a
-  UI nicety; the chip itself only exposes attributes, so control changes
-  flow through the `temperature` attribute (design choice above).
-- No simulator run was performed; correctness is established by the ported
-  unit tests, not by a live Wokwi execution.
+4. **`attrInit` f64 signature:** wokwi_api.zig declares
+   `attrInit(name, default_value: f64)`, which I reused verbatim for the
+   temperature attribute (default 25.0). Note the C reference API splits this
+   into `attr_init` (u32) / `attr_init_float` (float); if the host export
+   names differ, this file must be regenerated — but since it's the skill's
+   canonical asset I trusted it.
+
+5. **ADD0 4-state vs 2-state:** datasheet Table 6-4 maps ADD0 to GND/V+/SDA/
+   SCL (four addresses). A digital `pinRead` only distinguishes two; I model
+   GND (0x48, canonical) and V+ (0x49) and document the SDA/SCL tie options
+   as unsupported. test_spec only needs 0x48. Documented in attributes.md:
+   `address` is fixed wiring derived from `ADD0`, never an attr/control.
+
+6. **`chip.json`/`diagram.json` already existed** (produced by prompt2a) and
+   are consistent with this chip: pins SCL/GND/ALERT/ADD0/V+/SDA, one
+   `temperature` range control, ADD0 grounded in diagram.json. No changes
+   needed; chip.zig matches them (control id `temperature` ↔ attr name). Did
+   not regenerate or modify them.
+
+7. **First-conversion latency (26–35 ms) deliberately not modelled.** The
+   test spec's assumptions state the first conversion is complete before the
+   temperature register is read; the chip returns the live attr immediately.
 
 ## Suggestions
 
-- State explicitly in the skill whether ADD0 (hardware address select) or the
-  `address` attribute is authoritative; recommend the attribute when the
-  harness `diagram.json` supplies it.
-- Clarify the output filename (`wokwi-api.zig` vs `wokwi_api.zig`) in the
-  "copy files" step.
+- State that `chip.zig` should either `@import("wokwi_api")` or own the
+  `__wokwi_api_version_1` export (currently implicit across skills).
+- Provide the `I2CConfig` Zig struct aligned with what the example `chip.zig`
+  actually uses (typed fn pointers + `reserved`), or fix `wokwi_api.zig`.

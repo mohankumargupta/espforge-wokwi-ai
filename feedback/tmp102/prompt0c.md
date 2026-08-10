@@ -1,41 +1,62 @@
-# Skill Feedback — data-conversions-complex-logic (prompt0c)
+# Feedback: data-conversions-complex-logic (prompt0c) — TMP102
 
-Device: tmp102 · Date: 2026-08-10
+## Summary
 
-## What worked
+Zig 0.16 std project created at `artifacts/tmp102/prompt0c` with:
+- `src/root.zig` — 15 conversion/reference-algorithm functions weighed against
+  spec tables 5/6, config register packing, fault queue, conversion rate,
+  big-endian byte order, slave addressing. 13 unit tests.
+- `src/main.zig` — CLI demo printing worked examples + a fuzz test
+  (encode∘decode fixed-point invariant via `std.testing.fuzz` + `*std.testing.Smith`).
+- `conversions_manifest.md` — worked examples, bit-layout assumptions, and
+  per-encode overflow policies.
 
-- The skill's flow (read spec -> `zig init` -> add functions + unit tests ->
-  `zig build`) was clear and sufficient. No ambiguity about artifacts.
+## Verified
 
-## Obstacles / notes
+- `zig build` OK; `zig build test` 17/17 pass (root module + exe module).
 
-1. **Zig 0.16 API churn surfaced late.** The std testing assertions
-   (`std.testing.expect*`, `expectApproxEqRel`) return error unions in 0.16
-   and must be `try`'d; the generated template's "fuzz example" test also
-   relies on the new `std.testing.fuzz`/`Smith` API. None of the `zig init`
-   template or build files indicate this. A skill note that "0.16 test
-   asserts need `try`" would have saved several compile-fix cycles.
+## Observations / obstacles
 
-2. **Datasheet HEX column is unsigned two's complement.** Table 6-2 lists the
-   negative counts (e.g. `0xE70`, `0xC90`) as raw unsigned hex, not signed
-   decimal. Deriving the expected signed count from the raw hex via the
-   `signExtend` primitive (rather than hard-coding signed integers) keeps the
-   test faithful to the datasheet and cross-checks the primitive. Worth a
-   hint in the skill.
+1. The skill's Zig 0.16 notes proved accurate and necessary:
+   - `std.testing.expect*` returns error unions and every assertion needs `try`.
+   - `std.testing.fuzz(context, fn, .{})` passes a `*std.testing.Smith`.
+   These are NOT discoverable from the generated template — the guidance saved
+   a round of compile errors. Good as written.
 
-3. **Clamping on encode is a judgment call.** 128 C = 2048 counts overflows
-   12-bit signed, so `temperatureCToRegisterWord12(128)` clamps to `0x7FF0`
-   (127.9375 C). The spec lists both 128 and 127.9375 as `0x7FF`; the skill
-   doesn't say whether to clamp or error on overflow. We chose clamp + a
-   documented test. A policy sentence would help downstream skills that need
-   identical behavior.
+2. Pitfall that cost a build + test round: Zig 0.16's generated `main.zig`
+   signatures `main(init: std.process.Init)` — an unused `init` is a hard
+   compile error (`error: unused function parameter`), not a warning. The skill
+   doesn't mention this; a `_ = init;` discard was needed.
 
-4. **Workdir-creation wrinkle.** The Bash tool fails if `workdir` doesn't
-   exist yet, so the target dir had to be `mkdir`'d from the original cwd
-   before `cd`-ing in for `zig init`. (Project-level tooling note, not a
-   skill defect.)
+3. Code-layout decision: `zig init` generated BOTH `src/main.zig` (exe root)
+   and `src/root.zig` (module root, exposed to consumers as `@import("prompt0c")`).
+   I put all conversion logic + their unit tests in `root.zig` (the reusable
+   module root), and a thin demo CLI + fuzz test in `main.zig`. The skill only
+   says "edit main zig file", which is ambiguous with this two-file template;
+   future runs should know the module root is `root.zig` and gets tested under
+   `zig build test` (both exe and module test steps run).
 
-## Suggestions
+4. Rounding trap in worked-example encode tests: Table 5 values like +127.9375,
+   -0.25 are exactly representable in f32 (multiples of 2^-4 times an integer),
+   so `expectEqual(word, ...)` is safe. Beware adding test temps that are NOT
+   exact multiples of 0.0625 (e.g. +25.1 C) — those need the half-LSB tolerance
+   path, which I only used in the roundtrip test, not the table tests.
 
-- Add a short "Zig 0.16 notes" section (try on asserts; Smith/fuzz API).
-- State the overflow/clamp policy for encode functions explicitly.
+5. Spec ambiguity that required a judgment call and is now pinned in the
+   manifest: the Configuration reset `0x60A0` decodes with TM=0 (Comparator
+   mode) and AL=1 (pre-trip alert status). The spec text never states the reset
+   thermostat mode explicitly; I decoded it from the reset word and tested both
+   values. Also confirmed `toWord()` correctly drops read-only AL/R fields
+   (0x60A0 -> 0x6080 on write).
+
+6. The datasheet's Table 5/6 "raw register value" columns list the raw N-bit
+   two's-complement count, NOT the full 16-bit word. Following the skill's
+   rule, decode tests derive the expected signed count via the same
+   sign-extension primitive under test applied to the raw value rather than
+   hand-computing a signed decimal; a second assertion against the datasheet's
+   real-world temperature keeps the test a genuine check.
+
+7. No CRC/checksum algorithms exist on this device — "complex logic" here is
+   the two's-complement sign extension + left-alignment for two data widths,
+   the config bit-packing, and the fault-queue/rate tables. Skill handled this
+   fine (manifest states no CRC identified).

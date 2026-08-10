@@ -3,64 +3,95 @@
 
 → Skill "data-conversions-complex-logic"
 
+# Todos
+[•] Run pwd to establish <original_pwd>
+[ ] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
+[ ] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
+[ ] zig init in artifacts/tmp102/prompt0c
+[ ] Edit src/main.zig with conversion functions + unit tests
+[ ] zig build verify
+[ ] Create conversions_manifest.md
+[ ] Create feedback/prompt0c.md
+
 $ pwd
 /home/pi/Developer/wokwi-ai
 
-$ ls -la artifacts/tmp102/outputs/ 2>/dev/null; ls -la artifacts/ 2>/dev/null
-total 24
-drwxr-xr-x 1 pi pi   140 Aug  9 22:19 .
-drwxr-xr-x 1 pi pi    30 Aug 10 04:19 ..
--rw-r--r-- 1 pi pi     7 Aug  9 21:49 esphome_component.txt
--rw-r--r-- 1 pi pi 10670 Aug  9 22:10 spec_tmp102.md
--rw-r--r-- 1 pi pi  3368 Aug  9 22:19 test_spec_tmp102.md
-drwxr-xr-x 1 pi pi    76 Aug  9 21:51 tmp102
--rw-r--r-- 1 pi pi  1767 Aug  9 21:49 tmp102.mdx
-total 0
-drwxr-xr-x 1 pi pi  12 Aug  9 21:49 .
-drwxr-xr-x 1 pi pi 578 Aug  9 03:52 ..
-drwxr-xr-x 1 pi pi  30 Aug 10 04:19 tmp102
+$ ls -la
+total 84
+drwxr-xr-x 1 pi pi  578 Aug  9 03:52 .
+drwxr-xr-x 1 pi pi  798 Jul 27 11:30 ..
+-rw-r--r-- 1 pi pi 1601 Jul  6 14:24 AGENTS.md
+drwxr-xr-x 1 pi pi   12 Aug 11 02:38 artifacts
+-rwxr-xr-x 1 pi pi  268 Jul 23 06:47 clean.sh
+drwxr-xr-x 1 pi pi 4300 Jul 28 13:12 components
+drwxr-xr-x 1 pi pi 1020 Jul 28 13:13 esphome
+drwxr-xr-x 1 pi pi   12 Aug 11 02:38 feedback
+drwxr-xr-x 1 pi pi  162 Aug 10 05:35 .git
+-rw-r--r-- 1 pi pi  129 Aug  7 13:19 .gitignore
+-rw-r--r-- 1 pi pi 1198 Aug 10 04:33 justfile
+drwxr-xr-x 1 pi pi   12 Aug 11 02:32 logs
+-rw-r--r-- 1 pi pi   49 Aug  3 11:54 prompt0a.txt
+-rw-r--r-- 1 pi pi  104 Aug  3 15:01 prompt0b.txt
+-rw-r--r-- 1 pi pi  108 Aug  3 15:16 prompt0c.txt
+-rw-r--r-- 1 pi pi  131 Aug  9 04:09 prompt2a.txt
+-rw-r--r-- 1 pi pi  142 Aug  5 03:22 prompt2c.txt
+-rw-r--r-- 1 pi pi   59 Aug  5 04:24 prompt2d.txt
+-rw-r--r-- 1 pi pi   71 Aug  8 07:03 prompt2e.txt
+-rw-r--r-- 1 pi pi   66 Jul 31 15:22 prompt2f.txt
+-rw-r--r-- 1 pi pi   82 Jul 31 15:21 prompt2g.txt
+-rw-r--r-- 1 pi pi  102 Jul  3 14:03 prompt4a.txt
+-rw-r--r-- 1 pi pi   61 Jul  5 13:22 prompt4.txt
+-rw-r--r-- 1 pi pi   56 Jun 28 06:34 prompt5.txt
+-rw-r--r-- 1 pi pi   44 Jun 27 10:31 prompt6.txt
+-rw-r--r-- 1 pi pi   44 Jun 27 10:33 prompt7.txt
+-rw-r--r-- 1 pi pi   41 Jun 27 10:34 prompt8.txt
+-rwxr-xr-x 1 pi pi  409 Jun 17 11:11 repomix.sh
+-rwxr-xr-x 1 pi pi  587 Jul 29 16:07 runprompt.sh
+drwxr-xr-x 1 pi pi    0 Jul 30 16:18 tests
+drwxr-xr-x 1 pi pi   12 Jun 15 12:30 .zig-cache
 
-# Todos
-[✓] Run pwd and confirm <original_pwd>
-[•] Read spec_tmp102.md at artifacts/tmp102/outputs/spec_tmp102.md
-[ ] Create artifacts/tmp102/prompt0c dir and run zig init
-[ ] Write zig main file with conversion functions + unit tests
-[ ] Verify with zig build
-[ ] Write conversions_manifest.md
-[ ] Write feedback file feedback/tmp102/prompt0c.md
+$ ls artifacts/tmp102 outputs 2>/dev/null; ls artifacts/tmp102/outputs 2>/dev/null
+artifacts/tmp102:
+outputs
+prompt0a
+esphome_component.txt
+spec_tmp102.md
+test_spec_tmp102.md
+tmp102
+tmp102.mdx
 
-$ ls -la artifacts/tmp102/
+$ ls -la artifacts/tmp102 artifacts/tmp102/outputs artifacts/tmp102/prompt0a
+artifacts/tmp102:
 total 0
-drwxr-xr-x 1 pi pi  30 Aug 10 04:19 .
-drwxr-xr-x 1 pi pi  12 Aug  9 21:49 ..
-drwxr-xr-x 1 pi pi 140 Aug  9 22:19 outputs
-drwxr-xr-x 1 pi pi  18 Aug  9 21:49 prompt0a
+drwxr-xr-x 1 pi pi  30 Aug 11 03:46 .
+drwxr-xr-x 1 pi pi  12 Aug 11 02:38 ..
+drwxr-xr-x 1 pi pi 140 Aug 11 02:54 outputs
+drwxr-xr-x 1 pi pi  18 Aug 11 02:38 prompt0a
+
+artifacts/tmp102/outputs:
+total 28
+drwxr-xr-x 1 pi pi   140 Aug 11 02:54 .
+drwxr-xr-x 1 pi pi    30 Aug 11 03:46 ..
+-rw-r--r-- 1 pi pi     7 Aug 11 02:39 esphome_component.txt
+-rw-r--r-- 1 pi pi 15770 Aug 11 02:49 spec_tmp102.md
+-rw-r--r-- 1 pi pi  3813 Aug 11 02:55 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi    76 Aug 11 02:39 tmp102
+-rw-r--r-- 1 pi pi  1767 Aug 11 02:39 tmp102.mdx
+
+artifacts/tmp102/prompt0a:
+total 0
+drwxr-xr-x 1 pi pi  18 Aug 11 02:38 .
+drwxr-xr-x 1 pi pi  30 Aug 11 03:46 ..
+drwxr-xr-x 1 pi pi 204 Aug 11 02:46 datasheet
+
+$ cat prompt0c.txt
+Create zig 0.16 std project that has data conversion functions and reference algorithms for device <device>
 
 → Read artifacts/tmp102/outputs/spec_tmp102.md
-→ Read artifacts/tmp102/outputs/test_spec_tmp102.md
+Now let me set up the project. First, create dirs and check zig
 
-$ ls -la artifacts/tmp102/prompt0a/ 2>/dev/null; zig version
-total 0
-drwxr-xr-x 1 pi pi  18 Aug  9 21:49 .
-drwxr-xr-x 1 pi pi  30 Aug 10 04:19 ..
-drwxr-xr-x 1 pi pi 204 Aug  9 21:56 datasheet
+$ mkdir -p artifacts/tmp102/prompt0c feedback/tmp102 && zig version
 0.16.0
-
-# Todos
-[✓] Run pwd and confirm <original_pwd>
-[✓] Read spec_tmp102.md at artifacts/tmp102/outputs/spec_tmp102.md
-[•] Create artifacts/tmp102/prompt0c dir and run zig init
-[ ] Write zig main file with conversion functions + unit tests
-[ ] Verify with zig build
-[ ] Write conversions_manifest.md
-[ ] Write feedback file feedback/tmp102/prompt0c.md
-
-Spec and test spec read. Now creating the project.
-✗ mkdir -p artifacts/tmp102/prompt0c && zig init failed
-Error: NotFound: FileSystem.access (/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c)
-
-$ mkdir -p artifacts/tmp102/prompt0c && ls artifacts/tmp102/prompt0c
-(no output)
 
 $ zig init
 info: created build.zig
@@ -72,664 +103,250 @@ info: see `zig build --help` for a menu of options
 → Read artifacts/tmp102/prompt0c/build.zig
 → Read artifacts/tmp102/prompt0c/src/main.zig
 → Read artifacts/tmp102/prompt0c/src/root.zig
-Project scaffolded. Now writing `src/main.zig` with conversion functions and unit
+
+# Todos
+[✓] Run pwd to establish <original_pwd>
+[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
+[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
+[✓] zig init in artifacts/tmp102/prompt0c
+[•] Edit src/main.zig with conversion functions + unit tests
+[ ] zig build verify
+[ ] Create conversions_manifest.md
+[ ] Create feedback/prompt0c.md
+
+Now I'll write the conversion functions. Let me update todos and write `src/root.zig` (the module root holding the reference algorithms) and `src/main.zig`.
+← Write artifacts/tmp102/prompt0c/src/root.zig
+Wrote file successfully.
 
 ← Write artifacts/tmp102/prompt0c/src/main.zig
 Wrote file successfully.
 
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -249,9 +249,9 @@
-     assertEqual(@as(i16, 2047), count12FromTemperatureC(200.0));
-     assertEqual(@as(i16, -2048), count12FromTemperatureC(-200.0));
- }
- 
--test "halff of 0.0625 C resolution: rounding to nearest count" {
-+test "half-count resolution: rounding to nearest count" {
-     // 0.03125 C below/above a count boundary rounds down/up.
-     assertEqual(@as(i16, 4), count12FromTemperatureC(0.25));
-     assertEqual(@as(i16, 3), count12FromTemperatureC(0.1875));
-     assertEqual(@as(i16, -4), count12FromTemperatureC(-0.25));
-
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -284,11 +284,13 @@
-     assertApprox(@as(f32, -25.0), temperatureCFromBytes(0xE7, 0x00), 1e-4);
- }
- 
- test "LSB byte omitted: decode from MSB byte only" {
-+    // LSB of the MSB byte is 4 counts = 0.25 C, so single-byte decode
-+    // quantizes to 0.25 C intervals; sub-LSB values (0.25 C) alias toward 0.
-     assertApprox(@as(f32, 25.0), temperatureCFromMsbByteOnly(0x19), 1e-4);
-     assertApprox(@as(f32, -25.0), temperatureCFromMsbByteOnly(0xE7), 1e-4);
--    assertApprox(@as(f32, 0.25), temperatureCFromMsbByteOnly(0x19 ^ 0x00), 1e-4); // sanity: msb only cannot see 0.25
-+    assertApprox(@as(f32, 0.0), temperatureCFromMsbByteOnly(0x00), 1e-4);
- }
- 
- test "default observable: 21.0 C encodes to 0x1500" {
-     const word = temperatureCToRegisterWord12(21.0);
-
-
-← Write artifacts/tmp102/prompt0c/src/root.zig
-Wrote file successfully.
-
-Now update `root.zig` to re-export the conversion functions so the library module exposes them for downstream reuse
-$ zig build 2>&1 && echo "BUILD OK" && zig build test 2>&1 && echo "TEST OK"
-BUILD OK
-test
-+- run test
-   +- compile test Debug native 13 errors
-/home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:82:15: error: incompatible types: 'i16' and 'u16'
-    const T = @TypeOf(expected, actual);
-              ^~~~~~~~~~~~~~~~~~~~~~~~~
-/home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:82:23: note: type 'i16' here
-    const T = @TypeOf(expected, actual);
-                      ^~~~~~~~
-/home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:82:33: note: type 'u16' here
-    const T = @TypeOf(expected, actual);
-                                ^~~~~~
-src/main.zig:316:16: note: called inline here
-    assertEqual(count & 0x0FFF, @as(u16, @bitCast(count12FromWord(word))) & 0x0FFF);
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-referenced by:
-    fuzz__anon_42319: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/compiler/test_runner.zig:600:20
-    fuzz [inlined]: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:1232:32
-    test.fuzz: encode/decode roundtrips over full 12-bit count range: src/main.zig:309:25
-src/main.zig:194:16: error: error union is ignored
-    assertEqual(@as(i16, 400), signExtend(0x190, 12)); //  25 C raw count
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:194:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:202:16: error: error union is ignored
-    assertEqual(@as(i16, 400), signExtend(0x190, 13));
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:202:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:225:20: error: error union is ignored
-        assertEqual(count, count12FromWord(word));
-        ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:225:20: note: consider using 'try', 'catch', or 'if'
-src/main.zig:235:16: error: error union is ignored
-    assertEqual(@as(i16, 4), count12FromWord(0x0040));
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:235:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:247:16: error: error union is ignored
-    assertEqual(@as(u16, 0x7FF0), temperatureCToRegisterWord12(200.0));
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:247:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:255:16: error: error union is ignored
-    assertEqual(@as(i16, 4), count12FromTemperatureC(0.25));
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:255:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:263:16: error: error union is ignored
-    assertEqual(@as(u16, 0x0C81), temperatureCToRegisterWord13(25.0));
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:263:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:274:17: error: error union is ignored
-    assertApprox(@as(f32, 21.0), temperatureCFromWordAuto(0x1500), 1e-4); // Normal
-    ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:274:17: note: consider using 'try', 'catch', or 'if'
-src/main.zig:279:16: error: error union is ignored
-    assertEqual(@as(u16, 0x1900), bytesToWord(0x19, 0x00)); // 25 C
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:279:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:290:17: error: error union is ignored
-    assertApprox(@as(f32, 25.0), temperatureCFromMsbByteOnly(0x19), 1e-4);
-    ~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:290:17: note: consider using 'try', 'catch', or 'if'
-src/main.zig:297:16: error: error union is ignored
-    assertEqual(@as(u16, 0x1500), word); // 21/0.0625 = 336 = 0x150
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:297:16: note: consider using 'try', 'catch', or 'if'
-src/main.zig:303:16: error: error union is ignored
-    assertEqual(@as(u16, 0x0000), temperatureCToRegisterWord12(0.0));
-    ~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:303:16: note: consider using 'try', 'catch', or 'if'
-error: 13 compilation errors
-failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
-
-Build Summary: 2/5 steps succeeded (1 failed)
-test transitive failure
-+- run test transitive failure
-   +- compile test Debug native 13 errors
-
-error: the following build command failed with exit code 1:
-.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x70c8709a -Zbf3644deb4af6271 test
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -190,20 +190,20 @@
- const assertEqual = std.testing.expectEqual;
- const assertApprox = std.testing.expectApproxEqRel;
- 
- test "signExtend: positive and negative 12-bit values" {
--    assertEqual(@as(i16, 400), signExtend(0x190, 12)); //  25 C raw count
--    assertEqual(@as(i16, -4), signExtend(0xFFC, 12)); // -0.25 C raw count
--    assertEqual(@as(i16, -400), signExtend(0xE70, 12)); // -25 C raw count
--    assertEqual(@as(i16, 2047), signExtend(0x7FF, 12)); // max positive
--    assertEqual(@as(i16, -2048), signExtend(0x800, 12)); // min negative
-+    try assertEqual(@as(i16, 400), signExtend(0x190, 12)); //  25 C raw count
-+    try assertEqual(@as(i16, -4), signExtend(0xFFC, 12)); // -0.25 C raw count
-+    try assertEqual(@as(i16, -400), signExtend(0xE70, 12)); // -25 C raw count
-+    try assertEqual(@as(i16, 2047), signExtend(0x7FF, 12)); // max positive
-+    try assertEqual(@as(i16, -2048), signExtend(0x800, 12)); // min negative
- }
- 
- test "signExtend: 13-bit extended values" {
--    assertEqual(@as(i16, 400), signExtend(0x190, 13));
--    assertEqual(@as(i16, -400), signExtend(0x1E70, 13)); // -25 C, 13-bit
--    assertEqual(@as(i16, 4095), signExtend(0x1FFF, 13));
--    assertEqual(@as(i16, -4096), signExtend(0x1000, 13));
-+    try assertEqual(@as(i16, 400), signExtend(0x190, 13));
-+    try assertEqual(@as(i16, -400), signExtend(0x1E70, 13)); // -25 C, 13-bit
-+    try assertEqual(@as(i16, 4095), signExtend(0x1FFF, 13));
-+    try assertEqual(@as(i16, -4096), signExtend(0x1000, 13));
- }
- 
- test "datasheet Table 6-2: word decode (12-bit, EM=0)" {
-     // Real-world | raw count | full register word
-@@ -221,50 +221,50 @@
-     for (vectors) |v| {
-         const deg_c: i32 = v[0];
-         const count: i16 = @intCast(v[1]);
-         const word: u16 = @intCast(v[2]);
--        assertEqual(count, count12FromWord(word));
-+        try assertEqual(count, count12FromWord(word));
-         assertApprox(@as(f32, @floatFromInt(deg_c)), temperatureCFromWord(word), 1e-4);
--        assertEqual(word, count12ToWord(count));
--        assertEqual(count, count12FromTemperatureC(@floatFromInt(deg_c)));
--        assertEqual(word, temperatureCToRegisterWord12(@floatFromInt(deg_c)));
-+        try assertEqual(word, count12ToWord(count));
-+        try assertEqual(count, count12FromTemperatureC(@floatFromInt(deg_c)));
-+        try assertEqual(word, temperatureCToRegisterWord12(@floatFromInt(deg_c)));
-     }
- }
- 
- test "datasheet Table 6-2: 0.25 C and min/max edges" {
-     //  0.25 C -> 0x004 -> word 0x0040
--    assertEqual(@as(i16, 4), count12FromWord(0x0040));
-+    try assertEqual(@as(i16, 4), count12FromWord(0x0040));
-     assertApprox(@as(f32, 0.25), temperatureCFromWord(0x0040), 1e-4);
--    assertEqual(@as(u16, 0x0040), temperatureCToRegisterWord12(0.25));
-+    try assertEqual(@as(u16, 0x0040), temperatureCToRegisterWord12(0.25));
-     // -0.25 C -> 0xFFC -> word 0xFFC0
--    assertEqual(@as(i16, -4), count12FromWord(0xFFC0));
-+    try assertEqual(@as(i16, -4), count12FromWord(0xFFC0));
-     assertApprox(@as(f32, -0.25), temperatureCFromWord(0xFFC0), 1e-4);
-     // max representable: 0x7FF0 = 127.9375 C (datasheet lists 128 also as 0x7FF)
-     assertApprox(@as(f32, 127.9375), temperatureCFromWord(0x7FF0), 1e-4);
-     assertApprox(@as(f32, -128.0), temperatureCFromWord(0x8000), 1e-4);
- }
- 
- test "encode clamps out-of-range temperatures to 12-bit span" {
--    assertEqual(@as(u16, 0x7FF0), temperatureCToRegisterWord12(200.0));
--    assertEqual(@as(u16, 0x8000), temperatureCToRegisterWord12(-200.0));
--    assertEqual(@as(i16, 2047), count12FromTemperatureC(200.0));
--    assertEqual(@as(i16, -2048), count12FromTemperatureC(-200.0));
-+    try assertEqual(@as(u16, 0x7FF0), temperatureCToRegisterWord12(200.0));
-+    try assertEqual(@as(u16, 0x8000), temperatureCToRegisterWord12(-200.0));
-+    try assertEqual(@as(i16, 2047), count12FromTemperatureC(200.0));
-+    try assertEqual(@as(i16, -2048), count12FromTemperatureC(-200.0));
- }
- 
- test "half-count resolution: rounding to nearest count" {
-     // 0.03125 C below/above a count boundary rounds down/up.
--    assertEqual(@as(i16, 4), count12FromTemperatureC(0.25));
--    assertEqual(@as(i16, 3), count12FromTemperatureC(0.1875));
--    assertEqual(@as(i16, -4), count12FromTemperatureC(-0.25));
--    assertEqual(@as(i16, -3), count12FromTemperatureC(-0.1875));
-+    try assertEqual(@as(i16, 4), count12FromTemperatureC(0.25));
-+    try assertEqual(@as(i16, 3), count12FromTemperatureC(0.1875));
-+    try assertEqual(@as(i16, -4), count12FromTemperatureC(-0.25));
-+    try assertEqual(@as(i16, -3), count12FromTemperatureC(-0.1875));
- }
- 
- test "extended mode (13-bit): encode/decode roundtrip" {
-     // 25 C -> 13-bit count 0x190 -> word (0x190 << 3) | 1 = 0xC81
--    assertEqual(@as(u16, 0x0C81), temperatureCToRegisterWord13(25.0));
-+    try assertEqual(@as(u16, 0x0C81), temperatureCToRegisterWord13(25.0));
-     assertApprox(@as(f32, 25.0), temperatureCFromWordExtended(0x0C81), 1e-4);
-     // -25 C -> 13-bit count 0x1E70 -> word 0xF381
--    assertEqual(@as(u16, 0xF381), temperatureCToRegisterWord13(-25.0));
-+    try assertEqual(@as(u16, 0xF381), temperatureCToRegisterWord13(-25.0));
-     assertApprox(@as(f32, -25.0), temperatureCFromWordExtended(0xF381), 1e-4);
-     // Marker distinguishes formats.
-     assert(registerIsExtendedMode(0xF381));
-     assert(!registerIsExtendedMode(0xE700));
-@@ -275,10 +275,10 @@
-     assertApprox(@as(f32, 25.0), temperatureCFromWordAuto(0x0C81), 1e-4); // Extended
- }
- 
- test "byte packing: MSB-first bus order" {
--    assertEqual(@as(u16, 0x1900), bytesToWord(0x19, 0x00)); // 25 C
--    assertEqual(@as(u16, 0xE700), bytesToWord(0xE7, 0x00)); // -25 C
-+    try assertEqual(@as(u16, 0x1900), bytesToWord(0x19, 0x00)); // 25 C
-+    try assertEqual(@as(u16, 0xE700), bytesToWord(0xE7, 0x00)); // -25 C
-     assertEqualSlicesBytes(&[_]u8{ 0x19, 0x00 }, &wordToBytes(0x1900));
-     assertEqualSlicesBytes(&[_]u8{ 0xE7, 0x00 }, &wordToBytes(0xE700));
-     assertApprox(@as(f32, 25.0), temperatureCFromBytes(0x19, 0x00), 1e-4);
-     assertApprox(@as(f32, -25.0), temperatureCFromBytes(0xE7, 0x00), 1e-4);
-@@ -293,17 +293,17 @@
- }
- 
- test "default observable: 21.0 C encodes to 0x1500" {
-     const word = temperatureCToRegisterWord12(21.0);
--    assertEqual(@as(u16, 0x1500), word); // 21/0.0625 = 336 = 0x150
-+    try assertEqual(@as(u16, 0x1500), word); // 21/0.0625 = 336 = 0x150
-     assertApprox(@as(f32, 21.0), temperatureCFromWord(word), 1e-4);
-     assertApprox(@as(f32, 21.0), temperatureCFromBytes(0x15, 0x00), 1e-4);
- }
- 
- test "power-up default register reads 0 C until first conversion" {
--    assertEqual(@as(u16, 0x0000), temperatureCToRegisterWord12(0.0));
-+    try assertEqual(@as(u16, 0x0000), temperatureCToRegisterWord12(0.0));
-     assertApprox(@as(f32, 0.0), temperatureCFromWord(0x0000), 1e-4);
--    assertEqual(@as(f32, 0.0), temperatureCFromMsbByteOnly(0x00));
-+    try assertEqual(@as(f32, 0.0), temperatureCFromMsbByteOnly(0x00));
- }
- 
- test "fuzz: encode/decode roundtrips over full 12-bit count range" {
-     try std.testing.fuzz({}, fuzzRoundtrip12, .{});
-@@ -312,11 +312,11 @@
- fn fuzzRoundtrip12(context: void, smith: *std.testing.Smith) !void {
-     _ = context;
-     const count: i16 = @bitCast(smith.value(u16));
-     const word = count12ToWord(count);
--    assertEqual(count & 0x0FFF, @as(u16, @bitCast(count12FromWord(word))) & 0x0FFF);
-+    try assertEqual(count & 0x0FFF, @as(u16, @bitCast(count12FromWord(word))) & 0x0FFF);
- }
- 
- fn assertEqualSlicesBytes(expected: *const [2]u8, actual: *const [2]u8) void {
--    assertEqual(expected[0], actual[0]);
--    assertEqual(expected[1], actual[1]);
-+    try assertEqual(expected[0], actual[0]);
-+    try assertEqual(expected[1], actual[1]);
- }
-\ No newline at end of file
-
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -222,9 +222,9 @@
-         const deg_c: i32 = v[0];
-         const count: i16 = @intCast(v[1]);
-         const word: u16 = @intCast(v[2]);
-         try assertEqual(count, count12FromWord(word));
--        assertApprox(@as(f32, @floatFromInt(deg_c)), temperatureCFromWord(word), 1e-4);
-+        try assertApprox(@as(f32, @floatFromInt(deg_c)), temperatureCFromWord(word), 1e-4);
-         try assertEqual(word, count12ToWord(count));
-         try assertEqual(count, count12FromTemperatureC(@floatFromInt(deg_c)));
-         try assertEqual(word, temperatureCToRegisterWord12(@floatFromInt(deg_c)));
-     }
-@@ -232,16 +232,16 @@
- 
- test "datasheet Table 6-2: 0.25 C and min/max edges" {
-     //  0.25 C -> 0x004 -> word 0x0040
-     try assertEqual(@as(i16, 4), count12FromWord(0x0040));
--    assertApprox(@as(f32, 0.25), temperatureCFromWord(0x0040), 1e-4);
-+    try assertApprox(@as(f32, 0.25), temperatureCFromWord(0x0040), 1e-4);
-     try assertEqual(@as(u16, 0x0040), temperatureCToRegisterWord12(0.25));
-     // -0.25 C -> 0xFFC -> word 0xFFC0
-     try assertEqual(@as(i16, -4), count12FromWord(0xFFC0));
--    assertApprox(@as(f32, -0.25), temperatureCFromWord(0xFFC0), 1e-4);
-+    try assertApprox(@as(f32, -0.25), temperatureCFromWord(0xFFC0), 1e-4);
-     // max representable: 0x7FF0 = 127.9375 C (datasheet lists 128 also as 0x7FF)
--    assertApprox(@as(f32, 127.9375), temperatureCFromWord(0x7FF0), 1e-4);
--    assertApprox(@as(f32, -128.0), temperatureCFromWord(0x8000), 1e-4);
-+    try assertApprox(@as(f32, 127.9375), temperatureCFromWord(0x7FF0), 1e-4);
-+    try assertApprox(@as(f32, -128.0), temperatureCFromWord(0x8000), 1e-4);
- }
- 
- test "encode clamps out-of-range temperatures to 12-bit span" {
-     try assertEqual(@as(u16, 0x7FF0), temperatureCToRegisterWord12(200.0));
-@@ -260,49 +260,49 @@
- 
- test "extended mode (13-bit): encode/decode roundtrip" {
-     // 25 C -> 13-bit count 0x190 -> word (0x190 << 3) | 1 = 0xC81
-     try assertEqual(@as(u16, 0x0C81), temperatureCToRegisterWord13(25.0));
--    assertApprox(@as(f32, 25.0), temperatureCFromWordExtended(0x0C81), 1e-4);
-+    try assertApprox(@as(f32, 25.0), temperatureCFromWordExtended(0x0C81), 1e-4);
-     // -25 C -> 13-bit count 0x1E70 -> word 0xF381
-     try assertEqual(@as(u16, 0xF381), temperatureCToRegisterWord13(-25.0));
--    assertApprox(@as(f32, -25.0), temperatureCFromWordExtended(0xF381), 1e-4);
-+    try assertApprox(@as(f32, -25.0), temperatureCFromWordExtended(0xF381), 1e-4);
-     // Marker distinguishes formats.
-     assert(registerIsExtendedMode(0xF381));
-     assert(!registerIsExtendedMode(0xE700));
- }
- 
- test "auto-detection via D0 marker" {
--    assertApprox(@as(f32, 21.0), temperatureCFromWordAuto(0x1500), 1e-4); // Normal
--    assertApprox(@as(f32, 25.0), temperatureCFromWordAuto(0x0C81), 1e-4); // Extended
-+    try assertApprox(@as(f32, 21.0), temperatureCFromWordAuto(0x1500), 1e-4); // Normal
-+    try assertApprox(@as(f32, 25.0), temperatureCFromWordAuto(0x0C81), 1e-4); // Extended
- }
- 
- test "byte packing: MSB-first bus order" {
-     try assertEqual(@as(u16, 0x1900), bytesToWord(0x19, 0x00)); // 25 C
-     try assertEqual(@as(u16, 0xE700), bytesToWord(0xE7, 0x00)); // -25 C
-     assertEqualSlicesBytes(&[_]u8{ 0x19, 0x00 }, &wordToBytes(0x1900));
-     assertEqualSlicesBytes(&[_]u8{ 0xE7, 0x00 }, &wordToBytes(0xE700));
--    assertApprox(@as(f32, 25.0), temperatureCFromBytes(0x19, 0x00), 1e-4);
--    assertApprox(@as(f32, -25.0), temperatureCFromBytes(0xE7, 0x00), 1e-4);
-+    try assertApprox(@as(f32, 25.0), temperatureCFromBytes(0x19, 0x00), 1e-4);
-+    try assertApprox(@as(f32, -25.0), temperatureCFromBytes(0xE7, 0x00), 1e-4);
- }
- 
- test "LSB byte omitted: decode from MSB byte only" {
-     // LSB of the MSB byte is 4 counts = 0.25 C, so single-byte decode
-     // quantizes to 0.25 C intervals; sub-LSB values (0.25 C) alias toward 0.
--    assertApprox(@as(f32, 25.0), temperatureCFromMsbByteOnly(0x19), 1e-4);
--    assertApprox(@as(f32, -25.0), temperatureCFromMsbByteOnly(0xE7), 1e-4);
--    assertApprox(@as(f32, 0.0), temperatureCFromMsbByteOnly(0x00), 1e-4);
-+    try assertApprox(@as(f32, 25.0), temperatureCFromMsbByteOnly(0x19), 1e-4);
-+    try assertApprox(@as(f32, -25.0), temperatureCFromMsbByteOnly(0xE7), 1e-4);
-+    try assertApprox(@as(f32, 0.0), temperatureCFromMsbByteOnly(0x00), 1e-4);
- }
- 
- test "default observable: 21.0 C encodes to 0x1500" {
-     const word = temperatureCToRegisterWord12(21.0);
-     try assertEqual(@as(u16, 0x1500), word); // 21/0.0625 = 336 = 0x150
--    assertApprox(@as(f32, 21.0), temperatureCFromWord(word), 1e-4);
--    assertApprox(@as(f32, 21.0), temperatureCFromBytes(0x15, 0x00), 1e-4);
-+    try assertApprox(@as(f32, 21.0), temperatureCFromWord(word), 1e-4);
-+    try assertApprox(@as(f32, 21.0), temperatureCFromBytes(0x15, 0x00), 1e-4);
- }
- 
- test "power-up default register reads 0 C until first conversion" {
-     try assertEqual(@as(u16, 0x0000), temperatureCToRegisterWord12(0.0));
--    assertApprox(@as(f32, 0.0), temperatureCFromWord(0x0000), 1e-4);
-+    try assertApprox(@as(f32, 0.0), temperatureCFromWord(0x0000), 1e-4);
-     try assertEqual(@as(f32, 0.0), temperatureCFromMsbByteOnly(0x00));
- }
- 
- test "fuzz: encode/decode roundtrips over full 12-bit count range" {
-
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -265,10 +265,10 @@
-     // -25 C -> 13-bit count 0x1E70 -> word 0xF381
-     try assertEqual(@as(u16, 0xF381), temperatureCToRegisterWord13(-25.0));
-     try assertApprox(@as(f32, -25.0), temperatureCFromWordExtended(0xF381), 1e-4);
-     // Marker distinguishes formats.
--    assert(registerIsExtendedMode(0xF381));
--    assert(!registerIsExtendedMode(0xE700));
-+    try assert(registerIsExtendedMode(0xF381));
-+    try assert(!registerIsExtendedMode(0xE700));
- }
- 
- test "auto-detection via D0 marker" {
-     try assertApprox(@as(f32, 21.0), temperatureCFromWordAuto(0x1500), 1e-4); // Normal
-
-
-Zig 0.16's `expectEqual`/`expectApproxEqRel`/`expect` return error unions. Adding `try` throughout and fixing a type mismatch.
-✗ Edit artifacts/tmp102/prompt0c/src/main.zig failed
-Error: Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
-→ Read artifacts/tmp102/prompt0c/src/main.zig [offset=130, limit=50]
-→ Read artifacts/tmp102/prompt0c/src/main.zig [offset=305]
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -312,9 +312,9 @@
- fn fuzzRoundtrip12(context: void, smith: *std.testing.Smith) !void {
-     _ = context;
-     const count: i16 = @bitCast(smith.value(u16));
-     const word = count12ToWord(count);
--    try assertEqual(count & 0x0FFF, @as(u16, @bitCast(count12FromWord(word))) & 0x0FFF);
-+    try assertEqual(@as(u16, @bitCast(count)) & 0x0FFF, @as(u16, @bitCast(count12FromWord(word))) & 0x0FFF);
- }
- 
- fn assertEqualSlicesBytes(expected: *const [2]u8, actual: *const [2]u8) void {
-     try assertEqual(expected[0], actual[0]);
-
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -315,8 +315,8 @@
-     const word = count12ToWord(count);
-     try assertEqual(@as(u16, @bitCast(count)) & 0x0FFF, @as(u16, @bitCast(count12FromWord(word))) & 0x0FFF);
- }
- 
--fn assertEqualSlicesBytes(expected: *const [2]u8, actual: *const [2]u8) void {
-+fn assertEqualSlicesBytes(expected: *const [2]u8, actual: *const [2]u8) !void {
-     try assertEqual(expected[0], actual[0]);
-     try assertEqual(expected[1], actual[1]);
- }
-\ No newline at end of file
-
-
-$ zig build 2>&1 && echo "BUILD OK" && zig build test 2>&1 && echo "TEST OK"
-BUILD OK
-test
-+- run test
-   +- compile test Debug native 1 errors
-src/main.zig:281:27: error: error union is ignored
-    assertEqualSlicesBytes(&[_]u8{ 0x19, 0x00 }, &wordToBytes(0x1900));
-    ~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-src/main.zig:281:27: note: consider using 'try', 'catch', or 'if'
+Now rewrite `src/main.zig` as a CLI demo of the conversions plus a fuzz roundtrip:
+$ zig build 2>&1 && echo "BUILD OK"
+install
++- install prompt0c
+   +- compile exe prompt0c Debug native 1 errors
+src/main.zig:6:13: error: unused function parameter
+pub fn main(init: std.process.Init) !void {
+            ^~~~
 error: 1 compilation errors
-failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig build-exe -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name prompt0c --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
 
-Build Summary: 2/5 steps succeeded (1 failed)
-test transitive failure
-+- run test transitive failure
-   +- compile test Debug native 1 errors
+Build Summary: 0/3 steps succeeded (1 failed)
+install transitive failure
++- install prompt0c transitive failure
+   +- compile exe prompt0c Debug native 1 errors
 
 error: the following build command failed with exit code 1:
-.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x5fda04aa -Z58c26a6a1770e5e3 test
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x7e30fad8 -Zc778b7d19f2c0976
 
 ← Edit artifacts/tmp102/prompt0c/src/main.zig
 Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
 ===================================================================
 --- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
 +++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -277,10 +277,10 @@
+@@ -3,8 +3,9 @@
  
- test "byte packing: MSB-first bus order" {
-     try assertEqual(@as(u16, 0x1900), bytesToWord(0x19, 0x00)); // 25 C
-     try assertEqual(@as(u16, 0xE700), bytesToWord(0xE7, 0x00)); // -25 C
--    assertEqualSlicesBytes(&[_]u8{ 0x19, 0x00 }, &wordToBytes(0x1900));
--    assertEqualSlicesBytes(&[_]u8{ 0xE7, 0x00 }, &wordToBytes(0xE700));
-+    try assertEqualSlicesBytes(&[_]u8{ 0x19, 0x00 }, &wordToBytes(0x1900));
-+    try assertEqualSlicesBytes(&[_]u8{ 0xE7, 0x00 }, &wordToBytes(0xE700));
-     try assertApprox(@as(f32, 25.0), temperatureCFromBytes(0x19, 0x00), 1e-4);
-     try assertApprox(@as(f32, -25.0), temperatureCFromBytes(0xE7, 0x00), 1e-4);
- }
+ const prompt0c = @import("prompt0c");
  
+ pub fn main(init: std.process.Init) !void {
++    _ = init;
+     // Prints worked examples to stderr, unbuffered, ignoring potential errors.
+     std.debug.print("TMP102 data conversions\n", .{});
+     std.debug.print("  +100 C Normal  -> word 0x{x:0>4} (decode back: {d})\n", .{
+         prompt0c.encodeTempNormal(100.0),
 
 
-$ zig build 2>&1 && echo "BUILD OK" && zig build test 2>&1 && echo "TEST OK"
+$ zig build 2>&1 && echo "BUILD OK"
 BUILD OK
+
+$ zig build test 2>&1 && echo "TESTS OK"
 test
-+- run test 11 pass, 2 fail (13 total)
-error: 'main.test.signExtend: 13-bit extended values' failed:
-       expected 4095, found -1
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x118b5c3 in expectEqualInner__anon_46259 (test)
++- run test 1 pass, 1 fail (2 total)
+error: 'main.test.config reset roundtrip through prompt0c module' failed:
+       expected .interrupt, found .comparator
+       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x117eba3 in expectEqualInner__anon_42639 (test)
                        return error.TestExpectedEqual;
                        ^
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x118d0c3 in expectEqual (test)
+       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x117ec4f in expectEqual (test)
            return expectEqualInner(T, expected, actual);
            ^
-       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig:204:5: 0x118d12b in test.signExtend: 13-bit extended values (test)
-           try assertEqual(@as(i16, 4095), signExtend(0x1FFF, 13));
+       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig:30:5: 0x117ec8f in test.config reset roundtrip through prompt0c module (test)
+           try std.testing.expectEqual(prompt0c.ThermostatMode.interrupt, cfg.thermostat_mode);
            ^
-error: 'main.test.datasheet Table 6-2: word decode (12-bit, EM=0)' failed:
-       actual 127.9375, not within relative tolerance 0.0001 of expected 128
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:336:13: 0x1184e6b in expectApproxEqRelInner__anon_42592 (test)
-                   return error.TestExpectedApproxEqRel;
-                   ^
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:329:5: 0x118cd0b in expectApproxEqRel (test)
-           return expectApproxEqRelInner(T, expected, actual, tolerance);
-           ^
-       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig:226:9: 0x118cd73 in test.datasheet Table 6-2: word decode (12-bit, EM=0) (test)
-               try assertApprox(@as(f32, @floatFromInt(deg_c)), temperatureCFromWord(word), 1e-4);
-               ^
-failed command: ./.zig-cache/o/74c859906ec8cf3196eda8c8ffad79ff/test --cache-dir=./.zig-cache --seed=0x39bcab82 --listen=-
+failed command: ./.zig-cache/o/e4311da1abb47e905fee217ebe95f54b/test --cache-dir=./.zig-cache --seed=0x7b994e15 --listen=-
 
-Build Summary: 3/5 steps succeeded (1 failed); 11/13 tests passed (2 failed)
-test transitive failure
-+- run test 11 pass, 2 fail (13 total)
-
-error: the following build command failed with exit code 1:
-.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x39bcab82 -Zc44c3fb910a26e47 test
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -200,9 +200,10 @@
- 
- test "signExtend: 13-bit extended values" {
-     try assertEqual(@as(i16, 400), signExtend(0x190, 13));
-     try assertEqual(@as(i16, -400), signExtend(0x1E70, 13)); // -25 C, 13-bit
--    try assertEqual(@as(i16, 4095), signExtend(0x1FFF, 13));
-+    try assertEqual(@as(i16, 4095), signExtend(0x0FFF, 13)); // max positive
-+    try assertEqual(@as(i16, -1), signExtend(0x1FFF, 13)); // all bits set = -1
-     try assertEqual(@as(i16, -4096), signExtend(0x1000, 13));
- }
- 
- test "datasheet Table 6-2: word decode (12-bit, EM=0)" {
-
-
-Both failures are test-side expectation errors, not function bugs: 0x1FFF is -1 in 13-bit, and decoding 0x7FF0 yields 127.9375 not 128. Fixing the test
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -223,12 +223,15 @@
-         const deg_c: i32 = v[0];
-         const count: i16 = @intCast(v[1]);
-         const word: u16 = @intCast(v[2]);
-         try assertEqual(count, count12FromWord(word));
--        try assertApprox(@as(f32, @floatFromInt(deg_c)), temperatureCFromWord(word), 1e-4);
-         try assertEqual(word, count12ToWord(count));
-         try assertEqual(count, count12FromTemperatureC(@floatFromInt(deg_c)));
-         try assertEqual(word, temperatureCToRegisterWord12(@floatFromInt(deg_c)));
-+        // Register holds the count exactly, so decode must reproduce
-+        // count * LSB (max count 0x7FF decodes to 127.9375, not 128).
-+        const expected_temp = @as(f32, @floatFromInt(count)) * LSB_DEGC;
-+        try assertApprox(expected_temp, temperatureCFromWord(word), 1e-6);
-     }
- }
- 
- test "datasheet Table 6-2: 0.25 C and min/max edges" {
-
-
-$ zig build 2>&1 && echo "BUILD OK" && zig build test 2>&1 && echo "TEST OK"
-BUILD OK
 test
-+- run test 12 pass, 1 fail (13 total)
-error: 'main.test.datasheet Table 6-2: word decode (12-bit, EM=0)' failed:
-       expected 3696, found -400
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x118b5e3 in expectEqualInner__anon_46259 (test)
++- run test 13 pass, 2 fail (15 total)
+error: 'root.test.config register reset value 0x60A0 decodes' failed:
+       expected .interrupt, found .comparator
+       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x118c60b in expectEqualInner__anon_46216 (test)
                        return error.TestExpectedEqual;
                        ^
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x118cc7b in expectEqual (test)
+       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x118e00f in expectEqual (test)
            return expectEqualInner(T, expected, actual);
            ^
-       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig:226:9: 0x118cce3 in test.datasheet Table 6-2: word decode (12-bit, EM=0) (test)
-               try assertEqual(count, count12FromWord(word));
-               ^
-failed command: ./.zig-cache/o/65d25772347507a47426848c505b3c6d/test --cache-dir=./.zig-cache --seed=0xb3e29512 --listen=-
+       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig:388:5: 0x118e083 in test.config register reset value 0x60A0 decodes (test)
+           try std.testing.expectEqual(ThermostatMode.interrupt, cfg.thermostat_mode);
+           ^
+error: 'root.test.config toWord forces read-only fields and keeps reserved bits clear' failed:
+       expected 24736, found 24704
+       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x118c54f in expectEqualInner__anon_46201 (test)
+                       return error.TestExpectedEqual;
+                       ^
+       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x118c7a3 in expectEqual (test)
+           return expectEqualInner(T, expected, actual);
+           ^
+       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig:400:5: 0x118c8a3 in test.config toWord forces read-only fields and keeps reserved bits clear (test)
+           try std.testing.expectEqual(@as(u16, 0x60A0), cfg.toWord());
+           ^
+failed command: ./.zig-cache/o/687417cae90dd3a42bac13ff0f89e4c3/test --cache-dir=./.zig-cache --seed=0x7b994e15 --listen=-
 
-Build Summary: 3/5 steps succeeded (1 failed); 12/13 tests passed (1 failed)
+Build Summary: 2/5 steps succeeded (2 failed); 14/17 tests passed (3 failed)
 test transitive failure
-+- run test 12 pass, 1 fail (13 total)
++- run test 13 pass, 2 fail (15 total)
++- run test 1 pass, 1 fail (2 total)
 
 error: the following build command failed with exit code 1:
-.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0xb3e29512 -Z2a7d9ecdf9c2f053 test
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x7b994e15 -Z939fb6d00c4d53a3 test
 
-The datasheet HEX column for negatives is unsigned two's complement (0xE70 = -400, 0xC90 = -880). Deriving the expected signed count via `signExtend` from the hex:
+Two test failures are my wrong assumptions about the reset config. `0x60A0` → bit5 (AL)=1 and bit9 (TM)=0. Let me verify the decode with a quick calc, then fix the tests:
+$ python3 -c "
+w=0x60A0
+print('bit9/TM', (w>>9)&1, 'bit5/AL', (w>>5)&1, 'CR', (w>>6)&3, 'R', (w>>13)&3, 'F', (w>>11)&3)
+print('toWord dropping read-only ->', (w & ~0x0020) & ~0x6000 | 0x6000)
+print('0x6080 =', 0x6080, '0x60A0 =', 0x60A0)
+"
+bit9/TM 0 bit5/AL 1 CR 2 R 3 F 0
+toWord dropping read-only -> 24704
+0x6080 = 24704 0x60A0 = 24736
+
+Confirmed. Fixing the three wrong
+← Edit artifacts/tmp102/prompt0c/src/root.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+@@ -384,13 +384,13 @@
+     try std.testing.expectEqual(@as(u2, 0b11), cfg.resolution_bits);
+     try std.testing.expectEqual(@as(u2, 0b00), cfg.fault_queue_bits);
+     try std.testing.expectEqual(1, faultQueueCount(cfg.fault_queue_bits));
+     try std.testing.expectEqual(false, cfg.polarity);
+-    try std.testing.expectEqual(ThermostatMode.interrupt, cfg.thermostat_mode);
++    try std.testing.expectEqual(ThermostatMode.comparator, cfg.thermostat_mode);
+     try std.testing.expectEqual(false, cfg.shutdown);
+     try std.testing.expectEqual(@as(u2, 0b10), cfg.conversion_rate_bits);
+     try std.testing.expectApproxEqRel(4.0, conversionRateHz(cfg.conversion_rate_bits), 1e-6);
+-    try std.testing.expectEqual(false, cfg.alert_status);
++    try std.testing.expectEqual(true, cfg.alert_status);
+     try std.testing.expectEqual(false, cfg.extended_mode);
+ }
+ 
+ test "config toWord forces read-only fields and keeps reserved bits clear" {
+
+
+← Edit artifacts/tmp102/prompt0c/src/root.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
+@@ -396,9 +396,10 @@
+ test "config toWord forces read-only fields and keeps reserved bits clear" {
+     var cfg = Config.fromWord(0x60A0);
+     cfg.alert_status = true; // read-only: must not change the packed word
+     cfg.resolution_bits = 0b00; // read-only: forced back to 0b11 on write
+-    try std.testing.expectEqual(@as(u16, 0x60A0), cfg.toWord());
++    // reset word has AL=1 (read-only); it must not survive a write.
++    try std.testing.expectEqual(@as(u16, 0x6080), cfg.toWord());
+ 
+     cfg = .{};
+     cfg.thermostat_mode = .interrupt;
+     cfg.extended_mode = true;
+
+
 ← Edit artifacts/tmp102/prompt0c/src/main.zig
 Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
 ===================================================================
 --- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
 +++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -220,11 +220,15 @@
-     .{ -55, 0xC90, 0xC900 },
- };
- for (vectors) |v| {
-     const deg_c: i32 = v[0];
--    const count: i16 = @intCast(v[1]);
-+    const raw_count_hex: u16 = @intCast(v[1]);
-+    // Datasheet HEX column lists the raw two's-complement count unsigned;
-+    // sign-extend its 12 bits to recover the signed count.
-+    const count: i16 = signExtend(raw_count_hex, 12);
-     const word: u16 = @intCast(v[2]);
-     try assertEqual(count, count12FromWord(word));
-+    try assertEqual(raw_count_hex, @as(u16, @bitCast(count)) & 0x0FFF);
-     try assertEqual(word, count12ToWord(count));
-     try assertEqual(count, count12FromTemperatureC(@floatFromInt(deg_c)));
-     try assertEqual(word, temperatureCToRegisterWord12(@floatFromInt(deg_c)));
-     // Register holds the count exactly, so decode must reproduce
+@@ -26,9 +26,9 @@
+ }
+ 
+ test "config reset roundtrip through prompt0c module" {
+     const cfg = prompt0c.Config.fromWord(0x60A0);
+-    try std.testing.expectEqual(prompt0c.ThermostatMode.interrupt, cfg.thermostat_mode);
++    try std.testing.expectEqual(prompt0c.ThermostatMode.comparator, cfg.thermostat_mode);
+ }
+ 
+ test "fuzz: encode then decode is a stable fixed point" {
+     try std.testing.fuzz({}, fuzzRoundTrip, .{});
 
 
-$ zig build 2>&1 && echo "BUILD OK" && zig build test 2>&1 && echo "TEST OK"
-BUILD OK
-TEST OK
+$ zig build 2>&1 && zig build test 2>&1 && echo "ALL OK"
+ALL OK
+
+All pass. Let me also run the demo to sanity-check the CLI
+$ zig build run 2>&1
+TMP102 data conversions
+  +100 C Normal  -> word 0x6400 (decode back: 100)
+  -25 C Normal   -> word 0xe700 (decode back: -25)
+  +150 C Extend  -> word 0x4b01 (decode back: 150)
+  0x6400 msb/lsb -> 64 00 (big-endian)
 
 # Todos
-[✓] Run pwd and confirm <original_pwd>
-[✓] Read spec_tmp102.md at artifacts/tmp102/outputs/spec_tmp102.md
-[✓] Create artifacts/tmp102/prompt0c dir and run zig init
-[✓] Write zig main file with conversion functions + unit tests
-[✓] Verify with zig build
-[•] Write conversions_manifest.md
-[ ] Write feedback file feedback/tmp102/prompt0c.md
+[✓] Run pwd to establish <original_pwd>
+[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
+[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
+[✓] zig init in artifacts/tmp102/prompt0c
+[✓] Edit src/main.zig with conversion functions + unit tests
+[✓] zig build verify
+[•] Create conversions_manifest.md
+[ ] Create feedback/prompt0c.md
 
-All 13 tests pass and
 ← Write artifacts/tmp102/prompt0c/conversions_manifest.md
 Wrote file successfully.
 
-$ mkdir -p feedback/tmp102 && ls feedback/
-tmp102
+# Todos
+[✓] Run pwd to establish <original_pwd>
+[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
+[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
+[✓] zig init in artifacts/tmp102/prompt0c
+[✓] Edit src/main.zig with conversion functions + unit tests
+[✓] zig build verify
+[✓] Create conversions_manifest.md
+[•] Create feedback/prompt0c.md
+
+Final verification, then write
+$ ls -la build.zig build.zig.zon src/main.zig conversions_manifest.md && zig build test 2>&1 | tail -3
+-rw-r--r-- 1 pi pi 8492 Aug 11 03:50 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug 11 03:50 build.zig.zon
+-rw-r--r-- 1 pi pi 3998 Aug 11 04:01 conversions_manifest.md
+-rw-r--r-- 1 pi pi 1855 Aug 11 03:59 src/main.zig
+
+$ zig build test 2>&1; echo "exit: $?"
+exit: 0
 
 ← Write feedback/tmp102/prompt0c.md
 Wrote file successfully.
 
 # Todos
-[✓] Run pwd and confirm <original_pwd>
-[✓] Read spec_tmp102.md at artifacts/tmp102/outputs/spec_tmp102.md
-[✓] Create artifacts/tmp102/prompt0c dir and run zig init
-[✓] Write zig main file with conversion functions + unit tests
-[✓] Verify with zig build
-[✓] Write conversions_manifest.md
-[✓] Write feedback file feedback/tmp102/prompt0c.md
+[✓] Run pwd to establish <original_pwd>
+[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
+[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
+[✓] zig init in artifacts/tmp102/prompt0c
+[✓] Edit src/main.zig with conversion functions + unit tests
+[✓] zig build verify
+[✓] Create conversions_manifest.md
+[✓] Create feedback/prompt0c.md
 
-Done. Zig std project at `artifacts/tmp102/prompt0c/` with `zig build` and `zig build test` both green (13 tests pass).
+Done. `zig build` and `zig build test` (17/17) pass.
 
-**Functions in `src/main.zig`** (re-exported via `src/root.zig`):
-- `signExtend(value, bits)` — two's-complement reference primitive
-- `count12FromWord` / `count12ToWord`, `count13FromWord` / `count13ToWord`
-- `temperatureCFromWord[Extended]` / `temperatureCToRegisterWord12|13` (rounds + clamps)
-- `registerIsExtendedMode`, `temperatureCFromWordAuto` (D0 marker dispatch)
-- `bytesToWord` / `wordToBytes` (MSB-first) / `temperatureCFromBytes` / `temperatureCFromMsbByteOnly`
+**Artifacts at `artifacts/tmp102/prompt0c`:** `build.zig`, `build.zig.zon`, `src/main.zig`, `src/root.zig`, `conversions_manifest.md`; feedback at `feedback/tmp102/prompt0c.md`.
 
-All datasheet Table 6-2 vectors (25 °C→0x1900, -25 °C→0xE700, etc.), the 21.0 C→0x1500 default observable, Extended-mode 13-bit cases, clamp edges, and a fuzz roundtrip are unit-tested.
+`src/root.zig` holds the reference algorithms + unit tests:
+- **Temperature (12-bit Normal / 13-bit Extended):** `decodeTempNormal(Word)`, `decodeTempExtended(Word)`, `decodeTemp Normal12/Extended13`, `encodeTempNormal/Extended`, sign-extension primitives — verified against spec Tables 5/6 (e.g. `100.0 C -> 0x6400`, `150.0 C -> 0x4B01`).
+- **Byte order:** `wordFromMsbLsb`/`msbLsbFromWord` (big-endian, MSB first).
+- **Config register:** `Config.fromWord/toWord`, fault queue, conversion rate, slave-address tables; `0x60A0` reset confirmed (TM=comparator, AL=1).
+- Overflow policies explicitly documented in doc-comments + manifest (clamp for temps, error for fault count, nearest/clamp for rate). `src/main.zig` adds a CLI demo + encode∘decode fuzz test.
 
-Artifacts produced:
-- `prompt0c/conversions_manifest.md` — per-function worked examples + bit-layout assumptions
-- `feedback/tmp102/prompt0c.md` — skill feedback (Zig 0.16 `try`-on-asserts, unsigned-HEX two's complement, clamp-vs-overflow policy)
+One judgment call worth noting: the reset config `0x60A0` decodes TM=0 and AL=1, so `toWord()` drops the read-only AL bit (0x60A0 → 0x6080 on write).
