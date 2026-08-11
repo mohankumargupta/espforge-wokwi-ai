@@ -22,8 +22,16 @@ prompt2e device:
 _execute prompt device model:
     ./runprompt.sh {{ prompt }}.txt {{ device }} {{ model }}
 
-prompt0 device: (prompt0a device) (prompt0b device) (prompt0c device)
-prompt2 device: (prompt2a device) (prompt2c device) (prompt2d device) (prompt2e device)
+clear_and_delay:
+    # Clear the visible terminal screen
+    clear
+    # Clear the tmux scrollback buffer (the || true prevents errors if run outside tmux)
+    tmux clear-history 2>/dev/null || true
+    echo "Screen and buffer cleared. Waiting 5 minutes..."
+    sleep 300
+
+prompt0 device: (prompt0a device) clear_and_delay (prompt0b device) clear_and_delay (prompt0c device) clear_and_delay
+prompt2 device: (prompt2a device) clear_and_delay (prompt2c device) clear_and_delay (prompt2d device) clear_and_delay (prompt2e device)
 
 
     

@@ -1,0 +1,209 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "wokwi-chip-diagram"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls artifacts/scd40/outputs/ 2>/dev/null; echo "---"; ls artifacts/scd40/ 2>/dev/null; echo "---"; ls feedback/ 2>/dev/null
+esphome_component.txt
+scd4x
+scd4x.mdx
+spec_scd40.md
+test_spec_scd40.md
+---
+outputs
+prompt0a
+prompt0c
+---
+scd40
+tmp102
+
+$ ls -la artifacts/scd40/prompt0a/ artifacts/scd40/prompt0c/ artifacts/scd40/prompt2d/ 2>/dev/null; echo "---"; ls feedback/scd40/ 2>/dev/null
+artifacts/scd40/prompt0a/:
+total 0
+drwxr-xr-x 1 pi pi  18 Aug 11 19:20 .
+drwxr-xr-x 1 pi pi  46 Aug 12 04:37 ..
+drwxr-xr-x 1 pi pi 200 Aug 11 19:24 datasheet
+
+artifacts/scd40/prompt0c/:
+total 28
+drwxr-xr-x 1 pi pi  116 Aug 12 04:41 .
+drwxr-xr-x 1 pi pi   46 Aug 12 04:37 ..
+-rw-r--r-- 1 pi pi 8492 Aug 12 04:37 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug 12 04:37 build.zig.zon
+-rw-r--r-- 1 pi pi 5506 Aug 12 04:41 conversions_manifest.md
+drwxr-xr-x 1 pi pi   32 Aug 12 04:37 src
+drwxr-xr-x 1 pi pi   12 Aug 12 04:39 .zig-cache
+---
+prompt0a.md
+prompt0b.md
+prompt0c.md
+
+→ Read artifacts/scd40/outputs/test_spec_scd40.md
+→ Read artifacts/scd40/outputs/spec_scd40.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/esp32c3.yaml
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/diagram.json
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json
+
+# Todos
+[•] Read skill references (wokwi.md, diagramjson.md, esp32c3.md)
+[ ] Check for attributes.md from prompt2d (absent -> skip)
+[ ] Create artifacts/scd40/prompt2a dir and copy chip.schema.json
+[ ] Generate chip.json and validate with check-jsonschema
+[ ] Copy chip.json to outputs dir, build diagram.json from template
+[ ] Validate diagram.json with wokwi-cli lint
+[ ] Create feedback/scd40/prompt2a.md
+
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/wokwi.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/diagramjson.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/esp32c3.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/esp32c3-devkit-m-1.json
+
+$ ls artifacts/tmp102/ 2>/dev/null; echo "==="; ls artifacts/tmp102/outputs/ 2>/dev/null; echo "==="; ls artifacts/tmp102/prompt2a/ 2>/dev/null; echo "==="; ls feedback/tmp102/ 2>/dev/null
+outputs
+prompt0a
+prompt0c
+prompt2a
+prompt2c
+prompt2d
+===
+build.zig
+chip.json
+chip.wasm
+chip.zig
+diagram.json
+esphome_component.txt
+qa_test
+spec_tmp102.md
+test_spec_tmp102.md
+tmp102
+tmp102.mdx
+tmp102.yaml
+wokwi_api.zig
+wokwi.toml
+===
+chip.json
+chip.schema.json
+===
+prompt0a.md
+prompt0b.md
+prompt0c.md
+prompt2a.md
+prompt2c.md
+prompt2d.md
+
+$ ls -la artifacts/scd40/prompt2d/ 2>/dev/null || echo "NO prompt2d dir"
+NO prompt2d dir
+
+→ Read artifacts/tmp102/prompt2a/chip.json
+→ Read artifacts/tmp102/outputs/diagram.json
+→ Read artifacts/tmp102/prompt2d/attributes.md
+Skills references read. No `prompt2d/attributes.md` exists for scd40 (only prompt0a/0c so far), so I'll classify environmental attrs directly from the test spec's three observables (co2, temperature, humidity). Now setting up directories
+
+$ mkdir -p artifacts/scd40/prompt2a && cp /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json artifacts/scd40/prompt2a/ && ls -la artifacts/scd40/prompt2a/
+total 4
+drwxr-xr-x 1 pi pi   32 Aug 12 04:43 .
+drwxr-xr-x 1 pi pi   62 Aug 12 04:43 ..
+-rw-r--r-- 1 pi pi 2960 Aug 12 04:43 chip.schema.json
+
+$ which check-jsonschema wokwi-cli; check-jsonschema --version 2>/dev/null; wokwi-cli --version 2>/dev/null
+/home/linuxbrew/.linuxbrew/bin/check-jsonschema
+/home/pi/bin/wokwi-cli
+check-jsonschema, version 0.37.4
+0.26.1 (9d71b975b7eb)
+
+# Todos
+[✓] Read skill references (wokwi.md, diagramjson.md, esp32c3.md)
+[✓] Check for attributes.md from prompt2d (absent -> skip)
+[✓] Create artifacts/scd40/prompt2a dir and copy chip.schema.json
+[•] Generate chip.json and validate with check-jsonschema
+[ ] Copy chip.json to outputs dir, build diagram.json from template
+[ ] Validate diagram.json with wokwi-cli lint
+[ ] Create feedback/scd40/prompt2a.md
+
+← Write artifacts/scd40/prompt2a/chip.json
+Wrote file successfully.
+
+$ check-jsonschema --schemafile artifacts/scd40/prompt2a/chip.schema.json artifacts/scd40/prompt2a/chip.json
+ok -- validation done
+
+$ cp artifacts/scd40/prompt2a/chip.json artifacts/scd40/outputs/chip.json && cat artifacts/scd40/outputs/chip.json
+{
+  "name": "chip",
+  "author": "Raspberry Pi",
+  "pins": [
+    "VDDH",
+    "VDD",
+    "GND",
+    "SDA",
+    "SCL",
+    "DNC"
+  ],
+  "controls": [
+    {
+      "id": "co2",
+      "label": "CO2",
+      "type": "range",
+      "min": 0,
+      "max": 40000,
+      "step": 1
+    },
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "type": "range",
+      "min": -10,
+      "max": 60,
+      "step": 0.01
+    },
+    {
+      "id": "humidity",
+      "label": "Humidity",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.01
+    }
+  ]
+}
+
+Phase 1 complete. Now Phase 2 — build diagram.json
+$ ls -la artifacts/scd40/outputs/ | grep -E "chip.json|diagram.json"
+-rw-r--r-- 1 pi pi   567 Aug 12 04:43 chip.json
+
+← Write artifacts/scd40/outputs/diagram.json
+Wrote file successfully.
+
+$ wokwi-cli lint
+Wokwi CLI v0.26.1 (9d71b975b7eb)
+ℹ [unsupported-part] Part "esp" uses undocumented type "board-esp32-c3-devkitm-1". This part may change or be removed in future versions. (esp)
+
+Found 1 info
+
+Lint passes (only the expected undocumented-board info). Now creating the feedback file
+$ mkdir -p feedback/scd40 && ls feedback/scd40/
+prompt0a.md
+prompt0b.md
+prompt0c.md
+
+← Write feedback/scd40/prompt2a.md
+Wrote file successfully.
+
+# Todos
+[✓] Read skill references (wokwi.md, diagramjson.md, esp32c3.md)
+[✓] Check for attributes.md from prompt2d (absent -> skip)
+[✓] Create artifacts/scd40/prompt2a dir and copy chip.schema.json
+[✓] Generate chip.json and validate with check-jsonschema
+[✓] Copy chip.json to outputs dir, build diagram.json from template
+[✓] Validate diagram.json with wokwi-cli lint
+[✓] Create feedback/scd40/prompt2a.md
+
+Done. Both artifacts generated and validated for SCD40.
+
+- **chip.json** (`artifacts/scd40/prompt2a/chip.json` → `outputs/chip.json`), schema-validated: pins `VDDH, VDD, GND, SDA, SCL, DNC` + range controls `co2`, `temperature`, `humidity`.
+- **diagram.json** (`outputs/diagram.json`): built on the template, chip attrs set to canonical defaults (`co2=500`, `temperature=25.0`, `humidity=37.0`), wired via primary I2C bus (`esp:4→SDA`, `esp:5→SCL`), VDD/VDDH→`3V3.1`, GND→`GND.1`. `wokwi-cli lint` passes.
+- **Feedback**: `feedback/scd40/prompt2a.md`.
+
+Note: no `prompt2d/attributes.md` exists yet for scd40; when the custom-chip skill produces it, re-check the diagram attrs against its environmental rows per the skill rule.

@@ -1,0 +1,184 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "data-conversions-complex-logic"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/ 2>/dev/null && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  30 Aug 11 19:20 .
+drwxr-xr-x 1 pi pi  22 Aug 11 19:16 ..
+drwxr-xr-x 1 pi pi 132 Aug 12 04:31 outputs
+drwxr-xr-x 1 pi pi  18 Aug 11 19:20 prompt0a
+total 32
+drwxr-xr-x 1 pi pi   132 Aug 12 04:31 .
+drwxr-xr-x 1 pi pi    30 Aug 11 19:20 ..
+-rw-r--r-- 1 pi pi     6 Aug 11 19:16 esphome_component.txt
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi  6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi 12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi  3192 Aug 12 04:31 test_spec_scd40.md
+
+$ zig version
+0.16.0
+
+# Todos
+[•] Create artifacts/scd40/prompt0c dir and run zig init
+[ ] Read spec_scd40.md and identify conversions/algorithms
+[ ] Implement conversion + algorithm functions with unit tests in src/main.zig
+[ ] Verify with zig build
+[ ] Create conversions_manifest.md
+[ ] Create feedback/prompt0c.md
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c && cd /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c && zig init
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+
+→ Read artifacts/scd40/outputs/spec_scd40.md
+→ Read artifacts/scd40/prompt0c/src/main.zig
+→ Read artifacts/scd40/prompt0c/build.zig
+→ Read artifacts/scd40/prompt0c/src/root.zig
+
+# Todos
+[✓] Create artifacts/scd40/prompt0c dir and run zig init
+[✓] Read spec_scd40.md and identify conversions/algorithms
+[•] Implement conversion + algorithm functions with unit tests in src/main.zig
+[ ] Verify with zig build
+[ ] Create conversions_manifest.md
+[ ] Create feedback/prompt0c.md
+
+← Write artifacts/scd40/prompt0c/src/main.zig
+Wrote file successfully.
+
+$ zig build test 2>&1 | tail -30
+test
++- run test 14 pass, 1 fail (15 total)
+error: 'main.test.serial number vectors' failed:
+       /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/src/main.zig:262:35: 0x11870f3 in serialToRaw (test)
+           if (value > 0x0000_ffff_ffff) return error.OutOfRange;
+                                         ^
+       /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/src/main.zig:438:19: 0x1188273 in test.serial number vectors (test)
+           const words = try serialToRaw(expected);
+                         ^
+failed command: ./.zig-cache/o/40d3ab1d8d8abceee346efa306235ebd/test --cache-dir=./.zig-cache --seed=0xed32fa35 --listen=-
+
+Build Summary: 3/5 steps succeeded (1 failed); 15/16 tests passed (1 failed)
+test transitive failure
++- run test 14 pass, 1 fail (15 total)
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c .zig-cache /home/pi/.cache/zig --seed 0xed32fa35 -Z7677647b380870b5 test
+
+$ printf '0xf8969f073bbe = %d\n0x0000ffffffff = %d\n' $((0xf8969f073bbe)) $((0x0000ffffffff)); echo "check >: "; if [ $((0xf8969f073bbe)) -gt $((0x0000ffffffff)) ]; then echo YES greater; else echo no; fi
+0xf8969f073bbe = 273325796834238
+0x0000ffffffff = 4294967295
+check >: 
+YES greater
+
+$ s=0000ffffffff; echo "len= ${#s}"; hostv=$(printf '0x0000ffffffff\n' | python3 -c "import sys; print(int(sys.stdin.read().strip(),16))") 2>/dev/null || true; echo "python: $hostv"; awk 'BEGIN{printf "0x%s = %d\n", "0000ffffffff", strtonum("0x0000ffffffff")}'
+len= 12
+python: 4294967295
+awk: line 2: function strtonum never defined
+
+$ python3 -c "print(hex(int('0x0000ffffffff',16)))"; python3 -c "print(int('0x0000ffffffff',16))"; python3 -c "print(2**48-1)"
+0xffffffff
+4294967295
+281474976710655
+
+$ python3 -c "s='0x0000ffffffff'; print(len(s), repr(s))"; python3 -c "s='0x'+'0000'+'ffffffff'; print(len(s), int(s,16))"; python3 -c "print(int('0x' + '0'*8 + 'f'*8, 16))"
+14 '0x0000ffffffff'
+14 4294967295
+4294967295
+
+← Edit artifacts/scd40/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/src/main.zig
+@@ -258,9 +258,9 @@
+ /// Out-of-range policy: error — any value outside [0, 0xFFFF_FFFF_FFFF]
+ /// cannot be represented, so return `error.OutOfRange` rather than silently
+ /// truncating (a truncated serial would corrupt the device identity).
+ pub fn serialToRaw(value: u64) SerialNumberError!SerialWords {
+-    if (value > 0x0000_ffff_ffff) return error.OutOfRange;
++    if (value > 0xffff_ffff_ffff) return error.OutOfRange;
+     return .{
+         .w0 = @intCast(value >> 32),
+         .w1 = @intCast((value >> 16) & 0xffff),
+         .w2 = @intCast(value & 0xffff),
+
+
+The sentinel literal was wrong: `0x0000_ffff_ffff` is 8 f's (32-bit max), not 48-bit max. Fixing to `0xffff_ffff
+✗ Edit artifacts/scd40/prompt0c/src/main.zig failed
+Error: Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+✱ Grep "0x0000_ffff_ffff|0x0000_FFFF_FFFF|ffff_ffff" in artifacts/scd40/prompt0c/src/main.zig · 1 match
+✱ Grep "max 0x|Out of range|0x0000_FFFF_FFFF|FFFF_FFFF_FFFF" in artifacts/scd40/prompt0c/src/main.zig · 2 matches
+
+$ zig build test 2>&1 | tail -15
+(no output)
+
+$ zig build test 2>&1; echo "exit=$?"
+exit=0
+
+$ zig build test --summary all 2>&1 | grep -E "run test|test" | head
+Build Summary: 5/5 steps succeeded; 16/16 tests passed
+test success
++- run test 1 pass (1 total) 20ms MaxRSS:4M
+|  +- compile test Debug native cached 91ms MaxRSS:57M
++- run test 15 pass (15 total) 40ms MaxRSS:4M
+   +- compile test Debug native cached 98ms MaxRSS:57M
+
+# Todos
+[✓] Create artifacts/scd40/prompt0c dir and run zig init
+[✓] Read spec_scd40.md and identify conversions/algorithms
+[✓] Implement conversion + algorithm functions with unit tests in src/main.zig
+[✓] Verify with zig build
+[•] Create conversions_manifest.md
+[ ] Create feedback/prompt0c.md
+
+All 16 tests pass. Now the manifest and feedback
+← Write artifacts/scd40/prompt0c/conversions_manifest.md
+Wrote file successfully.
+
+← Write feedback/scd40/prompt0c.md
+Wrote file successfully.
+
+$ ls -la artifacts/scd40/prompt0c/build.zig artifacts/scd40/prompt0c/build.zig.zon artifacts/scd40/prompt0c/src/main.zig artifacts/scd40/prompt0c/conversions_manifest.md feedback/scd40/prompt0c.md
+-rw-r--r-- 1 pi pi  8492 Aug 12 04:37 artifacts/scd40/prompt0c/build.zig
+-rw-r--r-- 1 pi pi  4293 Aug 12 04:37 artifacts/scd40/prompt0c/build.zig.zon
+-rw-r--r-- 1 pi pi  5506 Aug 12 04:41 artifacts/scd40/prompt0c/conversions_manifest.md
+-rw-r--r-- 1 pi pi 20833 Aug 12 04:40 artifacts/scd40/prompt0c/src/main.zig
+-rw-r--r-- 1 pi pi  2371 Aug 12 04:41 feedback/scd40/prompt0c.md
+
+$ zig build test --summary all 2>&1 | tail -2
++- compile test Debug native cached 81ms MaxRSS:57M
+
+$ zig build test --summary all 2>&1 | grep -E "tests passed|Build Summary"
+Build Summary: 5/5 steps succeeded; 16/16 tests passed
+
+# Todos
+[✓] Create artifacts/scd40/prompt0c dir and run zig init
+[✓] Read spec_scd40.md and identify conversions/algorithms
+[✓] Implement conversion + algorithm functions with unit tests in src/main.zig
+[✓] Verify with zig build
+[✓] Create conversions_manifest.md
+[✓] Create feedback/prompt0c.md
+
+Done. Zig 0.16 project at `artifacts/scd40/prompt0c`, all 16 tests pass.
+
+**`src/main.zig`** — data conversion + reference functions with unit tests:
+- CRC-8 (`0x31`, init `0xff`, no reflection/xor) — 23 datasheet vectors incl. `crc8Word(0xbeef)==0x92`
+- CO₂ (identity), temp (`−45+175·w/65535`) and RH (`100·w/65535`) decode/encode
+- temperature offset, sensor altitude, ambient pressure (`×100`), FRC (signed `w−0x8000`, `0xffff`=failed), ASC enable/target/periods
+- serial number (48-bit, 3 words), data-ready (bits 10:0), sensor-variant (bits 15:12)
+- encode out-of-range policies: saturate everywhere except `serialToRaw` → `error.OutOfRange`
+- fuzz test verifying temp encode/decode round-trips within one count
+
+**`conversions_manifest.md`** — the single source of truth: bit layout (full 16-bit word, big-endian), rounding = nearest + saturate, and per-function worked examples/policies.
+
+Caught a real bug via the tests: my 48-bit sentinel literal `0x0000_ffff_ffff` was actually only 32 bits — fixed to `0xffff_ffff_ffff`. Also documented that datasheet example counts (e.g. 25 °C → `0x6667`) aren't exactly nearest-representable, so encoders may differ by ±1 count.

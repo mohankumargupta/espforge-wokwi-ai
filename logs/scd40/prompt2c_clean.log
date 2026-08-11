@@ -1,0 +1,330 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "wokwi-test-harness"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls -la artifacts/scd40/outputs/ 2>/dev/null; echo "---"; ls -la artifacts/ 2>/dev/null
+total 40
+drwxr-xr-x 1 pi pi   174 Aug 12 04:43 .
+drwxr-xr-x 1 pi pi    62 Aug 12 04:43 ..
+-rw-r--r-- 1 pi pi   567 Aug 12 04:43 chip.json
+-rw-r--r-- 1 pi pi   688 Aug 12 04:43 diagram.json
+-rw-r--r-- 1 pi pi     6 Aug 11 19:16 esphome_component.txt
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi  6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi 12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi  3192 Aug 12 04:31 test_spec_scd40.md
+---
+total 0
+drwxr-xr-x 1 pi pi  22 Aug 11 19:16 .
+drwxr-xr-x 1 pi pi 578 Aug  9 03:52 ..
+drwxr-xr-x 1 pi pi  62 Aug 12 04:43 scd40
+drwxr-xr-x 1 pi pi  94 Aug 11 04:56 tmp102
+
+# Todos
+[•] Read spec, esphome_component.txt, scd4x.mdx, skill assets & references in full
+[ ] Create artifacts/scd40/prompt2c dir and copy template.yaml to scd40.yaml, add on_boot section per spec (verify in checklist)
+[ ] Validate esphome config with `esphome config scd40.yaml`
+[ ] Create rust qa_test project, copy assert_serial.rs & lib.rs from skill
+[ ] Create tests/test.rs from spec
+[ ] Compile qa_test with cargo build --target aarch64-unknown-linux-gnu
+[ ] Copy wokwi.toml, qa_test, scd40.yaml to outputs_dir
+[ ] Write feedback/scd40/prompt2c.md
+
+Let me set up the checklist and read the
+$ cat /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/esphome_component.txt; echo "---"; ls /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/scd4x/
+scd4x
+---
+automation.h
+__init__.py
+scd4x.cpp
+scd4x.h
+sensor.py
+
+→ Read artifacts/scd40/outputs/test_spec_scd40.md
+→ Read artifacts/scd40/outputs/scd4x.mdx
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/esp32c3.yaml
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/references/core-configuration.md
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/_test_example.rs
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/assert_serial.rs
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/lib.rs
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/Cargo.toml
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/justfile
+→ Read artifacts/scd40/outputs/scd4x/sensor.py
+→ Read artifacts/scd40/outputs/scd4x/scd4x.cpp
+→ Read artifacts/scd40/outputs/scd4x/scd4x.h
+→ Read artifacts/scd40/outputs/scd4x/automation.h
+→ Read artifacts/scd40/outputs/scd4x/__init__.py
+
+# Todos
+[✓] Read spec, esphome_component.txt, scd4x.mdx, skill assets & references in full
+[•] Create artifacts/scd40/prompt2c dir and copy template.yaml to scd40.yaml, add on_boot section per spec (verify in checklist)
+[ ] Validate esphome config with `esphome config scd40.yaml`
+[ ] Create rust qa_test project, copy assert_serial.rs & lib.rs from skill
+[ ] Create tests/test.rs from spec
+[ ] Compile qa_test with cargo build --target aarch64-unknown-linux-gnu
+[ ] Copy wokwi.toml, qa_test, scd40.yaml to outputs_dir
+[ ] Write feedback/scd40/prompt2c.md
+
+I've read all required inputs. Now let me create the artifacts structure and build
+$ mkdir -p /home/pi/Developer/wokwi-ai/feedback/scd40
+(no output)
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c && cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c
+total 4
+drwxr-xr-x 1 pi pi  20 Aug 12 04:47 .
+drwxr-xr-x 1 pi pi  78 Aug 12 04:47 ..
+-rw-r--r-- 1 pi pi 231 Aug 12 04:47 scd40.yaml
+
+Now I'll build the scd40.yaml, preserving the template and adding the on_boot automation (with the on_value triggers for race-free logging) plus the device
+→ Read artifacts/scd40/prompt2c/scd40.yaml
+
+← Edit artifacts/scd40/prompt2c/scd40.yaml
+Index: /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
++++ /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+@@ -1,6 +1,9 @@
+ esphome:
+   name: dut
++  on_boot:
++    - then:
++        - component.update: scd40
+ 
+ esp32: 
+   variant: esp32c3 # Use always
+   framework:
+
+
+Now adding the on_boot automation (the one allowed template exception) and appending the device-specific YAML after the template content
+Now appending the device-specific YAML (i2c bus + scd4x sensor platform with race-free on_value logging) after the template content
+→ Read artifacts/scd40/prompt2c/scd40.yaml
+
+← Edit artifacts/scd40/prompt2c/scd40.yaml
+Index: /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
++++ /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+@@ -18,6 +18,29 @@
+ #  platform: esphome
+ logger:
+   hardware_uart: UART0
+ 
++i2c:
++  sda: 4
++  scl: 5
+ 
++sensor:
++  - platform: scd4x
++    id: scd40
++    co2:
++      name: "SCD40 CO2"
++      on_value:
++        - lambda: |-
++            ESP_LOGI("scd40_test", "CO2 = %.0f ppm", x);
++    temperature:
++      name: "SCD40 Temperature"
++      on_value:
++        - lambda: |-
++            ESP_LOGI("scd40_test", "Temperature = %.2f C", x);
++    humidity:
++      name: "SCD40 Humidity"
++      on_value:
++        - lambda: |-
++            ESP_LOGI("scd40_test", "Humidity = %.2f %", x);
+ 
++
++
+
+
+← Edit artifacts/scd40/prompt2c/scd40.yaml
+Index: /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
++++ /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+@@ -39,8 +39,8 @@
+ humidity:
+   name: "SCD40 Humidity"
+   on_value:
+     - lambda: |-
+-        ESP_LOGI("scd40_test", "Humidity = %.2f %", x);
++        ESP_LOGI("scd40_test", "Humidity = %.2f %%", x);
+ 
+ 
+ 
+
+
+The humidity format string needs the literal `%` escaped as `%%` in printf format
+Now let me verify the format-string translation (grep for `{:` sequences) and view the final
+$ grep -n '{:' /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml || echo "OK: no {: sequences found"
+OK: no {: sequences found
+
+→ Read artifacts/scd40/prompt2c/scd40.yaml
+
+← Edit artifacts/scd40/prompt2c/scd40.yaml
+Index: /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
++++ /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml
+@@ -25,8 +25,9 @@
+ 
+ sensor:
+   - platform: scd4x
+     id: scd40
++    update_interval: 5s
+     co2:
+       name: "SCD40 CO2"
+       on_value:
+         - lambda: |-
+
+
+The scd4x initializes asynchronously (~1.5s after boot via internal timers), so a single `component.update` at boot would no-op. I'll add a short `update_interval` so a read deterministically happens and `on_value` fires.
+→ Read artifacts/scd40/prompt2c/scd40.yaml
+Now validating the esphome config:
+
+$ esphome config scd40.yaml 2>&1 | tail -40
+disabled_by_default: false
+      force_update: false
+      unit_of_measurement: ppm
+      icon: mdi:molecule-co2
+      accuracy_decimals: 0
+      device_class: carbon_dioxide
+      state_class: measurement
+    temperature:
+      name: SCD40 Temperature
+      on_value:
+        - then:
+            - lambda: !lambda |-
+                ESP_LOGI("scd40_test", "Temperature = %.2f C", x);
+      disabled_by_default: false
+      force_update: false
+      unit_of_measurement: °C
+      icon: mdi:thermometer
+      accuracy_decimals: 2
+      device_class: temperature
+      state_class: measurement
+    humidity:
+      name: SCD40 Humidity
+      on_value:
+        - then:
+            - lambda: !lambda |-
+                ESP_LOGI("scd40_test", "Humidity = %.2f %%", x);
+      disabled_by_default: false
+      force_update: false
+      unit_of_measurement: '%'
+      icon: mdi:water-percent
+      accuracy_decimals: 2
+      device_class: humidity
+      state_class: measurement
+    automatic_self_calibration: true
+    altitude_compensation: 0
+    temperature_offset: 4.0
+    measurement_mode: periodic
+    address: 0x62
+
+INFO Configuration is valid!
+
+# Todos
+[✓] Read spec, esphome_component.txt, scd4x.mdx, skill assets & references in full
+[✓] Create artifacts/scd40/prompt2c dir and copy template.yaml to scd40.yaml, add on_boot section per spec (verify in checklist)
+[✓] [x] verified on_boot added to esphome core config per skill instructions
+[✓] Validate esphome config with `esphome config scd40.yaml`
+[•] Create rust qa_test project, copy assert_serial.rs & lib.rs from skill
+[ ] Create tests/test.rs from spec
+[ ] Compile qa_test with cargo build --target aarch64-unknown-linux-gnu
+[ ] Copy wokwi.toml, qa_test, scd40.yaml to outputs_dir
+[ ] Write feedback/scd40/prompt2c.md
+
+Configuration is valid. Now creating the Rust qa
+$ cargo new --vcs none --lib qa_test
+Creating library `qa_test` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+$ cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/assert_serial.rs /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test/src/ && cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/lib.rs /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test/src/ && rm /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test/src/lib-generated.rs 2>/dev/null; ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test/src/
+total 8
+drwxr-xr-x 1 pi pi   44 Aug 12 04:49 .
+drwxr-xr-x 1 pi pi   26 Aug 12 04:49 ..
+-rw-r--r-- 1 pi pi 3268 Aug 12 04:49 assert_serial.rs
+-rw-r--r-- 1 pi pi   23 Aug 12 04:49 lib.rs
+
+Now creating
+← Write artifacts/scd40/prompt2c/qa_test/tests/test.rs
+Wrote file successfully.
+
+$ cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/Cargo.toml /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test/Cargo.toml && cat Cargo.toml
+[package]
+name = "qa_test"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+# You can add normal PC dependencies here if you need them later
+# e.g., reqwest, tokio, regex, etc.
+
+$ cargo build --target aarch64-unknown-linux-gnu 2>&1 | tail -20
+Compiling qa_test v0.1.0 (/home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.59s
+
+# Todos
+[✓] Read spec, esphome_component.txt, scd4x.mdx, skill assets & references in full
+[✓] Create artifacts/scd40/prompt2c dir and copy template.yaml to scd40.yaml, add on_boot section per spec (verify in checklist)
+[✓] [x] verified on_boot added to esphome core config per skill instructions
+[✓] Validate esphome config with `esphome config scd40.yaml`
+[✓] Create rust qa_test project, copy assert_serial.rs & lib.rs from skill
+[✓] Create tests/test.rs from spec
+[✓] Compile qa_test with cargo build --target aarch64-unknown-linux-gnu
+[•] Copy wokwi.toml, qa_test, scd40.yaml to outputs_dir
+[ ] Write feedback/scd40/prompt2c.md
+
+Compiled. Now copying files to outputs_dir
+$ cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ && cp /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/scd40.yaml /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ && cp -r /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2c/qa_test /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ && rm -rf /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/qa_test/target && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ && echo "---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/qa_test/
+total 48
+drwxr-xr-x 1 pi pi   228 Aug 12 04:50 .
+drwxr-xr-x 1 pi pi    78 Aug 12 04:47 ..
+-rw-r--r-- 1 pi pi   567 Aug 12 04:43 chip.json
+-rw-r--r-- 1 pi pi   688 Aug 12 04:43 diagram.json
+-rw-r--r-- 1 pi pi     6 Aug 11 19:16 esphome_component.txt
+drwxr-xr-x 1 pi pi    56 Aug 12 04:50 qa_test
+-rw-r--r-- 1 pi pi   796 Aug 12 04:50 scd40.yaml
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi  6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi 12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi  3192 Aug 12 04:31 test_spec_scd40.md
+-rw-r--r-- 1 pi pi   271 Aug 12 04:50 wokwi.toml
+---
+total 8
+drwxr-xr-x 1 pi pi  56 Aug 12 04:50 .
+drwxr-xr-x 1 pi pi 228 Aug 12 04:50 ..
+-rw-r--r-- 1 pi pi 151 Aug 12 04:50 Cargo.lock
+-rw-r--r-- 1 pi pi 179 Aug 12 04:50 Cargo.toml
+drwxr-xr-x 1 pi pi  44 Aug 12 04:50 src
+drwxr-xr-x 1 pi pi  14 Aug 12 04:50 tests
+
+← Write feedback/scd40/prompt2c.md
+Wrote file successfully.
+
+All files copied. Now writing the
+# Todos
+[✓] Read spec, esphome_component.txt, scd4x.mdx, skill assets & references in full
+[✓] Create artifacts/scd40/prompt2c dir and copy template.yaml to scd40.yaml, add on_boot section per spec (verify in checklist)
+[✓] [x] verified on_boot added to esphome core config per skill instructions
+[✓] Validate esphome config with `esphome config scd40.yaml`
+[✓] Create rust qa_test project, copy assert_serial.rs & lib.rs from skill
+[✓] Create tests/test.rs from spec
+[✓] Compile qa_test with cargo build --target aarch64-unknown-linux-gnu
+[✓] Copy wokwi.toml, qa_test, scd40.yaml to outputs_dir
+[✓] Write feedback/scd40/prompt2c.md
+
+Done. Test harness created for SCD40:
+
+**Deliverables in `artifacts/scd40/outputs/`**
+- `scd40.yaml` — ESPHome config: template preserved, `on_boot` added (issues `component.update` to force first read), `i2c` on pins 4/5, `scd4x` platform with `update_interval: 5s` and `on_value` automations logging the canonical values (`CO2 = 500 ppm`, `Temperature = 25.00 C`, `Humidity = 37.00 %`).
+- `qa_test/` — Rust std project with `tests/test.rs` asserting the three observable lines in stream order.
+- `wokwi.toml` — rfc2217 bridge on port 4000.
+
+**Checks** (per AGENTS.md + skill): `esphome config scd40.yaml` valid; printf-formatted (no `{:`, `%` escaped as `%%`); race-free via `on_value` triggers; `cargo build --target aarch64-unknown-linux-gnu` passes; feedback written to `feedback/scd40/prompt2c.md`.

@@ -1,0 +1,311 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "wokwi-customchip"
+
+# Todos
+[•] Determine original_pwd and create artifacts/scd40/prompt2d dir
+[ ] Read spec, test_spec, and conversions_src in full
+[ ] Study MCP23017 example and wokwi_api.zig
+[ ] Classify chip inputs (environmental vs fixed wiring)
+[ ] Write Zig 0.16 chip.zig with ported conversions
+[ ] Add unit tests to chip.zig
+[ ] Validate: zig fmt, zig build, zig build test
+[ ] Copy build.zig, chip.zig, chip.wasm, wokwi_api.zig to outputs_dir
+[ ] Write feedback file
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2d && ls /home/pi/Developer/wokwi-ai/artifacts/scd40/ 2>/dev/null
+outputs
+prompt0a
+prompt0c
+prompt2a
+prompt2c
+prompt2d
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ 2>/dev/null; echo "---prompt0c---"; ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/ 2>/dev/null
+total 48
+drwxr-xr-x 1 pi pi   228 Aug 12 04:50 .
+drwxr-xr-x 1 pi pi    94 Aug 12 05:22 ..
+-rw-r--r-- 1 pi pi   567 Aug 12 04:43 chip.json
+-rw-r--r-- 1 pi pi   688 Aug 12 04:43 diagram.json
+-rw-r--r-- 1 pi pi     6 Aug 11 19:16 esphome_component.txt
+drwxr-xr-x 1 pi pi    56 Aug 12 04:50 qa_test
+-rw-r--r-- 1 pi pi   796 Aug 12 04:50 scd40.yaml
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi  6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi 12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi  3192 Aug 12 04:31 test_spec_scd40.md
+-rw-r--r-- 1 pi pi   271 Aug 12 04:50 wokwi.toml
+---prompt0c---
+total 28
+drwxr-xr-x 1 pi pi  116 Aug 12 04:41 .
+drwxr-xr-x 1 pi pi   94 Aug 12 05:22 ..
+-rw-r--r-- 1 pi pi 8492 Aug 12 04:37 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug 12 04:37 build.zig.zon
+-rw-r--r-- 1 pi pi 5506 Aug 12 04:41 conversions_manifest.md
+drwxr-xr-x 1 pi pi   32 Aug 12 04:37 src
+drwxr-xr-x 1 pi pi   12 Aug 12 04:39 .zig-cache
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt0c/src/
+total 28
+drwxr-xr-x 1 pi pi    32 Aug 12 04:37 .
+drwxr-xr-x 1 pi pi   116 Aug 12 04:41 ..
+-rw-r--r-- 1 pi pi 20833 Aug 12 04:40 main.zig
+-rw-r--r-- 1 pi pi   571 Aug 12 04:37 root.zig
+
+→ Read artifacts/scd40/outputs/spec_scd40.md
+→ Read artifacts/scd40/outputs/test_spec_scd40.md
+
+# Todos
+[✓] Determine original_pwd and create artifacts/scd40/prompt2d dir
+[•] Read spec, test_spec, and conversions_src in full
+[ ] Study MCP23017 example and wokwi_api.zig
+[ ] Classify chip inputs (environmental vs fixed wiring)
+[ ] Write Zig 0.16 chip.zig with ported conversions
+[ ] Add unit tests to chip.zig
+[ ] Validate: zig fmt, zig build, zig build test
+[ ] Copy build.zig, chip.zig, chip.wasm, wokwi_api.zig to outputs_dir
+[ ] Write feedback file
+
+→ Read artifacts/scd40/prompt0c/src/main.zig
+→ Read artifacts/scd40/prompt0c/conversions_manifest.md
+
+$ ls -la /home/pi/.config/opencode/skills/wokwi-customchip/; echo "---assets---"; ls -la /home/pi/.config/opencode/skills/wokwi-customchip/assets/; echo "---references---"; ls -la /home/pi/.config/opencode/skills/wokwi-customchip/references/
+total 8
+drwxr-xr-x 1 pi pi   48 Jul 29 12:53 .
+drwxr-xr-x 1 pi pi  676 Aug  9 04:07 ..
+drwxr-xr-x 1 pi pi  104 Aug  5 15:24 assets
+drwxr-xr-x 1 pi pi   18 Jul 29 12:53 references
+-rw-r--r-- 1 pi pi 7343 Aug 10 21:06 SKILL.md
+---assets---
+total 12
+drwxr-xr-x 1 pi pi  104 Aug  5 15:24 .
+drwxr-xr-x 1 pi pi   48 Jul 29 12:53 ..
+-rw-r--r-- 1 pi pi 2727 Aug  8 18:45 build.zig
+-rw-r--r-- 1 pi pi 2959 Jul 29 12:53 chip.schema.json
+-rw-r--r-- 1 pi pi 3032 Aug  5 15:24 wokwi_api.zig
+drwxr-xr-x 1 pi pi   16 Aug  5 15:23 wokwi-mcp23017
+---references---
+total 0
+drwxr-xr-x 1 pi pi  18 Jul 29 12:53 .
+drwxr-xr-x 1 pi pi  48 Jul 29 12:53 ..
+drwxr-xr-x 1 pi pi 230 Jul 29 12:53 chips-api
+
+$ ls -la /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi-mcp23017/; echo "---chips-api---"; ls -la /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/
+total 20
+drwxr-xr-x 1 pi pi    16 Aug  5 15:23 .
+drwxr-xr-x 1 pi pi   104 Aug  5 15:24 ..
+-rw-r--r-- 1 pi pi 20437 Aug  5 15:23 chip.zig
+---chips-api---
+total 60
+drwxr-xr-x 1 pi pi   230 Jul 29 12:53 .
+drwxr-xr-x 1 pi pi    18 Jul 29 12:53 ..
+-rw-r--r-- 1 pi pi  1995 Jul 29 12:53 analog.md
+-rw-r--r-- 1 pi pi  2343 Jul 29 12:53 attributes.md
+-rw-r--r-- 1 pi pi  4759 Jul 29 12:53 chip-json.md
+-rw-r--r-- 1 pi pi  1277 Jul 29 12:53 framebuffer.md
+-rw-r--r-- 1 pi pi  5071 Jul 29 12:53 getting-started.md
+-rw-r--r-- 1 pi pi  3555 Jul 29 12:53 gpio.md
+-rw-r--r-- 1 pi pi  3004 Jul 29 12:53 i2c.md
+-rw-r--r-- 1 pi pi  3542 Jul 29 12:53 spi.md
+-rw-r--r-- 1 pi pi  2104 Jul 29 12:53 time.md
+-rw-r--r-- 1 pi pi 11723 Jul 29 12:53 tutorial-7seg.md
+-rw-r--r-- 1 pi pi  2462 Jul 29 12:53 uart.md
+
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi_api.zig
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/assets/build.zig
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi-mcp23017/chip.zig
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/i2c.md
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/attributes.md
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/getting-started.md
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/chip-json.md
+→ Read /home/pi/.config/opencode/skills/wokwi-customchip/references/chips-api/time.md
+→ Read artifacts/scd40/outputs/chip.json
+→ Read artifacts/scd40/outputs/diagram.json
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/scd4x/; echo "---"; cat /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/esphome_component.txt; echo "---qa_test---"; ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/qa_test/ 2>/dev/null; echo "---scd40.yaml---"; cat /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/scd40.yaml 2>/dev/null
+total 28
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 .
+drwxr-xr-x 1 pi pi   228 Aug 12 04:50 ..
+-rw-r--r-- 1 pi pi   715 Aug 11 19:16 automation.h
+-rw-r--r-- 1 pi pi     0 Aug 11 19:16 __init__.py
+-rw-r--r-- 1 pi pi 11817 Aug 11 19:16 scd4x.cpp
+-rw-r--r-- 1 pi pi  2196 Aug 11 19:16 scd4x.h
+-rw-r--r-- 1 pi pi  5682 Aug 11 19:16 sensor.py
+---
+scd4x
+---qa_test---
+total 8
+drwxr-xr-x 1 pi pi  56 Aug 12 04:50 .
+drwxr-xr-x 1 pi pi 228 Aug 12 04:50 ..
+-rw-r--r-- 1 pi pi 151 Aug 12 04:50 Cargo.lock
+-rw-r--r-- 1 pi pi 179 Aug 12 04:50 Cargo.toml
+drwxr-xr-x 1 pi pi  44 Aug 12 04:50 src
+drwxr-xr-x 1 pi pi  14 Aug 12 04:50 tests
+---scd40.yaml---
+esphome:
+  name: dut
+  on_boot:
+    - then:
+        - component.update: scd40
+
+esp32: 
+  variant: esp32c3 # Use always
+  framework:
+    type: esp-idf
+
+#wifi:
+#  ssid: !secret wifi_ssid
+#  password: !secret wifi_password
+
+#api:
+#ota:
+#  platform: esphome
+logger:
+  hardware_uart: UART0
+
+i2c:
+  sda: 4
+  scl: 5
+
+sensor:
+  - platform: scd4x
+    id: scd40
+    update_interval: 5s
+    co2:
+      name: "SCD40 CO2"
+      on_value:
+        - lambda: |-
+            ESP_LOGI("scd40_test", "CO2 = %.0f ppm", x);
+    temperature:
+      name: "SCD40 Temperature"
+      on_value:
+        - lambda: |-
+            ESP_LOGI("scd40_test", "Temperature = %.2f C", x);
+    humidity:
+      name: "SCD40 Humidity"
+      on_value:
+        - lambda: |-
+            ESP_LOGI("scd40_test", "Humidity = %.2f %%", x);
+
+Now let me examine the ESPHome component to know exactly which commands firmware will issue during
+→ Read artifacts/scd40/outputs/scd4x/scd4x.cpp
+→ Read artifacts/scd40/outputs/scd4x/scd4x.h
+Now let me check the Zig installation and the existing build files to match versions
+
+$ zig version
+0.16.0
+
+→ Read artifacts/scd40/prompt0c/build.zig
+
+$ cp /home/pi/.config/opencode/skills/wokwi-customchip/assets/build.zig /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2d/build.zig && cp /home/pi/.config/opencode/skills/wokwi-customchip/assets/wokwi_api.zig /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2d/wokwi_api.zig && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/prompt2d/
+total 8
+drwxr-xr-x 1 pi pi   44 Aug 12 05:24 .
+drwxr-xr-x 1 pi pi   94 Aug 12 05:22 ..
+-rw-r--r-- 1 pi pi 2727 Aug 12 05:24 build.zig
+-rw-r--r-- 1 pi pi 3032 Aug 12 05:24 wokwi_api.zig
+
+# Todos
+[✓] Determine original_pwd and create artifacts/scd40/prompt2d dir
+[✓] Read spec, test_spec, and conversions_src in full
+[✓] Study MCP23017 example and wokwi_api.zig
+[•] Classify chip inputs (environmental vs fixed wiring)
+[ ] Write Zig 0.16 chip.zig with ported conversions
+[ ] Add unit tests to chip.zig
+[ ] Validate: zig fmt, zig build, zig build test
+[ ] Copy build.zig, chip.zig, chip.wasm, wokwi_api.zig to outputs_dir
+[ ] Write feedback file
+
+The extern symbol naming matters for WASM correctness. Let me verify Wokwi's actual import
+◈ Parallel Web Search "wokwi custom chip wasm import names env pinInit attrInit camelCase wokwi-api.h zig"
+% WebFetch https://wokwi.com/api/chips/wokwi-api.h
+
+← Write artifacts/scd40/prompt2d/chip.zig
+Wrote file successfully.
+
+The Wokwi WASM import names are camelCase (`attrInitFloat`, `i2cInit`), confirmed. Now I'll write `chip.zig`, porting the canonical conversions verbatim from prompt0c
+# Todos
+[✓] Determine original_pwd and create artifacts/scd40/prompt2d dir
+[✓] Read spec, test_spec, and conversions_src in full
+[✓] Study MCP23017 example and wokwi_api.zig
+[✓] Classify chip inputs (environmental vs fixed wiring)
+[✓] Write Zig 0.16 chip.zig with ported conversions
+[✓] Add unit tests to chip.zig
+[•] Validate: zig fmt, zig build, zig build test
+[ ] Copy build.zig, chip.zig, chip.wasm, wokwi_api.zig to outputs_dir
+[ ] Write feedback file
+
+$ zig fmt chip.zig && echo "---fmt done---"
+chip.zig
+---fmt done---
+
+$ zig build 2>&1
+(no output)
+
+$ ls -la chip.wasm 2>&1; echo "---test---"; zig build test 2>&1
+-rwxr-xr-x 1 pi pi 583167 Aug 12 05:26 chip.wasm
+---test---
+
+$ zig build test --summary all 2>&1
+Build Summary: 3/3 steps succeeded; 15/15 tests passed
+test success
++- run test 15 pass (15 total) 17ms MaxRSS:3M
+   +- compile test Debug native cached 86ms MaxRSS:59M
+
+All 15 tests pass. Now copying artifacts to outputs_dir and writing the manifest + feedback files
+$ cp build.zig chip.zig chip.wasm wokwi_api.zig /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/
+total 656
+drwxr-xr-x 1 pi pi    306 Aug 12 05:27 .
+drwxr-xr-x 1 pi pi     94 Aug 12 05:22 ..
+-rw-r--r-- 1 pi pi   2727 Aug 12 05:27 build.zig
+-rw-r--r-- 1 pi pi    567 Aug 12 04:43 chip.json
+-rwxr-xr-x 1 pi pi 583167 Aug 12 05:27 chip.wasm
+-rw-r--r-- 1 pi pi  25538 Aug 12 05:27 chip.zig
+-rw-r--r-- 1 pi pi    688 Aug 12 04:43 diagram.json
+-rw-r--r-- 1 pi pi      6 Aug 11 19:16 esphome_component.txt
+drwxr-xr-x 1 pi pi     56 Aug 12 04:50 qa_test
+-rw-r--r-- 1 pi pi    796 Aug 12 04:50 scd40.yaml
+drwxr-xr-x 1 pi pi     96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi   6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi  12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi   3192 Aug 12 04:31 test_spec_scd40.md
+-rw-r--r-- 1 pi pi   3032 Aug 12 05:27 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 12 04:50 wokwi.toml
+
+← Write artifacts/scd40/prompt2d/attributes.md
+Wrote file successfully.
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/feedback/scd40 && ls -la /home/pi/Developer/wokwi-ai/feedback/scd40/
+total 20
+drwxr-xr-x 1 pi pi  110 Aug 12 04:50 .
+drwxr-xr-x 1 pi pi   22 Aug 11 19:29 ..
+-rw-r--r-- 1 pi pi 1712 Aug 11 19:29 prompt0a.md
+-rw-r--r-- 1 pi pi 2501 Aug 12 04:32 prompt0b.md
+-rw-r--r-- 1 pi pi 2371 Aug 12 04:41 prompt0c.md
+-rw-r--r-- 1 pi pi 1836 Aug 12 04:43 prompt2a.md
+-rw-r--r-- 1 pi pi 1710 Aug 12 04:50 prompt2c.md
+
+← Write feedback/scd40/prompt2d.md
+Wrote file successfully.
+
+# Todos
+[✓] Determine original_pwd and create artifacts/scd40/prompt2d dir
+[✓] Read spec, test_spec, and conversions_src in full
+[✓] Study MCP23017 example and wokwi_api.zig
+[✓] Classify chip inputs (environmental vs fixed wiring)
+[✓] Write Zig 0.16 chip.zig with ported conversions
+[✓] Add unit tests to chip.zig
+[✓] Validate: zig fmt, zig build, zig build test
+[✓] Copy build.zig, chip.zig, chip.wasm, wokwi_api.zig to outputs_dir
+[✓] Write feedback file
+
+SCD40 custom chip done. Summary:
+
+- **`artifacts/scd40/prompt2d/chip.zig`** — Zig 0.16 wasm32-freestanding I2C chip implementing the essential SCD40 command set (start/stop periodic, `read_measurement`, `get_data_ready_status`, boot-time `set_*` writes, `get_serial_number`, `get_sensor_variant`), with CRC-8 per data word.
+- **Conversions ported verbatim** from `prompt0c/src/main.zig` (no re-derivation), validated by 15/15 unit tests including the three observable defaults (CO2=500, T=25.0, RH=37.0).
+- **Environmental attrs** (`co2`, `temperature`, `humidity`) are live-read on every `read_measurement`, matching the existing `chip.json` controls; the fixed `0x62` address is a hard-coded const (no SCD40 strap pins). Documented in `attributes.md`.
+- **Outputs copied** to `outputs/`: `build.zig`, `chip.zig`, `chip.wasm`, `wokwi_api.zig`.
+- **Feedback** written to `feedback/scd40/prompt2d.md` (reuse confirmed; noted the command-then-read I2C pattern, camelCase WASM import names, and write-side CRC assumption).

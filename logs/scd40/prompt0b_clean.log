@@ -1,0 +1,107 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "canonical-test-spec"
+→ Read /home/pi/.config/opencode/skills/canonical-test-spec/references/small-classes.md
+→ Read /home/pi/.config/opencode/skills/canonical-test-spec/references/sensor-classes.md
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+# Todos
+[•] Gather inputs: esphome_component.txt, esphome docs mdx, component source dir, spec_scd40.md
+[ ] Read all input files in full
+[ ] Produce Canonical Test Specification artifacts/scd40/outputs/test_spec_scd40.md
+[ ] Write feedback file feedback/scd40/prompt0b.md
+
+$ ls -la artifacts/scd40/outputs/
+total 28
+drwxr-xr-x 1 pi pi    96 Aug 11 19:28 .
+drwxr-xr-x 1 pi pi    30 Aug 11 19:20 ..
+-rw-r--r-- 1 pi pi     6 Aug 11 19:16 esphome_component.txt
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi  6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi 12886 Aug 11 19:28 spec_scd40.md
+
+$ ls -la artifacts/scd40/
+total 0
+drwxr-xr-x 1 pi pi 30 Aug 11 19:20 .
+drwxr-xr-x 1 pi pi 22 Aug 11 19:16 ..
+drwxr-xr-x 1 pi pi 96 Aug 11 19:28 outputs
+drwxr-xr-x 1 pi pi 18 Aug 11 19:20 prompt0a
+
+→ Read artifacts/scd40/outputs/esphome_component.txt
+→ Read artifacts/scd40/outputs/scd4x.mdx
+→ Read artifacts/scd40/outputs/spec_scd40.md
+
+$ ls -la artifacts/scd40/outputs/scd4x/
+total 28
+drwxr-xr-x 1 pi pi    96 Aug 11 19:16 .
+drwxr-xr-x 1 pi pi    96 Aug 11 19:28 ..
+-rw-r--r-- 1 pi pi   715 Aug 11 19:16 automation.h
+-rw-r--r-- 1 pi pi     0 Aug 11 19:16 __init__.py
+-rw-r--r-- 1 pi pi 11817 Aug 11 19:16 scd4x.cpp
+-rw-r--r-- 1 pi pi  2196 Aug 11 19:16 scd4x.h
+-rw-r--r-- 1 pi pi  5682 Aug 11 19:16 sensor.py
+
+→ Read artifacts/scd40/outputs/scd4x/scd4x.cpp
+→ Read artifacts/scd40/outputs/scd4x/scd4x.h
+→ Read artifacts/scd40/outputs/scd4x/sensor.py
+→ Read artifacts/scd40/outputs/scd4x/automation.h
+
+$ ls -la artifacts/scd40/prompt0a/ && wc -l artifacts/scd40/prompt0a/* 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  18 Aug 11 19:20 .
+drwxr-xr-x 1 pi pi  30 Aug 11 19:20 ..
+drwxr-xr-x 1 pi pi 200 Aug 11 19:24 datasheet
+0 artifacts/scd40/prompt0a/datasheet
+
+$ ls -la artifacts/scd40/prompt0a/datasheet/
+total 1420
+drwxr-xr-x 1 pi pi     200 Aug 11 19:24 .
+drwxr-xr-x 1 pi pi      18 Aug 11 19:20 ..
+-rw-r--r-- 1 pi pi     639 Aug 11 19:22 main.py
+-rw-r--r-- 1 pi pi     183 Aug 11 19:22 pyproject.toml
+-rw-r--r-- 1 pi pi       5 Aug 11 19:22 .python-version
+-rw-r--r-- 1 pi pi       0 Aug 11 19:22 README.md
+-rw-r--r-- 1 pi pi   79832 Aug 11 19:24 scd40_datasheet.md
+-rw-r--r-- 1 pi pi 1302393 Aug 11 19:20 scd40.pdf
+-rw-r--r-- 1 pi pi    3528 Aug 11 19:22 template_chip.md
+-rw-r--r-- 1 pi pi   50150 Aug 11 19:22 uv.lock
+drwxr-xr-x 1 pi pi      96 Aug 11 19:22 .venv
+
+✱ Grep "read_measurement|0x01f4|0x6667|0x5eb9" in artifacts/scd40/prompt0a/datasheet/scd40_datasheet.md · 12 matches
+
+# Todos
+[✓] Gather inputs: esphome_component.txt, esphome docs mdx, component source dir, spec_scd40.md
+[✓] Read all input files in full
+[•] Produce Canonical Test Specification artifacts/scd40/outputs/test_spec_scd40.md
+[ ] Write feedback file feedback/scd40/prompt0b.md
+
+All inputs gathered. The datasheet confirms line 445-446 of `scd40_datasheet.md`: the canonical `read_measurement` response is CO₂=500 ppm (0x01f4), Temp=25°C (0x6667), RH=37% (0x5eb9) — one authoritative source for
+$ mkdir -p artifacts/scd40/outputs feedback/scd40
+(no output)
+
+← Write artifacts/scd40/outputs/test_spec_scd40.md
+Wrote file successfully.
+
+# Todos
+[✓] Gather inputs: esphome_component.txt, esphome docs mdx, component source dir, spec_scd40.md
+[✓] Read all input files in full
+[✓] Produce Canonical Test Specification artifacts/scd40/outputs/test_spec_scd40.md
+[•] Write feedback file feedback/scd40/prompt0b.md
+
+← Write feedback/scd40/prompt0b.md
+Wrote file successfully.
+
+# Todos
+[✓] Gather inputs: esphome_component.txt, esphome docs mdx, component source dir, spec_scd40.md
+[✓] Read all input files in full
+[✓] Produce Canonical Test Specification artifacts/scd40/outputs/test_spec_scd40.md
+[✓] Write feedback file feedback/scd40/prompt0b.md
+
+Done.
+
+- **Spec:** `artifacts/scd40/outputs/test_spec_scd40.md` — SCD40 (Sensirion, I²C 0x62), capability "Measure ambient CO2 concentration", observables `co2` (int, ppm, default 500), `temperature` (float, C, default 25.0), `humidity` (float, %, default 37.0), plus assumptions, excluded features, and a canonical presentation block (precision traced to `sensor.py` `accuracy_decimals`).
+- **Defaults traced:** datasheet `read_measurement` example (`scd40_datasheet.md:445`), consistent with `spec_scd40.md:151-153`; precisions from `scd4x/sensor.py:57-77`.
+- **Feedback:** `feedback/scd40/prompt0b.md`.
