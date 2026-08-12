@@ -1,0 +1,137 @@
+[0m
+> build · deepseek-v4-flash-free
+[0m
+[0m→ [0mSkill "canonical-test-spec"
+[0m
+[0m# [0mTodos
+[•] Locate inputs in artifacts/apds9960/outputs (esphome_component.txt, docs mdx, component source, spec_apds9960.md)
+[ ] Read skill reference files (sensor-classes, small-classes)
+[ ] Read all input files in full
+[ ] Produce Canonical Test Specification at artifacts/apds9960/outputs/test_spec_apds9960.md
+[ ] Write feedback file at feedback/apds9960/prompt0b.md
+[0m
+[0m$ [0mpwd
+/home/pi/Developer/wokwi-ai
+[0m
+[0m$ [0mls -la artifacts/apds9960/outputs/ 2>/dev/null && echo "---" && ls -la artifacts/apds9960/ 2>/dev/null
+total 28
+drwxr-xr-x 1 pi pi   114 Aug 12 17:18 .
+drwxr-xr-x 1 pi pi    30 Aug 12 17:13 ..
+drwxr-xr-x 1 pi pi   116 Aug 12 17:14 apds9960
+-rw-r--r-- 1 pi pi  3608 Aug 12 17:14 apds9960.mdx
+-rw-r--r-- 1 pi pi     9 Aug 12 17:14 esphome_component.txt
+-rw-r--r-- 1 pi pi 19142 Aug 12 17:18 spec_apds9960.md
+---
+total 0
+drwxr-xr-x 1 pi pi  30 Aug 12 17:13 .
+drwxr-xr-x 1 pi pi  38 Aug 12 17:13 ..
+drwxr-xr-x 1 pi pi 114 Aug 12 17:18 outputs
+drwxr-xr-x 1 pi pi  18 Aug 12 17:13 prompt0a
+[0m
+[0m$ [0mfind artifacts/apds9960 -type f | head -50
+artifacts/apds9960/outputs/esphome_component.txt
+artifacts/apds9960/outputs/apds9960.mdx
+artifacts/apds9960/outputs/apds9960/__init__.py
+artifacts/apds9960/outputs/apds9960/apds9960.cpp
+artifacts/apds9960/outputs/apds9960/apds9960.h
+artifacts/apds9960/outputs/apds9960/binary_sensor.py
+artifacts/apds9960/outputs/apds9960/sensor.py
+artifacts/apds9960/outputs/spec_apds9960.md
+artifacts/apds9960/prompt0a/datasheet/apds9960.pdf
+artifacts/apds9960/prompt0a/datasheet/main.py
+artifacts/apds9960/prompt0a/datasheet/pyproject.toml
+artifacts/apds9960/prompt0a/datasheet/.python-version
+artifacts/apds9960/prompt0a/datasheet/README.md
+artifacts/apds9960/prompt0a/datasheet/.venv/CACHEDIR.TAG
+artifacts/apds9960/prompt0a/datasheet/.venv/.gitignore
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate.csh
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate.fish
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate.nu
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate.ps1
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate.bat
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/deactivate.bat
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/pydoc.bat
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/activate_this.py
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/pymupdf4llm
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/tabulate
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/pymupdf
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/onnxruntime_test
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/numpy-config
+artifacts/apds9960/prompt0a/datasheet/.venv/bin/f2py
+artifacts/apds9960/prompt0a/datasheet/.venv/pyvenv.cfg
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/_virtualenv.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/_virtualenv.pth
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/__init__.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/_version.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/builder.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/compat.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/encode.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/flexbuffers.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/number_types.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/packer.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/table.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/flatbuffers/util.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/features.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/_features.so
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/_build.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/DocumentLayoutAnalyzer.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/MultiProcessWrapper.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/__init__.py
+artifacts/apds9960/prompt0a/datasheet/.venv/lib/python3.13/site-packages/pymupdf/layout/common_util.py
+[0m
+[0m→ [0mRead artifacts/apds9960/outputs/esphome_component.txt
+[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/sensor-classes.md
+[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/small-classes.md
+[0m→ [0mRead artifacts/apds9960/outputs/apds9960.mdx
+[0m→ [0mRead artifacts/apds9960/outputs/spec_apds9960.md
+[0m→ [0mRead artifacts/apds9960/outputs/apds9960/apds9960.h
+Now let me read the ESPHome component source files.
+[0m→ [0mRead artifacts/apds9960/outputs/apds9960/apds9960.cpp
+[0m→ [0mRead artifacts/apds9960/outputs/apds9960/__init__.py
+[0m→ [0mRead artifacts/apds9960/outputs/apds9960/sensor.py
+[0m→ [0mRead artifacts/apds9960/outputs/apds9960/binary_sensor.py
+[0m✱ [0mGlob "artifacts/**/test_spec_*.md"[90m 2 matches[0m
+Let me check for prior examples of test_spec output format in the repo.
+[0m✱ [0mGlob "feedback/**/prompt0b.md"[90m 2 matches[0m
+[0m→ [0mRead artifacts/scd40/outputs/test_spec_scd40.md
+[0m→ [0mRead feedback/tmp102/prompt0b.md
+[0m→ [0mRead artifacts/tmp102/outputs/test_spec_tmp102.md
+Let me check the downstream skills to understand how observables/defaults are consumed, which informs the spec.
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-customchip/SKILL.md
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/SKILL.md
+[0m
+[0m# [0mTodos
+[✓] Locate inputs in artifacts/apds9960/outputs (esphome_component.txt, docs mdx, component source, spec_apds9960.md)
+[✓] Read skill reference files (sensor-classes, small-classes)
+[✓] Read all input files in full
+[•] Produce Canonical Test Specification at artifacts/apds9960/outputs/test_spec_apds9960.md
+[ ] Write feedback file at feedback/apds9960/prompt0b.md
+[0m
+Now I have all inputs and understand the downstream consumers. Let me update the todo and write the spec.
+[0m← [0mWrite artifacts/apds9960/outputs/test_spec_apds9960.md
+Wrote file successfully.
+[0m
+Now the feedback file.
+[0m$ [0mmkdir -p feedback/apds9960 && ls feedback/
+apds9960
+scd40
+tmp102
+[0m
+[0m← [0mWrite feedback/apds9960/prompt0b.md
+Wrote file successfully.
+[0m
+[0m# [0mTodos
+[✓] Locate inputs in artifacts/apds9960/outputs (esphome_component.txt, docs mdx, component source, spec_apds9960.md)
+[✓] Read skill reference files (sensor-classes, small-classes)
+[✓] Read all input files in full
+[✓] Produce Canonical Test Specification at artifacts/apds9960/outputs/test_spec_apds9960.md
+[✓] Write feedback file at feedback/apds9960/prompt0b.md
+[0m
+Done. Produced `artifacts/apds9960/outputs/test_spec_apds9960.md` and `feedback/apds9960/prompt0b.md`.
+
+Key decisions:
+- **Device**: APDS9960, I2C @ 0x39, Avago/Broadcom.
+- **Observables** (all `%`, precision 1, from ESPHome `sensor.py` `accuracy_decimals=1`): clear 20.0, red 15.0, green 12.0, blue 9.0, proximity 7.1, each with a canonical percent→counts→Little-Endian register decode (e.g. proximity PDATA 0x12, datasheet no-object range 10–25).
+- **Gesture excluded** (event-driven binary pulses don't fit the numeric observable model; documented in Excluded Features with rationale).
+- Traceability table maps every field to its source (datasheet/spec, ESPHome source, or explicitly-labeled deterministic selection for the RGBC defaults, since the datasheet has no idle RGBC vector).

@@ -1,0 +1,536 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "data-conversions-complex-logic"
+
+# Todos
+[•] Get pwd and locate spec_apds9960.md
+[ ] Create artifacts/apds9960/prompt0c dir and run zig init
+[ ] Read spec and identify conversions/complex logic
+[ ] Edit src/main.zig with conversion functions + unit tests
+[ ] Run zig build to verify
+[ ] Create conversions_manifest.md
+[ ] Write feedback/prompt0c.md
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls artifacts/apds9960/ 2>/dev/null && echo "---" && ls artifacts/apds9960/outputs/ 2>/dev/null
+outputs
+prompt0a
+---
+apds9960
+apds9960.mdx
+esphome_component.txt
+spec_apds9960.md
+test_spec_apds9960.md
+
+→ Read artifacts/apds9960/outputs/spec_apds9960.md
+→ Read artifacts/apds9960/outputs/test_spec_apds9960.md
+
+$ ls -la artifacts/apds9960/prompt0a/ && echo "---feedback---" && ls feedback/ 2>/dev/null; ls feedback/apds9960/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  18 Aug 12 17:13 .
+drwxr-xr-x 1 pi pi  30 Aug 12 17:13 ..
+drwxr-xr-x 1 pi pi 212 Aug 12 17:16 datasheet
+---feedback---
+apds9960
+scd40
+tmp102
+prompt0a.md
+prompt0b.md
+
+$ zig version
+0.16.0
+
+→ Read feedback/apds9960/prompt0b.md
+
+$ ls artifacts/scd40/prompt0c/ 2>/dev/null; ls artifacts/tmp102/prompt0c/ 2>/dev/null; ls artifacts/ 2>/dev/null
+build.zig
+build.zig.zon
+conversions_manifest.md
+src
+build.zig
+build.zig.zon
+conversions_manifest.md
+src
+zig-out
+apds9960
+scd40
+tmp102
+
+$ ls -la artifacts/tmp102/prompt0c/src/ && echo "---scd40---" && ls -la artifacts/scd40/prompt0c/src/
+total 20
+drwxr-xr-x 1 pi pi    32 Aug 12 20:12 .
+drwxr-xr-x 1 pi pi   130 Aug 12 20:16 ..
+-rw-r--r-- 1 pi pi 12639 Aug 12 20:15 main.zig
+-rw-r--r-- 1 pi pi   571 Aug 12 20:12 root.zig
+---scd40---
+total 28
+drwxr-xr-x 1 pi pi    32 Aug 12 04:37 .
+drwxr-xr-x 1 pi pi   116 Aug 12 04:41 ..
+-rw-r--r-- 1 pi pi 20833 Aug 12 04:40 main.zig
+-rw-r--r-- 1 pi pi   571 Aug 12 04:37 root.zig
+
+→ Read artifacts/tmp102/prompt0c/conversions_manifest.md
+→ Read artifacts/tmp102/prompt0c/src/main.zig
+
+$ cat artifacts/scd40/prompt0c/build.zig && echo "=====ZON=====" && cat artifacts/scd40/prompt0c/build.zig.zon
+const std = @import("std");
+
+// Although this function looks imperative, it does not perform the build
+// directly and instead it mutates the build graph (`b`) that will be then
+// executed by an external runner. The functions in `std.Build` implement a DSL
+// for defining build steps and express dependencies between them, allowing the
+// build runner to parallelize the build automatically (and the cache system to
+// know when a step doesn't need to be re-run).
+pub fn build(b: *std.Build) void {
+    // Standard target options allow the person running `zig build` to choose
+    // what target to build for. Here we do not override the defaults, which
+    // means any target is allowed, and the default is native. Other options
+    // for restricting supported target set are available.
+    const target = b.standardTargetOptions(.{});
+    // Standard optimization options allow the person running `zig build` to select
+    // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall. Here we do not
+    // set a preferred release mode, allowing the user to decide how to optimize.
+    const optimize = b.standardOptimizeOption(.{});
+    // It's also possible to define more custom flags to toggle optional features
+    // of this build script using `b.option()`. All defined flags (including
+    // target and optimize options) will be listed when running `zig build --help`
+    // in this directory.
+
+    // This creates a module, which represents a collection of source files alongside
+    // some compilation options, such as optimization mode and linked system libraries.
+    // Zig modules are the preferred way of making Zig code available to consumers.
+    // addModule defines a module that we intend to make available for importing
+    // to our consumers. We must give it a name because a Zig package can expose
+    // multiple modules and consumers will need to be able to specify which
+    // module they want to access.
+    const mod = b.addModule("prompt0c", .{
+        // The root source file is the "entry point" of this module. Users of
+        // this module will only be able to access public declarations contained
+        // in this file, which means that if you have declarations that you
+        // intend to expose to consumers that were defined in other files part
+        // of this module, you will have to make sure to re-export them from
+        // the root file.
+        .root_source_file = b.path("src/root.zig"),
+        // Later on we'll use this module as the root module of a test executable
+        // which requires us to specify a target.
+        .target = target,
+    });
+
+    // Here we define an executable. An executable needs to have a root module
+    // which needs to expose a `main` function. While we could add a main function
+    // to the module defined above, it's sometimes preferable to split business
+    // logic and the CLI into two separate modules.
+    //
+    // If your goal is to create a Zig library for others to use, consider if
+    // it might benefit from also exposing a CLI tool. A parser library for a
+    // data serialization format could also bundle a CLI syntax checker, for example.
+    //
+    // If instead your goal is to create an executable, consider if users might
+    // be interested in also being able to embed the core functionality of your
+    // program in their own executable in order to avoid the overhead involved in
+    // subprocessing your CLI tool.
+    //
+    // If neither case applies to you, feel free to delete the declaration you
+    // don't need and to put everything under a single module.
+    const exe = b.addExecutable(.{
+        .name = "prompt0c",
+        .root_module = b.createModule(.{
+            // b.createModule defines a new module just like b.addModule but,
+            // unlike b.addModule, it does not expose the module to consumers of
+            // this package, which is why in this case we don't have to give it a name.
+            .root_source_file = b.path("src/main.zig"),
+            // Target and optimization levels must be explicitly wired in when
+            // defining an executable or library (in the root module), and you
+            // can also hardcode a specific target for an executable or library
+            // definition if desireable (e.g. firmware for embedded devices).
+            .target = target,
+            .optimize = optimize,
+            // List of modules available for import in source files part of the
+            // root module.
+            .imports = &.{
+                // Here "prompt0c" is the name you will use in your source code to
+                // import this module (e.g. `@import("prompt0c")`). The name is
+                // repeated because you are allowed to rename your imports, which
+                // can be extremely useful in case of collisions (which can happen
+                // importing modules from different packages).
+                .{ .name = "prompt0c", .module = mod },
+            },
+        }),
+    });
+
+    // This declares intent for the executable to be installed into the
+    // install prefix when running `zig build` (i.e. when executing the default
+    // step). By default the install prefix is `zig-out/` but can be overridden
+    // by passing `--prefix` or `-p`.
+    b.installArtifact(exe);
+
+    // This creates a top level step. Top level steps have a name and can be
+    // invoked by name when running `zig build` (e.g. `zig build run`).
+    // This will evaluate the `run` step rather than the default step.
+    // For a top level step to actually do something, it must depend on other
+    // steps (e.g. a Run step, as we will see in a moment).
+    const run_step = b.step("run", "Run the app");
+
+    // This creates a RunArtifact step in the build graph. A RunArtifact step
+    // invokes an executable compiled by Zig. Steps will only be executed by the
+    // runner if invoked directly by the user (in the case of top level steps)
+    // or if another step depends on it, so it's up to you to define when and
+    // how this Run step will be executed. In our case we want to run it when
+    // the user runs `zig build run`, so we create a dependency link.
+    const run_cmd = b.addRunArtifact(exe);
+    run_step.dependOn(&run_cmd.step);
+
+    // By making the run step depend on the default step, it will be run from the
+    // installation directory rather than directly from within the cache directory.
+    run_cmd.step.dependOn(b.getInstallStep());
+
+    // This allows the user to pass arguments to the application in the build
+    // command itself, like this: `zig build run -- arg1 arg2 etc`
+    if (b.args) |args| {
+        run_cmd.addArgs(args);
+    }
+
+    // Creates an executable that will run `test` blocks from the provided module.
+    // Here `mod` needs to define a target, which is why earlier we made sure to
+    // set the releative field.
+    const mod_tests = b.addTest(.{
+        .root_module = mod,
+    });
+
+    // A run step that will run the test executable.
+    const run_mod_tests = b.addRunArtifact(mod_tests);
+
+    // Creates an executable that will run `test` blocks from the executable's
+    // root module. Note that test executables only test one module at a time,
+    // hence why we have to create two separate ones.
+    const exe_tests = b.addTest(.{
+        .root_module = exe.root_module,
+    });
+
+    // A run step that will run the second test executable.
+    const run_exe_tests = b.addRunArtifact(exe_tests);
+
+    // A top level step for running all tests. dependOn can be called multiple
+    // times and since the two run steps do not depend on one another, this will
+    // make the two of them run in parallel.
+    const test_step = b.step("test", "Run tests");
+    test_step.dependOn(&run_mod_tests.step);
+    test_step.dependOn(&run_exe_tests.step);
+
+    // Just like flags, top level steps are also listed in the `--help` menu.
+    //
+    // The Zig build system is entirely implemented in userland, which means
+    // that it cannot hook into private compiler APIs. All compilation work
+    // orchestrated by the build system will result in other Zig compiler
+    // subcommands being invoked with the right flags defined. You can observe
+    // these invocations when one fails (or you pass a flag to increase
+    // verbosity) to validate assumptions and diagnose problems.
+    //
+    // Lastly, the Zig build system is relatively simple and self-contained,
+    // and reading its source code will allow you to master it.
+}
+=====ZON=====
+.{
+    // This is the default name used by packages depending on this one. For
+    // example, when a user runs `zig fetch --save <url>`, this field is used
+    // as the key in the `dependencies` table. Although the user can choose a
+    // different name, most users will stick with this provided value.
+    //
+    // It is redundant to include "zig" in this name because it is already
+    // within the Zig package namespace.
+    .name = .prompt0c,
+    // This is a [Semantic Version](https://semver.org/).
+    // In a future version of Zig it will be used for package deduplication.
+    .version = "0.0.0",
+    // Together with name, this represents a globally unique package
+    // identifier. This field is generated by the Zig toolchain when the
+    // package is first created, and then *never changes*. This allows
+    // unambiguous detection of one package being an updated version of
+    // another.
+    //
+    // When forking a Zig project, this id should be regenerated (delete the
+    // field and run `zig build`) if the upstream project is still maintained.
+    // Otherwise, the fork is *hostile*, attempting to take control over the
+    // original project's identity. Thus it is recommended to leave the comment
+    // on the following line intact, so that it shows up in code reviews that
+    // modify the field.
+    .fingerprint = 0x19bfe789ba5a2899, // Changing this has security and trust implications.
+    // Tracks the earliest Zig version that the package considers to be a
+    // supported use case.
+    .minimum_zig_version = "0.16.0",
+    // This field is optional.
+    // Each dependency must either provide a `url` and `hash`, or a `path`.
+    // `zig build --fetch` can be used to fetch all dependencies of a package, recursively.
+    // Once all dependencies are fetched, `zig build` no longer requires
+    // internet connectivity.
+    .dependencies = .{
+        // See `zig fetch --save <url>` for a command-line interface for adding dependencies.
+        //.example = .{
+        //    // When updating this field to a new URL, be sure to delete the corresponding
+        //    // `hash`, otherwise you are communicating that you expect to find the old hash at
+        //    // the new URL. If the contents of a URL change this will result in a hash mismatch
+        //    // which will prevent zig from using it.
+        //    .url = "https://example.com/foo.tar.gz",
+        //
+        //    // This is computed from the file contents of the directory of files that is
+        //    // obtained after fetching `url` and applying the inclusion rules given by
+        //    // `paths`.
+        //    //
+        //    // This field is the source of truth; packages do not come from a `url`; they
+        //    // come from a `hash`. `url` is just one of many possible mirrors for how to
+        //    // obtain a package matching this `hash`.
+        //    //
+        //    // Uses the [multihash](https://multiformats.io/multihash/) format.
+        //    .hash = "...",
+        //
+        //    // When this is provided, the package is found in a directory relative to the
+        //    // build root. In this case the package's hash is irrelevant and therefore not
+        //    // computed. This field and `url` are mutually exclusive.
+        //    .path = "foo",
+        //
+        //    // When this is set to `true`, a package is declared to be lazily
+        //    // fetched. This makes the dependency only get fetched if it is
+        //    // actually used.
+        //    .lazy = false,
+        //},
+    },
+    // Specifies the set of files and directories that are included in this package.
+    // Only files and directories listed here are included in the `hash` that
+    // is computed for this package. Only files listed here will remain on disk
+    // when using the zig package manager. As a rule of thumb, one should list
+    // files required for compilation plus any license(s).
+    // Paths are relative to the build root. Use the empty string (`""`) to refer to
+    // the build root itself.
+    // A directory listed here means that all files within, recursively, are included.
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        // For example...
+        //"LICENSE",
+        //"README.md",
+    },
+}
+
+✱ Grep "fuzz|Smith|Random" in artifacts/scd40/prompt0c/src/main.zig · 3 matches
+→ Read artifacts/scd40/prompt0c/src/main.zig [offset=470, limit=40]
+
+# Todos
+[✓] Get pwd and locate spec_apds9960.md
+[•] Create artifacts/apds9960/prompt0c dir and run zig init
+[ ] Read spec and identify conversions/complex logic
+[ ] Edit src/main.zig with conversion functions + unit tests
+[ ] Run zig build to verify
+[ ] Create conversions_manifest.md
+[ ] Write feedback/prompt0c.md
+
+$ mkdir -p artifacts/apds9960/prompt0c && cd artifacts/apds9960/prompt0c && zig init
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+
+→ Read artifacts/apds9960/prompt0c/src/main.zig
+Now let me look at the generated template files and check the fuzz API in 0.16.
+→ Read artifacts/apds9960/prompt0c/src/root.zig
+→ Read artifacts/tmp102/prompt0c/src/root.zig
+
+# Todos
+[✓] Get pwd and locate spec_apds9960.md
+[✓] Create artifacts/apds9960/prompt0c dir and run zig init
+[✓] Read spec and identify conversions/complex logic
+[•] Edit src/main.zig with conversion functions + unit tests
+[ ] Run zig build to verify
+[ ] Create conversions_manifest.md
+[ ] Write feedback/prompt0c.md
+
+The template confirms zig 0.16's `std.testing.fuzz`/`Smith` API and `try`'d `expect*`. Now I'll write the conversion library.
+← Write artifacts/apds9960/prompt0c/src/main.zig
+Wrote file successfully.
+
+← Edit artifacts/apds9960/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+@@ -186,9 +186,9 @@
+     try std.testing.expectEqual(RgbcBytes{ .low = 0xB8, .high = 0x1E }, rgbcToBytes(0x1EB8));
+     try std.testing.expectEqual(RgbcBytes{ .low = 0x0A, .high = 0x17 }, rgbcToBytes(0x170A));
+ }
+ 
+-test "rgbc percent decode (canonical defaults -> %)":
++test "rgbc percent decode (canonical defaults -> %)" {
+     try std.testing.expectApproxEqAbs(20.0, rgbcPercentFromCount(13107), 0.001);
+     try std.testing.expectApproxEqAbs(15.0, rgbcPercentFromCount(9830), 0.001);
+     try std.testing.expectApproxEqAbs(12.0, rgbcPercentFromCount(7864), 0.001);
+     try std.testing.expectApproxEqAbs(9.0, rgbcPercentFromCount(5898), 0.001);
+
+
+← Edit artifacts/apds9960/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+@@ -195,9 +195,9 @@
+     try std.testing.expectApproxEqAbs(0.0, rgbcPercentFromCount(0), 0.001);
+     try std.testing.expectApproxEqAbs(100.0, rgbcPercentFromCount(65535), 0.001);
+ }
+ 
+-test "rgbc percent encode -> canonical register bytes":
++test "rgbc percent encode -> canonical register bytes" {
+     // Canonical decode table: 20.0% -> 0x3333 (0x33, 0x33); 15.0% -> 0x2666
+     // (0x66, 0x26); 12.0% -> 0x1EB8 (0xB8, 0x1E); 9.0% -> 0x170A (0x0A, 0x17).
+     try std.testing.expectEqual(@as(u16, 0x3333), rgbcCountFromPercent(20.0));
+     try std.testing.expectEqual(@as(u16, 0x2666), rgbcCountFromPercent(15.0));
+
+
+I introduced two syntax typos (`":` instead of `" {`). Fixing:
+$ zig build
+(no output)
+
+$ zig build test 2>&1
+test
++- run test
+   +- compile test Debug native 4 errors
+src/main.zig:78:12: error: type 'u8' cannot represent integer value '256'
+    return 256 - atime;
+           ^~~
+referenced by:
+    test.ATIME worked examples (cycles / ms / full-scale): src/main.zig:235:59
+src/main.zig:104:12: error: type 'u8' cannot represent integer value '256'
+    return 256 - wtime;
+           ^~~
+src/main.zig:155:14: error: unreachable else prong; all cases already handled
+        else => unreachable,
+        ~~~~~^~~~~~~~~~~~~~
+src/main.zig:279:61: error: type 'i8' cannot represent integer value '128'
+    try std.testing.expectEqual(@as(u8, 0x7F), offsetToByte(128));
+                                                            ^~~
+error: 4 compilation errors
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/5 steps succeeded (1 failed); 1/1 tests passed
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 4 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x702bd8ae -Z8aa190b1cd8fc19a test
+
+← Edit artifacts/apds9960/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+@@ -74,9 +74,9 @@
+ 
+ /// ATIME register -> ALS/color integration cycles (1..256).
+ /// Formula: CYCLES = 256 - ATIME.
+ pub fn atimeToCycles(atime: u8) u16 {
+-    return 256 - atime;
++    return @as(u16, 256) - atime;
+ }
+ 
+ /// ATIME register -> ALS/color integration time in ms.
+ /// Formula: CYCLES * 2.78 ms (2.78 ms .. 712 ms).
+
+
+← Edit artifacts/apds9960/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+@@ -100,9 +100,9 @@
+ // ---- WTIME / wait time -----------------------------------------------------
+ 
+ /// WTIME register -> wait steps (1..256). Formula: WAIT_STEPS = 256 - WTIME.
+ pub fn wtimeToSteps(wtime: u8) u16 {
+-    return 256 - wtime;
++    return @as(u16, 256) - wtime;
+ }
+ 
+ /// WTIME register (and CONFIG1 WLONG flag) -> wait time in ms.
+ /// Formula: WAIT_STEPS * 2.78 ms (WLONG = 0) or * 12 (WLONG = 1).
+
+
+← Edit artifacts/apds9960/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+@@ -151,9 +151,8 @@
+         0 => 4,
+         1 => 8,
+         2 => 16,
+         3 => 32,
+-        else => unreachable,
+     };
+ }
+ 
+ /// Proximity result time in ms.
+
+
+← Edit artifacts/apds9960/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt0c/src/main.zig
+@@ -129,10 +129,10 @@
+ ///
+ /// Out-of-range policy: **clamp/saturate** to the representable range
+ /// [-127, +127]. -128 (unrepresentable magnitude 128) clamps to -127 (0xFF);
+ /// values above +127 clamp to +127 (0x7F). 0 encodes as 0x00.
+-pub fn offsetToByte(offset: i8) u8 {
+-    const clamped = std.math.clamp(@as(i32, offset), -127, 127);
++pub fn offsetToByte(offset: i32) u8 {
++    const clamped = std.math.clamp(offset, -127, 127);
+     const mag: u8 = @intCast(@abs(clamped));
+     return if (clamped < 0) mag | 0x80 else mag;
+ }
+ 
+
+
+$ zig build test 2>&1
+(no output)
+
+Tests pass. Now the conversions manifest.
+← Write artifacts/apds9960/prompt0c/conversions_manifest.md
+Wrote file successfully.
+
+$ zig build && zig build test && ls -la build.zig build.zig.zon src/main.zig conversions_manifest.md
+-rw-r--r-- 1 pi pi  8492 Aug 12 20:23 build.zig
+-rw-r--r-- 1 pi pi  4293 Aug 12 20:23 build.zig.zon
+-rw-r--r-- 1 pi pi  7204 Aug 12 20:27 conversions_manifest.md
+-rw-r--r-- 1 pi pi 16012 Aug 12 20:27 src/main.zig
+
+All four artifacts verified. Now the feedback file.
+$ ls feedback/apds9960/
+prompt0a.md
+prompt0b.md
+
+← Write feedback/apds9960/prompt0c.md
+Wrote file successfully.
+
+# Todos
+[✓] Get pwd and locate spec_apds9960.md
+[✓] Create artifacts/apds9960/prompt0c dir and run zig init
+[✓] Read spec and identify conversions/complex logic
+[✓] Edit src/main.zig with conversion functions + unit tests
+[✓] Run zig build to verify
+[✓] Create conversions_manifest.md
+[✓] Write feedback/prompt0c.md
+
+Done. Zig 0.16 project created at `artifacts/apds9960/prompt0c/` with `zig build` and `zig build test` passing.
+
+**16 functions in `src/main.zig`:** RGBC Little-Endian byte-pair assembly, RGBC/proximity percent scaling (ESPHome `value/65535*100`, `value/255*100`), ATIME→cycles/ms/full-scale, WTIME→steps/wait-ms (WLONG), sign/magnitude offset encode/decode, pulse count/length, and the tPROX formula.
+
+**Key findings (recorded in manifest + feedback):**
+- Spec's inline `CountMAX = min(1025×CYCLES, 65535)` contradicts its own worked examples (`0xF6→10241`, `0xDB→37889`); implemented `min(1024*cycles+1, 65535)` per the worked examples.
+- `tINIT`/`tACC` are referenced as "per PPLEN" but never tabulated, so `proximityResultTimeMs` parameterizes them rather than inventing constants.
+- `0x80` (negative zero) canonicalizes to 0 and is excluded from the exhaustive offset round-trip test.
+
+All canonical register bytes verified: 20.0%→`0x3333`, 15.0%→`0x2666`, 12.0%→`0x1EB8`, 9.0%→`0x170A`, 7.1%→`0x12`, plus three `std.testing.fuzz` round-trip tests.

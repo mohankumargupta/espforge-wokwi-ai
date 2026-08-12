@@ -1,94 +1,111 @@
-# TMP102 conversions manifest
+# TMP102 Conversions Manifest
 
-Source of truth for register-level bit layout (alignment, byte order, sign
-extension) for the TMP102. Any skill that later encodes/decodes the same
-registers MUST reuse or port these exact functions rather than re-deriving
-the encoding.
+- Device: TMP102 (Texas Instruments, I2C digital temperature sensor)
+- Source spec: `artifacts/tmp102/outputs/spec_tmp102.md`
+- Implementation: `artifacts/tmp102/prompt0c/src/main.zig` (zig 0.16)
+- Verdict: `zig build` and `zig build test` both pass.
 
-Files: `src/root.zig` (all conversion functions, module `prompt0c`),
-`src/main.zig` (CLI demo + fuzz roundtrip).
+This file is the single source of truth for TMP102 register-level bit layout
+(alignment, byte order, and sign extension). Any skill that later needs to
+encode or decode TMP102 temperature registers MUST reuse or port these exact
+functions rather than re-deriving the encoding independently.
 
-## Temperature register (0x00), TLOW (0x02), THIGH (0x03)
+All temperature registers (Temperature `0x00`, TLOW `0x02`, THIGH `0x03`)
+share the same data format: two's complement, left-aligned in the 16-bit
+register word, MSB byte first (big-endian). Scale = 0.0625 C/LSB.
 
-Data is 12-bit (13-bit in Extended mode) two's complement, left-aligned in
-the 16-bit word, MSB byte first. Scale: 0.0625 C/LSB.
+## Conversions identified
 
-### Normal mode (EM=0)
+No CRC or checksum logic exists for this device. The complex logic is the
+two's-complement sign extension plus left-alignment encode/decode for the two
+temperature data formats (Normal 12-bit / Extended 13-bit), plus two
+Configuration-register field decoders (conversion rate and fault queue).
 
-| Function | Input | Output | Worked example |
-|---|---|---|---|
-| `decodeTempNormal(word)` | full 16-bit register word | °C | `0x6400` -> `100.0` C |
-| `decodeTempNormal12(count)` | raw u12 count | °C | `0x190` -> `25.0` C |
-| `encodeTempNormal(temp_c)` | °C | full 16-bit word | `100.0` C -> `0x6400` |
-| `signExtend12(count)` | raw u12 count | i16 count | `0xE70` -> `-880` |
+| Function | File | Purpose |
+|---|---|---|
+| `signExtend(value, bits)` | src/main.zig | Interpret a `bits`-wide two's-complement field as a signed i16 |
+| `decodeCount12(word)` | src/main.zig | Normal-mode (12-bit) register word -> signed count |
+| `decodeCount13(word)` | src/main.zig | Extended-mode (13-bit) register word -> signed count |
+| `decodeCount(word, extended)` | src/main.zig | Mode-select wrapper around the two decoders |
+| `countToCelsius(count)` | src/main.zig | signed count -> C (count * 0.0625) |
+| `wordToCelsius(word)` | src/main.zig | register word -> `{celsius, extended}` with EM-flag auto-detection |
+| `celsiusToWord12(c)` | src/main.zig | C -> Normal-mode (12-bit) register word |
+| `celsiusToWord13(c)` | src/main.zig | C -> Extended-mode (13-bit) register word |
+| `conversionRateHz(config)` | src/main.zig | CR1:CR0 (bits 7:6) -> conversion rate in Hz |
+| `faultQueueCount(config)` | src/main.zig | F1:F0 (bits 12:11) -> consecutive-fault count before ALERT |
 
-- **Bit layout encoded:** value left-aligned in bits 15:4; bits 3:0 = 0.
-  Sign extension via `@bitCast(word) >> 4` (arithmetic shift on i16).
-- **Out-of-range (encode):** **clamp/saturate** to representable range
-  [-128.0, +127.9375] C. `+128` C saturates to `0x7FF0` (127.9375 C) because
-  12 bits cannot represent +128 exactly (documented wrap in datasheet Table 5).
-  NaN input -> `0x0000` (0 C).
+## Function details
 
-### Extended mode (EM=1)
+### `signExtend(value: u16, comptime bits: u5) i16`
 
-| Function | Input | Output | Worked example |
-|---|---|---|---|
-| `decodeTempExtended(word)` | full 16-bit register word | °C | `0x4B01` -> `150.0` C |
-| `decodeTempExtended13(count)` | raw u13 count | °C | `0x0960` -> `150.0` C |
-| `encodeTempExtended(temp_c)` | °C | full 16-bit word | `150.0` C -> `0x4B01` |
-| `signExtend13(count)` | raw u13 count | i16 count | `0x1C90` -> `-880` |
+- Worked example: `signExtend(0xE70, 12)` -> `-400` (raw 12-bit count for -25 C).
+- Bit layout: value holds a two's-complement field in its low `bits` bits;
+  the high bits are sign-extended via an arithmetic right shift after
+  reinterpreting `value << (16 - bits)` as i16.
+- This is THE sign-extension primitive; all decoders route through it.
 
-- **Bit layout encoded:** value left-aligned in bits 15:3; bit 0 = 1 (EM mode
-  flag, always written by encode, ignored on read); bits 2:1 = 0.
-  Sign extension via `@bitCast(word) >> 3` (arithmetic shift on i16).
-- **Out-of-range (encode):** **clamp/saturate** to representable range
-  [-256.0, +255.9375] C. NaN input -> `0x0001` (0 C).
+### `decodeCount12(word: u16) i16`
 
-## Byte order (I2C transport)
+- Worked example: `decodeCount12(0x3200)` -> `800` (+50 C).
+- Bit layout: data occupies bits 15:4 of the register word; bits 3:0 are
+  ignored (always 0 in Normal mode). The 12-bit field is then sign-extended.
 
-| Function | Input | Output | Worked example |
-|---|---|---|---|
-| `wordFromMsbLsb(msb, lsb)` | two wire bytes | u16 word | `(0x64, 0x00)` -> `0x6400` |
-| `msbLsbFromWord(word)` | u16 word | `{msb, lsb}` | `0x6400` -> `(0x64, 0x00)` |
+### `decodeCount13(word: u16) i16`
 
-- **Bit layout encoded:** big-endian, MSB byte first. No out-of-range issue
-  (total functions over fixed-width bytes).
+- Worked example: `decodeCount13(0x4B01)` -> `2400` (+150 C, Extended).
+- Bit layout: data occupies bits 15:3; bit 0 is the EM format flag (ignored
+  for the count); bits 2:1 read 0. The 13-bit field is then sign-extended.
 
-## Configuration register (0x01) bit fields
+### `decodeCount(word: u16, extended: bool) i16`
 
-Packed/unpacked by `Config.fromWord(u16)` / `Config.toWord()`. Layout:
-byte1 = bit15 OS | bit14:13 R1:R0 (read-only, `11` = 12-bit) | bit12:11 F1:F0 |
-bit10 POL | bit9 TM | bit8 SD; byte2 = bit7:6 CR1:CR0 | bit5 AL (read-only) |
-bit4 EM | bit3:0 reserved. Reset value `0x60A0` (TM=comparator, AL=1, CR=4 Hz,
-F1:F0=00).
+- Runtime mode selector; delegates to `decodeCount13` when `extended` is true,
+  else `decodeCount12`.
 
-### Fault queue (F1:F0)
+### `countToCelsius(count: i16) f32`
 
-| Function | Input | Output | Worked example |
-|---|---|---|---|
-| `faultQueueCount(bits)` | u2 field | faults | `0b10` -> `4` |
-| `faultQueueBits(count)` | faults | u2 field | `4` -> `0b10` |
+- Worked example: `countToCelsius(800)` -> `50.0`.
+- Formula: `count * 0.0625`. No bit layout involved.
 
-- **Bit layout encoded:** 00=1, 01=2, 10=4, 11=6.
-- **Out-of-range (encode):** **error** (`error.InvalidFaultQueueCount`) for any
-  count not in {1, 2, 4, 6}.
+### `wordToCelsius(word: u16) Decoded` (`Decoded = { celsius: f32, extended: bool }`)
 
-### Conversion rate (CR1:CR0)
+- Worked example: `wordToCelsius(0x4B01)` -> `{ celsius: 150.0, extended: true }`.
+- Bit layout: bit 0 of the word selects the format — `0` = Normal (12-bit),
+  `1` = Extended (13-bit); the matching decoder is applied automatically.
+  Bytes are MSB-first; this function operates on the already-assembled word.
 
-| Function | Input | Output | Worked example |
-|---|---|---|---|
-| `conversionRateHz(bits)` | u2 field | Hz | `0b10` -> `4.0` Hz |
-| `conversionRateBits(hz)` | Hz | u2 field | `4.0` -> `0b10` |
+### `celsiusToWord12(celsius: f32) u16`  — ENCODE
 
-- **Bit layout encoded:** 00=0.25, 01=1, 10=4, 11=8 Hz.
-- **Out-of-range (encode):** **clamp/round-to-nearest**; above 8 Hz clamps to
-  0b11. Midpoints 0.625/2.5/6.0 are rounded up to the next rate.
+- Worked example: `50.0 C` -> `0x3200`.
+- Bit layout: signed 12-bit count placed left-aligned in bits 15:4; bits 3:0
+  are written 0.
+- Out-of-range policy: **clamp/saturate**. Range is [-128.0, +127.9375] C.
+  Inputs outside are saturated to `0x8000` (-128 C) or `0x7FF0`
+  (+127.9375 C); e.g. `celsiusToWord12(128.0)` -> `0x7FF0` because +128 C
+  cannot be represented in 12 bits.
 
-## Bus addressing
+### `celsiusToWord13(celsius: f32) u16`  — ENCODE
 
-| Function | Input | Output | Worked example |
-|---|---|---|---|
-| `slaveAddress(a1a0)` | u2 A1:A0 strap | u7 7-bit addr | `0b10` -> `0x4A` |
+- Worked example: `150.0 C` -> `0x4B01`.
+- Bit layout: signed 13-bit count placed left-aligned in bits 15:3; bit 0 is
+  written 1 (EM flag); bits 2:1 are 0.
+- Out-of-range policy: **clamp/saturate**. Range is [-256.0, +255.9375] C.
+  Inputs outside are saturated to `0x8001` (-256 C) or `0x7FF9`
+  (+255.9375 C).
 
-- **Bit layout encoded:** base `0b1001000` (0x48) | A1:A0 -> 0x48/0x49/0x4A/0x4B
-  for ADD0 = GND/V+/SDA/SCL. Total, no out-of-range case.
+### `conversionRateHz(config: u16) f32`
+
+- Worked example: `conversionRateHz(0x60A0)` -> `4.0` (reset value, CR1:CR0 = 10).
+- Bit layout: CR1:CR0 are Configuration bits 7:6 (byte 2 LSB).
+  Decode: 00 -> 0.25 Hz, 01 -> 1 Hz, 10 -> 4 Hz, 11 -> 8 Hz.
+
+### `faultQueueCount(config: u16) u8`
+
+- Worked example: `faultQueueCount(0x60A0)` -> `1` (reset value, F1:F0 = 00).
+- Bit layout: F1:F0 are Configuration bits 12:11 (byte 1 MSB).
+  Decode: 00 -> 1, 01 -> 2, 10 -> 4, 11 -> 6 consecutive faults.
+
+## Verification
+
+- `zig build` — compiles.
+- `zig build test` — all unit tests pass, including exhaustive round trips of
+  every representable 12-bit and 13-bit register code.

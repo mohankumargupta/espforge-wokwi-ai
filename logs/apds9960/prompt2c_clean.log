@@ -1,0 +1,420 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "wokwi-test-harness"
+
+$ ls -la artifacts/ 2>/dev/null && echo "---" && ls -la artifacts/apds9960/ 2>/dev/null && echo "---outputs---" && ls -la artifacts/apds9960/outputs/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  38 Aug 12 17:13 .
+drwxr-xr-x 1 pi pi 578 Aug  9 03:52 ..
+drwxr-xr-x 1 pi pi  62 Aug 12 21:43 apds9960
+drwxr-xr-x 1 pi pi  62 Aug 12 05:28 scd40
+drwxr-xr-x 1 pi pi 110 Aug 12 20:11 tmp102
+---
+total 0
+drwxr-xr-x 1 pi pi  62 Aug 12 21:43 .
+drwxr-xr-x 1 pi pi  38 Aug 12 17:13 ..
+drwxr-xr-x 1 pi pi 198 Aug 12 21:43 outputs
+drwxr-xr-x 1 pi pi  18 Aug 12 17:13 prompt0a
+drwxr-xr-x 1 pi pi 130 Aug 12 20:27 prompt0c
+drwxr-xr-x 1 pi pi  50 Aug 12 21:43 prompt2a
+---outputs---
+total 48
+drwxr-xr-x 1 pi pi   198 Aug 12 21:43 .
+drwxr-xr-x 1 pi pi    62 Aug 12 21:43 ..
+drwxr-xr-x 1 pi pi   116 Aug 12 17:14 apds9960
+-rw-r--r-- 1 pi pi  3608 Aug 12 17:14 apds9960.mdx
+-rw-r--r-- 1 pi pi   874 Aug 12 21:43 chip.json
+-rw-r--r-- 1 pi pi   670 Aug 12 21:43 diagram.json
+-rw-r--r-- 1 pi pi     9 Aug 12 17:14 esphome_component.txt
+-rw-r--r-- 1 pi pi 19142 Aug 12 17:18 spec_apds9960.md
+-rw-r--r-- 1 pi pi  9535 Aug 12 18:25 test_spec_apds9960.md
+
+$ pwd && ls -la
+/home/pi/Developer/wokwi-ai
+total 84
+drwxr-xr-x 1 pi pi  578 Aug  9 03:52 .
+drwxr-xr-x 1 pi pi  798 Jul 27 11:30 ..
+-rw-r--r-- 1 pi pi 1601 Jul  6 14:24 AGENTS.md
+drwxr-xr-x 1 pi pi   38 Aug 12 17:13 artifacts
+-rwxr-xr-x 1 pi pi  268 Jul 23 06:47 clean.sh
+drwxr-xr-x 1 pi pi 4300 Jul 28 13:12 components
+drwxr-xr-x 1 pi pi 1020 Jul 28 13:13 esphome
+drwxr-xr-x 1 pi pi   38 Aug 12 17:13 feedback
+drwxr-xr-x 1 pi pi  162 Aug 12 05:52 .git
+-rw-r--r-- 1 pi pi  129 Aug  7 13:19 .gitignore
+-rw-r--r-- 1 pi pi 1567 Aug 11 06:34 justfile
+drwxr-xr-x 1 pi pi   38 Aug 12 17:12 logs
+-rw-r--r-- 1 pi pi   49 Aug  3 11:54 prompt0a.txt
+-rw-r--r-- 1 pi pi  104 Aug  3 15:01 prompt0b.txt
+-rw-r--r-- 1 pi pi  108 Aug  3 15:16 prompt0c.txt
+-rw-r--r-- 1 pi pi  131 Aug  9 04:09 prompt2a.txt
+-rw-r--r-- 1 pi pi  142 Aug  5 03:22 prompt2c.txt
+-rw-r--r-- 1 pi pi   59 Aug  5 04:24 prompt2d.txt
+-rw-r--r-- 1 pi pi   71 Aug  8 07:03 prompt2e.txt
+-rw-r--r-- 1 pi pi   66 Jul 31 15:22 prompt2f.txt
+-rw-r--r-- 1 pi pi   82 Jul 31 15:21 prompt2g.txt
+-rw-r--r-- 1 pi pi  102 Jul  3 14:03 prompt4a.txt
+-rw-r--r-- 1 pi pi   61 Jul  5 13:22 prompt4.txt
+-rw-r--r-- 1 pi pi   56 Jun 28 06:34 prompt5.txt
+-rw-r--r-- 1 pi pi   44 Jun 27 10:31 prompt6.txt
+-rw-r--r-- 1 pi pi   44 Jun 27 10:33 prompt7.txt
+-rw-r--r-- 1 pi pi   41 Jun 27 10:34 prompt8.txt
+-rwxr-xr-x 1 pi pi  409 Jun 17 11:11 repomix.sh
+-rwxr-xr-x 1 pi pi  587 Jul 29 16:07 runprompt.sh
+drwxr-xr-x 1 pi pi    0 Jul 30 16:18 tests
+drwxr-xr-x 1 pi pi   12 Jun 15 12:30 .zig-cache
+
+→ Read artifacts/apds9960/outputs/test_spec_apds9960.md
+→ Read artifacts/apds9960/outputs/esphome_component.txt
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml
+→ Read artifacts/apds9960/outputs/apds9960.mdx
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/esp32c3.yaml
+
+# Todos
+[•] Read all skill assets and references in full
+[ ] Create artifacts/apds9960/prompt2c and feedback/apds9960 dirs
+[ ] STEP 1: Generate apds9960.yaml from template + component + on_boot/on_value sections
+[ ] Verify on_boot section added to esphome core config
+[ ] Validate yaml with `esphome config apds9960.yaml`
+[ ] STEP 2: cargo new qa_test
+[ ] Copy qa_test assets (assert_serial.rs, lib.rs)
+[ ] Generate qa_test/tests/test.rs with assert_serial! assertions
+[ ] Compile qa_test (cargo build --target aarch64-unknown-linux-gnu)
+[ ] Copy files to outputs_dir (wokwi.toml, qa_test, apds9960.yaml)
+[ ] Write feedback file prompt2c.md
+
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/_test_example.rs
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/assert_serial.rs
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/lib.rs
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/Cargo.toml
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/justfile
+→ Read /home/pi/.config/opencode/skills/wokwi-test-harness/references/core-configuration.md
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/apds9960/ 2>/dev/null || echo "no apds9960 dir in outputs"
+total 32
+drwxr-xr-x 1 pi pi   116 Aug 12 17:14 .
+drwxr-xr-x 1 pi pi   198 Aug 12 21:43 ..
+-rw-r--r-- 1 pi pi 13357 Aug 12 17:14 apds9960.cpp
+-rw-r--r-- 1 pi pi  2071 Aug 12 17:14 apds9960.h
+-rw-r--r-- 1 pi pi   787 Aug 12 17:14 binary_sensor.py
+-rw-r--r-- 1 pi pi  2389 Aug 12 17:14 __init__.py
+-rw-r--r-- 1 pi pi   872 Aug 12 17:14 sensor.py
+
+$ ls -la /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/ && cat /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/Cargo.lock
+total 12
+drwxr-xr-x 1 pi pi  84 Aug  4 14:32 .
+drwxr-xr-x 1 pi pi 116 Aug  6 06:23 ..
+-rw-r--r-- 1 pi pi 151 Aug  4 14:32 Cargo.lock
+-rw-r--r-- 1 pi pi 179 Aug  4 14:32 Cargo.toml
+-rw-r--r-- 1 pi pi 230 Aug  4 14:32 justfile
+drwxr-xr-x 1 pi pi  44 Aug  4 14:32 src
+drwxr-xr-x 1 pi pi  66 Aug  4 14:32 target
+drwxr-xr-x 1 pi pi   0 Aug  4 14:32 tests
+# This file is automatically @generated by Cargo.
+# It is not intended for manual editing.
+version = 4
+
+[[package]]
+name = "qa_test"
+version = "0.1.0"
+
+→ Read artifacts/apds9960/outputs/apds9960/apds9960.cpp
+→ Read artifacts/apds9960/outputs/apds9960/sensor.py
+→ Read artifacts/apds9960/outputs/apds9960/__init__.py
+→ Read artifacts/apds9960/outputs/diagram.json
+→ Read artifacts/apds9960/outputs/chip.json
+
+# Todos
+[✓] Read all skill assets and references in full
+[•] Create artifacts/apds9960/prompt2c and feedback/apds9960 dirs
+[ ] STEP 1: Generate apds9960.yaml from template + component + on_boot/on_value sections
+[ ] Verify on_boot section added to esphome core config
+[ ] Validate yaml with `esphome config apds9960.yaml`
+[ ] STEP 2: cargo new qa_test
+[ ] Copy qa_test assets (assert_serial.rs, lib.rs)
+[ ] Generate qa_test/tests/test.rs with assert_serial! assertions
+[ ] Compile qa_test (cargo build --target aarch64-unknown-linux-gnu)
+[ ] Copy files to outputs_dir (wokwi.toml, qa_test, apds9960.yaml)
+[ ] Write feedback file prompt2c.md
+
+All assets read. Now creating the required directories.
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c /home/pi/Developer/wokwi-ai/feedback/apds9960 && cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/apds9960.yaml && ls -la /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/
+total 4
+drwxr-xr-x 1 pi pi  26 Aug 12 21:46 .
+drwxr-xr-x 1 pi pi  78 Aug 12 21:46 ..
+-rw-r--r-- 1 pi pi 231 Aug 12 21:46 apds9960.yaml
+
+← Write artifacts/apds9960/prompt2c/apds9960.yaml
+Wrote file successfully.
+
+Now generating the apds9960.yaml with on_boot + on_value sections.
+$ grep -n '{:' /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/apds9960.yaml || echo "NO {:
+/bin/bash: -c: line 1: unexpected EOF while looking for matching `"'
+/bin/bash: -c: line 2: syntax error: unexpected end of file
+
+$ which esphome && esphome version
+/home/pi/.local/bin/esphome
+Version: 2026.5.3
+
+✱ Grep "\{:" in artifacts/apds9960/prompt2c · 0 matches
+
+$ esphome config apds9960.yaml
+INFO ESPHome 2026.5.3
+INFO Reading configuration apds9960.yaml...
+esphome:
+  name: dut
+  on_boot:
+    - then:
+        - component.update:
+            id: apds9960_hub
+      priority: 600.0
+  min_version: 2026.5.3
+  build_path: build/dut
+  friendly_name: ''
+  platformio_options: {}
+  environment_variables: {}
+  includes: []
+  includes_c: []
+  libraries: []
+  name_add_mac_suffix: false
+  debug_scheduler: false
+  areas: []
+  devices: []
+esp32:
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: 5.5.4
+    sdkconfig_options: {}
+    log_level: ERROR
+    advanced:
+      compiler_optimization: SIZE
+      enable_idf_experimental_features: false
+      enable_lwip_assert: true
+      ignore_efuse_custom_mac: false
+      ignore_efuse_mac_crc: false
+      sram1_as_iram: false
+      enable_lwip_dhcp_server: false
+      enable_lwip_mdns_queries: true
+      enable_lwip_bridge_interface: false
+      enable_lwip_tcpip_core_locking: true
+      enable_lwip_check_thread_safety: true
+      disable_libc_locks_in_iram: true
+      disable_vfs_support_termios: true
+      disable_vfs_support_select: true
+      disable_vfs_support_dir: true
+      freertos_in_iram: false
+      ringbuf_in_iram: false
+      heap_in_iram: false
+      execute_from_psram: false
+      loop_task_stack_size: 8192
+      enable_ota_rollback: false
+      use_full_certificate_bundle: false
+      include_builtin_idf_components: []
+      enable_full_printf: false
+      disable_debug_stubs: true
+      disable_ocd_aware: true
+      disable_usb_serial_jtag_secondary: true
+      disable_dev_null_vfs: true
+      disable_mbedtls_peer_cert: true
+      disable_mbedtls_pkcs7: true
+      disable_regi2c_in_iram: true
+      adc_oneshot_in_iram: false
+      disable_fatfs: true
+    components: []
+    platform_version: https://github.com/pioarduino/platform-espressif32/releases/download/55.03.38-1/platform-espressif32.zip
+    source: pioarduino/framework-espidf@https://github.com/pioarduino/esp-idf/releases/download/v5.5.4/esp-idf-v5.5.4.tar.xz
+  flash_size: 4MB
+  watchdog_timeout: 5s
+  board: esp32-c3-devkitm-1
+  cpu_frequency: 160MHZ
+logger:
+  hardware_uart: UART0
+  baud_rate: 115200
+  tx_buffer_size: 512
+  deassert_rts_dtr: false
+  task_log_buffer_size: 768
+  level: DEBUG
+  logs: {}
+  runtime_tag_levels: false
+i2c:
+  - sda: 4
+    scl: 5
+    sda_pullup_enabled: true
+    scl_pullup_enabled: true
+    frequency: 50000.0
+    scan: true
+apds9960:
+  - id: apds9960_hub
+    address: 0x39
+    led_drive: 100ma
+    proximity_gain: 4x
+    ambient_light_gain: 4x
+    gesture_led_drive: 100ma
+    gesture_gain: 4x
+    gesture_wait_time: 2.8ms
+    update_interval: 60s
+sensor:
+  - platform: apds9960
+    id: apds9960_clear
+    type: clear
+    name: Clear channel
+    on_value:
+      - then:
+          - lambda: !lambda |-
+              ESP_LOGI("qa_test", "Clear channel = %.1f %%", x);
+    disabled_by_default: false
+    force_update: false
+    unit_of_measurement: '%'
+    icon: mdi:lightbulb
+    accuracy_decimals: 1
+    state_class: measurement
+  - platform: apds9960
+    id: apds9960_red
+    type: red
+    name: Red channel
+    on_value:
+      - then:
+          - lambda: !lambda |-
+              ESP_LOGI("qa_test", "Red channel = %.1f %%", x);
+    disabled_by_default: false
+    force_update: false
+    unit_of_measurement: '%'
+    icon: mdi:lightbulb
+    accuracy_decimals: 1
+    state_class: measurement
+  - platform: apds9960
+    id: apds9960_green
+    type: green
+    name: Green channel
+    on_value:
+      - then:
+          - lambda: !lambda |-
+              ESP_LOGI("qa_test", "Green channel = %.1f %%", x);
+    disabled_by_default: false
+    force_update: false
+    unit_of_measurement: '%'
+    icon: mdi:lightbulb
+    accuracy_decimals: 1
+    state_class: measurement
+  - platform: apds9960
+    id: apds9960_blue
+    type: blue
+    name: Blue channel
+    on_value:
+      - then:
+          - lambda: !lambda |-
+              ESP_LOGI("qa_test", "Blue channel = %.1f %%", x);
+    disabled_by_default: false
+    force_update: false
+    unit_of_measurement: '%'
+    icon: mdi:lightbulb
+    accuracy_decimals: 1
+    state_class: measurement
+  - platform: apds9960
+    id: apds9960_proximity
+    type: proximity
+    name: Proximity
+    on_value:
+      - then:
+          - lambda: !lambda |-
+              ESP_LOGI("qa_test", "Proximity = %.1f %%", x);
+    disabled_by_default: false
+    force_update: false
+    unit_of_measurement: '%'
+    icon: mdi:lightbulb
+    accuracy_decimals: 1
+    state_class: measurement
+
+INFO Configuration is valid!
+
+# Todos
+[✓] Read all skill assets and references in full
+[✓] Create artifacts/apds9960/prompt2c and feedback/apds9960 dirs
+[✓] STEP 1: Generate apds9960.yaml from template + component + on_boot/on_value sections
+[✓] Verify on_boot section added to esphome core config
+[✓] Validate yaml with `esphome config apds9960.yaml`
+[•] STEP 2: cargo new qa_test
+[ ] Copy qa_test assets (assert_serial.rs, lib.rs)
+[ ] Generate qa_test/tests/test.rs with assert_serial! assertions
+[ ] Compile qa_test (cargo build --target aarch64-unknown-linux-gnu)
+[ ] Copy files to outputs_dir (wokwi.toml, qa_test, apds9960.yaml)
+[ ] Write feedback file prompt2c.md
+
+Config is valid. Now STEP 2: create the rust qa_test project.
+$ cargo new --vcs none --lib qa_test
+Creating library `qa_test` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+$ cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/assert_serial.rs /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/qa_test/src/ && cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/lib.rs /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/qa_test/src/ && ls -la /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/qa_test/src/
+total 8
+drwxr-xr-x 1 pi pi   44 Aug 12 21:48 .
+drwxr-xr-x 1 pi pi   26 Aug 12 21:48 ..
+-rw-r--r-- 1 pi pi 3268 Aug 12 21:48 assert_serial.rs
+-rw-r--r-- 1 pi pi   23 Aug 12 21:48 lib.rs
+
+← Write artifacts/apds9960/prompt2c/qa_test/tests/test.rs
+Wrote file successfully.
+
+Now generating test.rs. The serial output order (from `update()` → `read_color_data_` then `read_proximity_data_`): Clear, Red, Green, Blue, then Proximity.
+→ Read artifacts/apds9960/prompt2c/qa_test/Cargo.toml
+
+$ cargo build --target aarch64-unknown-linux-gnu
+Compiling qa_test v0.1.0 (/home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/qa_test)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.89s
+
+# Todos
+[✓] Read all skill assets and references in full
+[✓] Create artifacts/apds9960/prompt2c and feedback/apds9960 dirs
+[✓] STEP 1: Generate apds9960.yaml from template + component + on_boot/on_value sections
+[✓] Verify on_boot section added to esphome core config
+[✓] Validate yaml with `esphome config apds9960.yaml`
+[✓] STEP 2: cargo new qa_test
+[✓] Copy qa_test assets (assert_serial.rs, lib.rs)
+[✓] Generate qa_test/tests/test.rs with assert_serial! assertions
+[✓] Compile qa_test (cargo build --target aarch64-unknown-linux-gnu)
+[•] Copy files to outputs_dir (wokwi.toml, qa_test, apds9960.yaml)
+[ ] Write feedback file prompt2c.md
+
+Compiled cleanly. Now copying files to outputs_dir.
+$ cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/ && rm -rf /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/qa_test && cp -r /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/qa_test /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/ && cp /home/pi/Developer/wokwi-ai/artifacts/apds9960/prompt2c/apds9960.yaml /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/ && ls -la /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/
+total 56
+drwxr-xr-x 1 pi pi   258 Aug 12 21:48 .
+drwxr-xr-x 1 pi pi    78 Aug 12 21:46 ..
+drwxr-xr-x 1 pi pi   116 Aug 12 17:14 apds9960
+-rw-r--r-- 1 pi pi  3608 Aug 12 17:14 apds9960.mdx
+-rw-r--r-- 1 pi pi  1345 Aug 12 21:48 apds9960.yaml
+-rw-r--r-- 1 pi pi   874 Aug 12 21:43 chip.json
+-rw-r--r-- 1 pi pi   670 Aug 12 21:43 diagram.json
+-rw-r--r-- 1 pi pi     9 Aug 12 17:14 esphome_component.txt
+drwxr-xr-x 1 pi pi    68 Aug 12 21:48 qa_test
+-rw-r--r-- 1 pi pi 19142 Aug 12 17:18 spec_apds9960.md
+-rw-r--r-- 1 pi pi  9535 Aug 12 18:25 test_spec_apds9960.md
+-rw-r--r-- 1 pi pi   271 Aug 12 21:48 wokwi.toml
+
+Now writing the feedback file.
+← Write feedback/apds9960/prompt2c.md
+Wrote file successfully.
+
+# Todos
+[✓] Read all skill assets and references in full
+[✓] Create artifacts/apds9960/prompt2c and feedback/apds9960 dirs
+[✓] STEP 1: Generate apds9960.yaml from template + component + on_boot/on_value sections
+[✓] Verify on_boot section added to esphome core config
+[✓] Validate yaml with `esphome config apds9960.yaml`
+[✓] STEP 2: cargo new qa_test
+[✓] Copy qa_test assets (assert_serial.rs, lib.rs)
+[✓] Generate qa_test/tests/test.rs with assert_serial! assertions
+[✓] Compile qa_test (cargo build --target aarch64-unknown-linux-gnu)
+[✓] Copy files to outputs_dir (wokwi.toml, qa_test, apds9960.yaml)
+[✓] Write feedback file prompt2c.md
+
+Done. Test harness for APDS9960 created and validated.
+
+**Deliverables:**
+- `artifacts/apds9960/prompt2c/apds9960.yaml` — ESPHome config (I2C SDA=4/SCL=5, `apds9960` component at 0x39), `on_boot` forces first read via `component.update: apds9960_hub`, each of the 5 sensors logs through its `on_value` trigger (avoids the async-update race). printf translation applied (`%.1f %%`), no `{:` leaked. `esphome config` valid.
+- `artifacts/apds9960/prompt2c/qa_test/` — compiles clean for `aarch64-unknown-linux-gnu`; `tests/test.rs` asserts Clear/Red/Green/Blue/Proximity = 20.0/15.0/12.0/9.0/7.1 in publish order, values copied verbatim from the spec.
+- `artifacts/apds9960/outputs/` — now contains `wokwi.toml`, `qa_test/`, and `apds9960.yaml`.
+- `feedback/apds9960/prompt2c.md` — notes written, including a suggestion to document printf `%%` escaping for the trailing `%` unit in the skill.

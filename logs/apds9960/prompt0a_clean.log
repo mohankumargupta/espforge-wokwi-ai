@@ -1,0 +1,266 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "spec-from-datasheet"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls -la /home/pi/.config/opencode/skills/spec-from-datasheet/ && ls -la /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/ && ls -la /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/
+total 4
+drwxr-xr-x 1 pi pi   42 Jun 22 12:33 .
+drwxr-xr-x 1 pi pi  676 Aug  9 04:07 ..
+drwxr-xr-x 1 pi pi   32 Jun 22 13:14 assets
+drwxr-xr-x 1 pi pi   44 Jun 22 13:14 scripts
+-rw-r--r-- 1 pi pi 2886 Aug  3 15:21 SKILL.md
+total 8
+drwxr-xr-x 1 pi pi  44 Jun 22 13:14 .
+drwxr-xr-x 1 pi pi  42 Jun 22 12:33 ..
+-rwxr-xr-x 1 pi pi 432 Jun 22 13:22 analog.sh
+-rwxr-xr-x 1 pi pi 289 Jul  4 08:09 components.sh
+total 48
+drwxr-xr-x 1 pi pi   178 Aug  3 12:19 .
+drwxr-xr-x 1 pi pi    32 Jun 22 13:14 ..
+-rw-r--r-- 1 pi pi   639 Jun 19 13:40 main.py
+-rw-r--r-- 1 pi pi  1077 Aug  3 12:19 template_chip2.md
+-rw-r--r-- 1 pi pi  3528 Aug  8 18:52 template_chip.md
+-rw-r--r-- 1 pi pi  5033 Jul  7 12:48 transport_i2c.md
+-rw-r--r-- 1 pi pi 10295 Jul  7 12:48 transport_spi.md
+-rw-r--r-- 1 pi pi 15298 Jul  7 12:48 transport_uart.md
+
+# Todos
+[•] Run components.sh and find esphome.io docs markdown for apds9960
+[ ] Create esphome_component.txt, copy component mdx and source code to outputs_dir
+[ ] Find datasheet URL, use analog.sh, download datasheet PDF
+[ ] Prepare extraction environment (uv init, pymupdf4llm, main.py, template)
+[ ] Convert PDF to markdown
+[ ] Produce final spec markdown from template + datasheet
+[ ] Write feedback file
+
+Let me create the checklist and read the skill
+→ Read /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/components.sh
+→ Read /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/analog.sh
+→ Read /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/main.py
+Context vars: `<original_pwd>`=/home/pi/Developer/wokwi-ai, `<device>`=apds9960. Let me read the skill scripts and assets
+→ Read /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/template_chip.md
+Let me create the directories and check if components/esphome are
+
+$ mkdir -p artifacts/apds9960/outputs artifacts/apds9960/prompt0a/datasheet feedback/apds9960 && ls -la components esphome 2>/dev/null | head -5; echo "---"; ls artifacts/apds9960/
+components:
+total 1512
+drwxr-xr-x 1 pi pi  4300 Jul 28 13:12 .
+drwxr-xr-x 1 pi pi   578 Aug  9 03:52 ..
+drwxr-xr-x 1 pi pi    42 Jul 28 13:12 alarm_control_panel
+---
+outputs
+prompt0a
+
+$ ls -d esphome components && test -d components && test -d esphome && echo "BOTH EXIST - components.sh will exit 0"
+components
+esphome
+BOTH EXIST - components.sh will exit 0
+
+$ bash /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/components.sh
++ [[ -d components ]]
++ [[ -d esphome ]]
++ exit 0
+
+components.sh has already been run (both dirs exist). Let me run it as the skill instructs, then find the component
+$ rg -i apds9960 components
+components/index.mdx:  ["APDS9960", "/components/sensor/apds9960/", "apds9960.jpg", "Colour & Gesture"],
+components/index.mdx:  ["APDS9960", "/components/sensor/apds9960/", "apds9960.jpg", "Colour & Gesture"],
+components/sensor/apds9960.mdx:description: "Instructions for setting up APDS9960 sensors."
+components/sensor/apds9960.mdx:title: "APDS9960 Sensor"
+components/sensor/apds9960.mdx:import apds9960FullImg from './images/apds9960-full.jpg';
+components/sensor/apds9960.mdx:<span id="apds9960-component"></span>
+components/sensor/apds9960.mdx:The `apds9960` sensor platform allows you to use your APDS9960 RGB and gesture sensors
+components/sensor/apds9960.mdx:([datasheet](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/apds9960.pdf),
+components/sensor/apds9960.mdx:  src={apds9960FullImg}
+components/sensor/apds9960.mdx:apds9960:
+components/sensor/apds9960.mdx:  - platform: apds9960
+components/sensor/apds9960.mdx:    name: "APDS9960 Clear Channel"
+components/sensor/apds9960.mdx:  - platform: apds9960
+components/sensor/apds9960.mdx:The `apds9960` sensor allows you to use your [Apds9960](/components/sensor/apds9960/) to perform different
+components/sensor/apds9960.mdx:The `apds9960` binary sensor allows you to use your [Apds9960](/components/sensor/apds9960/) to perform different
+components/sensor/apds9960.mdx:With some APDS9960 modules the VL pin needs to be supplied with 3.3V for gesture sensing to work. The VL pin provides power for the infrared LED that is used to detect gestures. There may be two pads on the module which, if shorted with a solder joint, cause the main VCC power pin to supply power for the infrared LED as well. However, providing a separate power supply via the VL pin may help to isolate the rest of the circuit from noise created by pulsing the infrared LED at relatively high power.
+components/sensor/apds9960.mdx:- <APIRef text="apds9960.h" path="apds9960/apds9960.h" />
+
+Found it. The component name is `apds9960`. Let me read the mdx file and set up the outputs
+→ Read components/sensor/apds9960.mdx
+Datasheet URL found: `https://cdn.sparkfun.com/datasheets/Sensors/Proximity/apds9960.pdf`. Let me set up the outputs dir and check the esphome source
+
+$ printf 'apds9960\n' > artifacts/apds9960/outputs/esphome_component.txt && cp components/sensor/apds9960.mdx artifacts/apds9960/outputs/ && ls esphome/components/apds9960/
+ls: cannot access 'esphome/components/apds9960/': No such file or directory
+
+$ rg -il "apds9960" esphome/components --glob '*.h' --glob '*.cpp' --glob '*.yaml' --glob '*.py' | head; echo "---"; ls esphome/components/ | rg -i apds
+rg: esphome/components: IO error for operation on esphome/components: No such file or directory (os error 2)
+---
+ls: cannot access 'esphome/components/': No such file or directory
+
+$ ls esphome/ | head -40; echo "---components?---"; ls esphome/ | rg -i component
+AGENTS.md
+CLAUDE.md
+codecov.yml
+CODE_OF_CONDUCT.md
+CODEOWNERS
+CONTRIBUTING.md
+docker
+Doxyfile
+esphome
+GEMINI.md
+LICENSE
+MANIFEST.in
+netlify.toml
+platformio.ini
+pyproject.toml
+README.md
+requirements_dev.txt
+requirements_test.txt
+requirements.txt
+script
+sdkconfig.defaults
+sdkconfig.defaults.esp32c6
+sdkconfig.defaults.esp32p4
+sdkconfig.defaults.esp32s3
+tests
+THREAT_MODEL.md
+---components?---
+
+$ ls esphome/esphome/components/ | rg -i apds
+apds9306
+apds9960
+
+$ cp -r esphome/esphome/components/apds9960 artifacts/apds9960/outputs/ && ls -la artifacts/apds9960/outputs/apds9960/
+total 32
+drwxr-xr-x 1 pi pi   116 Aug 12 17:14 .
+drwxr-xr-x 1 pi pi    82 Aug 12 17:14 ..
+-rw-r--r-- 1 pi pi 13357 Aug 12 17:14 apds9960.cpp
+-rw-r--r-- 1 pi pi  2071 Aug 12 17:14 apds9960.h
+-rw-r--r-- 1 pi pi   787 Aug 12 17:14 binary_sensor.py
+-rw-r--r-- 1 pi pi  2389 Aug 12 17:14 __init__.py
+-rw-r--r-- 1 pi pi   872 Aug 12 17:14 sensor.py
+
+# Todos
+[✓] Run components.sh and find esphome.io docs markdown for apds9960
+[✓] Create esphome_component.txt, copy component mdx and source code to outputs_dir
+[•] Find datasheet URL, use analog.sh, download datasheet PDF
+[ ] Prepare extraction environment (uv init, pymupdf4llm, main.py, template)
+[ ] Convert PDF to markdown
+[ ] Produce final spec markdown from template + datasheet
+[ ] Write feedback file
+
+Now use `analog.sh` with the datasheet URL
+$ bash /home/pi/.config/opencode/skills/spec-from-datasheet/scripts/analog.sh "https://cdn.sparkfun.com/datasheets/Sensors/Proximity/apds9960.pdf"
+https://cdn.sparkfun.com/datasheets/Sensors/Proximity/apds9960.pdf https://web.archive.org/web/20151103211433im_/https://cdn.sparkfun.com/datasheets/Sensors/Proximity/apds9960.pdf
+
+analog.sh returned the wayback URL. Let me download the datasheet
+$ curl -sL -o artifacts/apds9960/prompt0a/datasheet/apds9960.pdf "https://web.archive.org/web/20151103211433im_/https://cdn.sparkfun.com/datasheets/Sensors/Proximity/apds9960.pdf" && ls -la artifacts/apds9960/prompt0a/datasheet/ && file artifacts/apds9960/prompt0a/datasheet/apds9960.pdf
+total 912
+drwxr-xr-x 1 pi pi     24 Aug 12 17:15 .
+drwxr-xr-x 1 pi pi     18 Aug 12 17:13 ..
+-rw-r--r-- 1 pi pi 930882 Aug 12 17:15 apds9960.pdf
+artifacts/apds9960/prompt0a/datasheet/apds9960.pdf: PDF document, version 1.4 (password protected)
+
+`file` reports "password protected" — the skill says that's usually a false flag. Let me verify with qpdf
+$ qpdf --show-encryption artifacts/apds9960/prompt0a/datasheet/apds9960.pdf; echo "---"; qpdf --qdf --object-streams=disable artifacts/apds9960/prompt0a/datasheet/apds9960.pdf /tmp/opencode/apds9960_unenc.pdf 2>&1 | head -3; echo "exit: $?"
+File is not encrypted
+---
+exit: 0
+
+Not encrypted — false flag as the skill noted. Now prepare the extraction environment
+$ uv init && uv add pymupdf4llm
+Initialized project `datasheet`
+Using CPython 3.13.3
+Creating virtual environment at: .venv
+Resolved 13 packages in 487ms
+Installed 12 packages in 286ms
+ + flatbuffers==25.12.19
+ + networkx==3.6.1
+ + numpy==2.5.2
+ + onnxruntime==1.28.0
+ + packaging==26.3
+ + protobuf==7.35.1
+ + psutil==7.2.2
+ + pymupdf==1.28.2
+ + pymupdf-layout==1.28.2
+ + pymupdf4llm==1.28.2
+ + pyyaml==6.0.3
+ + tabulate==0.10.0
+
+$ cp /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/main.py . && cp /home/pi/.config/opencode/skills/spec-from-datasheet/assets/datasheet_device/template_chip.md . && ls -la
+total 980
+drwxr-xr-x 1 pi pi    170 Aug 12 17:15 .
+drwxr-xr-x 1 pi pi     18 Aug 12 17:13 ..
+-rw-r--r-- 1 pi pi 930882 Aug 12 17:15 apds9960.pdf
+-rw-r--r-- 1 pi pi    639 Aug 12 17:15 main.py
+-rw-r--r-- 1 pi pi    183 Aug 12 17:15 pyproject.toml
+-rw-r--r-- 1 pi pi      5 Aug 12 17:15 .python-version
+-rw-r--r-- 1 pi pi      0 Aug 12 17:15 README.md
+-rw-r--r-- 1 pi pi   3528 Aug 12 17:15 template_chip.md
+-rw-r--r-- 1 pi pi  50150 Aug 12 17:15 uv.lock
+drwxr-xr-x 1 pi pi     96 Aug 12 17:15 .venv
+
+# Todos
+[✓] Run components.sh and find esphome.io docs markdown for apds9960
+[✓] Create esphome_component.txt, copy component mdx and source code to outputs_dir
+[✓] Find datasheet URL, use analog.sh, download datasheet PDF
+[✓] Prepare extraction environment (uv init, pymupdf4llm, main.py, template)
+[•] Convert PDF to markdown
+[ ] Produce final spec markdown from template + datasheet
+[ ] Write feedback file
+
+$ uv run main.py apds9960.pdf apds9960_datasheet.md && wc -l apds9960_datasheet.md && wc -c apds9960_datasheet.md
+2026-08-12 17:15:33.917543577 [W:onnxruntime:Default, device_discovery.cc:285 GetGpuDevices] Failed to detect devices under "/sys/class/drm/card1": device_discovery.cc:94 ReadFileContents Failed to open file: "/sys/class/drm/card1/device/vendor"
+2026-08-12 17:15:33.917864410 [W:onnxruntime:Default, device_discovery.cc:285 GetGpuDevices] Failed to detect devices under "/sys/class/drm/card0": device_discovery.cc:94 ReadFileContents Failed to open file: "/sys/class/drm/card0/device/vendor"
+
+=== Document parser messages ===
+Using Tesseract for OCR processing.
+OCR on page.number=17/18.
+OCR on page.number=35/36.
+1484 apds9960_datasheet.md
+85221 apds9960_datasheet.md
+
+Conversion done (1484 lines). Let me read the datasheet markdown
+→ Read artifacts/apds9960/prompt0a/datasheet/apds9960_datasheet.md
+Let me continue reading the datasheet
+→ Read artifacts/apds9960/prompt0a/datasheet/apds9960_datasheet.md [offset=804]
+→ Read artifacts/apds9960/outputs/apds9960/apds9960.h
+I have the full datasheet. Let me cross-check the esphome implementation for the init sequence and lux conversion, since it's already copied to outputs
+→ Read artifacts/apds9960/outputs/apds9960/__init__.py
+→ Read artifacts/apds9960/outputs/apds9960/apds9960.cpp
+
+← Write artifacts/apds9960/outputs/spec_apds9960.md
+Wrote file successfully.
+
+I have everything needed. Now producing the final spec from the datasheet, filling out the template
+# Todos
+[✓] Run components.sh and find esphome.io docs markdown for apds9960
+[✓] Create esphome_component.txt, copy component mdx and source code to outputs_dir
+[✓] Find datasheet URL, use analog.sh, download datasheet PDF
+[✓] Prepare extraction environment (uv init, pymupdf4llm, main.py, template)
+[✓] Convert PDF to markdown
+[✓] Produce final spec markdown from template + datasheet
+[•] Write feedback file
+
+Spec written. Now the feedback file
+← Write feedback/apds9960/prompt0a.md
+Wrote file successfully.
+
+# Todos
+[✓] Run components.sh and find esphome.io docs markdown for apds9960
+[✓] Create esphome_component.txt, copy component mdx and source code to outputs_dir
+[✓] Find datasheet URL, use analog.sh, download datasheet PDF
+[✓] Prepare extraction environment (uv init, pymupdf4llm, main.py, template)
+[✓] Convert PDF to markdown
+[✓] Produce final spec markdown from template + datasheet
+[✓] Write feedback file
+
+Done. Spec created for APDS-9960.
+
+**Deliverables:**
+- `artifacts/apds9960/outputs/spec_apds9960.md` — full spec (I²C `0x39`, 400 kHz; pin table; 43-register map with reset values; bit fields; init sequence; data conversion with ATIME/WTIME count formulas and worked test vectors)
+- `artifacts/apds9960/outputs/esphome_component.txt`, `apds9960.mdx`, and `apds9960/` (esphome source)
+- `artifacts/apds9960/prompt0a/datasheet/apds9960_datasheet.md` (1484-line extraction) + PDF
+- `feedback/apds9960/prompt0a.md`
+
+Notes: datasheet PDF was a false-flag "encrypted" report (qpdf confirmed clean). STATUS register reset value is inconsistent in the datasheet (`0x00` table vs `0x04` description) — recorded both. No direct Lux formula exists; documented responsivity + ESPHome's full-scale percentage conversion instead.

@@ -3,95 +3,70 @@
 
 → Skill "data-conversions-complex-logic"
 
-# Todos
-[•] Run pwd to establish <original_pwd>
-[ ] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
-[ ] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
-[ ] zig init in artifacts/tmp102/prompt0c
-[ ] Edit src/main.zig with conversion functions + unit tests
-[ ] zig build verify
-[ ] Create conversions_manifest.md
-[ ] Create feedback/prompt0c.md
-
 $ pwd
 /home/pi/Developer/wokwi-ai
 
-$ ls -la
-total 84
-drwxr-xr-x 1 pi pi  578 Aug  9 03:52 .
-drwxr-xr-x 1 pi pi  798 Jul 27 11:30 ..
--rw-r--r-- 1 pi pi 1601 Jul  6 14:24 AGENTS.md
-drwxr-xr-x 1 pi pi   12 Aug 11 02:38 artifacts
--rwxr-xr-x 1 pi pi  268 Jul 23 06:47 clean.sh
-drwxr-xr-x 1 pi pi 4300 Jul 28 13:12 components
-drwxr-xr-x 1 pi pi 1020 Jul 28 13:13 esphome
-drwxr-xr-x 1 pi pi   12 Aug 11 02:38 feedback
-drwxr-xr-x 1 pi pi  162 Aug 10 05:35 .git
--rw-r--r-- 1 pi pi  129 Aug  7 13:19 .gitignore
--rw-r--r-- 1 pi pi 1198 Aug 10 04:33 justfile
-drwxr-xr-x 1 pi pi   12 Aug 11 02:32 logs
--rw-r--r-- 1 pi pi   49 Aug  3 11:54 prompt0a.txt
--rw-r--r-- 1 pi pi  104 Aug  3 15:01 prompt0b.txt
--rw-r--r-- 1 pi pi  108 Aug  3 15:16 prompt0c.txt
--rw-r--r-- 1 pi pi  131 Aug  9 04:09 prompt2a.txt
--rw-r--r-- 1 pi pi  142 Aug  5 03:22 prompt2c.txt
--rw-r--r-- 1 pi pi   59 Aug  5 04:24 prompt2d.txt
--rw-r--r-- 1 pi pi   71 Aug  8 07:03 prompt2e.txt
--rw-r--r-- 1 pi pi   66 Jul 31 15:22 prompt2f.txt
--rw-r--r-- 1 pi pi   82 Jul 31 15:21 prompt2g.txt
--rw-r--r-- 1 pi pi  102 Jul  3 14:03 prompt4a.txt
--rw-r--r-- 1 pi pi   61 Jul  5 13:22 prompt4.txt
--rw-r--r-- 1 pi pi   56 Jun 28 06:34 prompt5.txt
--rw-r--r-- 1 pi pi   44 Jun 27 10:31 prompt6.txt
--rw-r--r-- 1 pi pi   44 Jun 27 10:33 prompt7.txt
--rw-r--r-- 1 pi pi   41 Jun 27 10:34 prompt8.txt
--rwxr-xr-x 1 pi pi  409 Jun 17 11:11 repomix.sh
--rwxr-xr-x 1 pi pi  587 Jul 29 16:07 runprompt.sh
-drwxr-xr-x 1 pi pi    0 Jul 30 16:18 tests
-drwxr-xr-x 1 pi pi   12 Jun 15 12:30 .zig-cache
-
-$ ls artifacts/tmp102 outputs 2>/dev/null; ls artifacts/tmp102/outputs 2>/dev/null
-artifacts/tmp102:
-outputs
-prompt0a
-esphome_component.txt
-spec_tmp102.md
-test_spec_tmp102.md
-tmp102
-tmp102.mdx
-
-$ ls -la artifacts/tmp102 artifacts/tmp102/outputs artifacts/tmp102/prompt0a
-artifacts/tmp102:
+$ ls -la artifacts/tmp102/ 2>/dev/null; echo "---"; ls -la artifacts/tmp102/outputs/ 2>/dev/null; echo "---"; ls -la feedback/ 2>/dev/null
 total 0
-drwxr-xr-x 1 pi pi  30 Aug 11 03:46 .
-drwxr-xr-x 1 pi pi  12 Aug 11 02:38 ..
-drwxr-xr-x 1 pi pi 140 Aug 11 02:54 outputs
+drwxr-xr-x 1 pi pi  78 Aug 12 20:10 .
+drwxr-xr-x 1 pi pi  38 Aug 12 17:13 ..
+drwxr-xr-x 1 pi pi 352 Aug 11 05:01 outputs
 drwxr-xr-x 1 pi pi  18 Aug 11 02:38 prompt0a
-
-artifacts/tmp102/outputs:
-total 28
-drwxr-xr-x 1 pi pi   140 Aug 11 02:54 .
-drwxr-xr-x 1 pi pi    30 Aug 11 03:46 ..
--rw-r--r-- 1 pi pi     7 Aug 11 02:39 esphome_component.txt
--rw-r--r-- 1 pi pi 15770 Aug 11 02:49 spec_tmp102.md
--rw-r--r-- 1 pi pi  3813 Aug 11 02:55 test_spec_tmp102.md
-drwxr-xr-x 1 pi pi    76 Aug 11 02:39 tmp102
--rw-r--r-- 1 pi pi  1767 Aug 11 02:39 tmp102.mdx
-
-artifacts/tmp102/prompt0a:
+drwxr-xr-x 1 pi pi  50 Aug 11 04:09 prompt2a
+drwxr-xr-x 1 pi pi  36 Aug 11 04:58 prompt2c
+drwxr-xr-x 1 pi pi 124 Aug 11 04:32 prompt2d
+---
+total 632
+drwxr-xr-x 1 pi pi    352 Aug 11 05:01 .
+drwxr-xr-x 1 pi pi     78 Aug 12 20:10 ..
+-rw-r--r-- 1 pi pi   2727 Aug 11 04:34 build.zig
+-rw-r--r-- 1 pi pi    300 Aug 11 04:10 chip.json
+-rwxr-xr-x 1 pi pi 559104 Aug 11 04:34 chip.wasm
+-rw-r--r-- 1 pi pi  26092 Aug 11 04:34 chip.zig
+-rw-r--r-- 1 pi pi    655 Aug 11 04:10 diagram.json
+drwxr-xr-x 1 pi pi     58 Aug 11 05:11 .esphome
+-rw-r--r-- 1 pi pi      7 Aug 11 02:39 esphome_component.txt
+-rw-r--r-- 1 pi pi    170 Aug 11 05:01 .gitignore
+drwxr-xr-x 1 pi pi     68 Aug 11 05:00 qa_test
+-rw-r--r-- 1 pi pi  15770 Aug 11 02:49 spec_tmp102.md
+-rw-r--r-- 1 pi pi   3813 Aug 11 02:55 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi     76 Aug 11 02:39 tmp102
+-rw-r--r-- 1 pi pi   1767 Aug 11 02:39 tmp102.mdx
+-rw-r--r-- 1 pi pi    604 Aug 11 05:00 tmp102.yaml
+-rw-r--r-- 1 pi pi   3032 Aug 11 04:34 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 11 05:00 wokwi.toml
+---
 total 0
-drwxr-xr-x 1 pi pi  18 Aug 11 02:38 .
-drwxr-xr-x 1 pi pi  30 Aug 11 03:46 ..
-drwxr-xr-x 1 pi pi 204 Aug 11 02:46 datasheet
+drwxr-xr-x 1 pi pi  38 Aug 12 17:13 .
+drwxr-xr-x 1 pi pi 578 Aug  9 03:52 ..
+drwxr-xr-x 1 pi pi  44 Aug 12 18:25 apds9960
+drwxr-xr-x 1 pi pi 132 Aug 12 05:27 scd40
+drwxr-xr-x 1 pi pi 132 Aug 11 05:01 tmp102
 
-$ cat prompt0c.txt
-Create zig 0.16 std project that has data conversion functions and reference algorithms for device <device>
+$ mkdir -p artifacts/tmp102/prompt0c artifacts/tmp102/feedback && ls artifacts/tmp102/feedback 2>/dev/null; ls feedback/tmp102/
+prompt0a.md
+prompt0b.md
+prompt0c.md
+prompt2a.md
+prompt2c.md
+prompt2d.md
+
+$ mkdir -p artifacts/tmp102/prompt0c && ls -la artifacts/tmp102/prompt0c && zig version
+total 0
+drwxr-xr-x 1 pi pi   0 Aug 12 20:11 .
+drwxr-xr-x 1 pi pi 110 Aug 12 20:11 ..
+0.16.0
 
 → Read artifacts/tmp102/outputs/spec_tmp102.md
-Now let me set up the project. First, create dirs and check zig
 
-$ mkdir -p artifacts/tmp102/prompt0c feedback/tmp102 && zig version
-0.16.0
+# Todos
+[•] Run pwd, create artifacts/tmp102/prompt0c, zig init
+[✓] Read spec_tmp102.md and identify conversions/algorithms
+[ ] Write src/main.zig with conversion functions + unit tests
+[ ] zig build to verify correctness
+[ ] Create conversions_manifest.md
+[ ] Write feedback/tmp102/prompt0c.md
+[ ] Verify required artifacts exist
 
 $ zig init
 info: created build.zig
@@ -103,250 +78,252 @@ info: see `zig build --help` for a menu of options
 → Read artifacts/tmp102/prompt0c/build.zig
 → Read artifacts/tmp102/prompt0c/src/main.zig
 → Read artifacts/tmp102/prompt0c/src/root.zig
-
-# Todos
-[✓] Run pwd to establish <original_pwd>
-[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
-[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
-[✓] zig init in artifacts/tmp102/prompt0c
-[•] Edit src/main.zig with conversion functions + unit tests
-[ ] zig build verify
-[ ] Create conversions_manifest.md
-[ ] Create feedback/prompt0c.md
-
-Now I'll write the conversion functions. Let me update todos and write `src/root.zig` (the module root holding the reference algorithms) and `src/main.zig`.
-← Write artifacts/tmp102/prompt0c/src/root.zig
-Wrote file successfully.
+Now I'll write the conversion functions and tests into `src/main.zig`.
 
 ← Write artifacts/tmp102/prompt0c/src/main.zig
 Wrote file successfully.
 
-Now rewrite `src/main.zig` as a CLI demo of the conversions plus a fuzz roundtrip:
-$ zig build 2>&1 && echo "BUILD OK"
-install
-+- install prompt0c
-   +- compile exe prompt0c Debug native 1 errors
-src/main.zig:6:13: error: unused function parameter
-pub fn main(init: std.process.Init) !void {
-            ^~~~
+$ zig build test 2>&1
+test
++- run test
+   +- compile test Debug native 1 errors
+src/main.zig:1:28: error: expected type expression, found 'a document comment'
+const std = @import("std");
+                           ^
 error: 1 compilation errors
-failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig build-exe -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name prompt0c --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
 
-Build Summary: 0/3 steps succeeded (1 failed)
-install transitive failure
-+- install prompt0c transitive failure
-   +- compile exe prompt0c Debug native 1 errors
+Build Summary: 2/5 steps succeeded (1 failed); 1/1 tests passed
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 1 errors
 
 error: the following build command failed with exit code 1:
-.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x7e30fad8 -Zc778b7d19f2c0976
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x6da11f52 -Z4618bd1269ccfa14 test
+
+The `//!` doc comment can't precede imports. Fixing.
+← Edit artifacts/tmp102/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+@@ -1,7 +1,7 @@
+ const std = @import("std");
+ 
+-//! TMP102 data conversion functions and reference algorithms.
++// TMP102 data conversion functions and reference algorithms.
+ //!
+ //! Reference: Texas Instruments TMP102 datasheet, 12-bit (Normal) and 13-bit
+ //! (Extended) temperature formats. All temperature registers (Temperature,
+ //! TLOW, THIGH) share the same two's-complement, left-aligned layout.
+
+
+$ zig build test 2>&1
+test
++- run test
+   +- compile test Debug native 1 errors
+src/main.zig:1:28: error: expected type expression, found 'a document comment'
+const std = @import("std");
+                           ^
+error: 1 compilation errors
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/5 steps succeeded (1 failed); 1/1 tests passed
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 1 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0xfb159cf5 -Z6215bdf2908ba041 test
+
+→ Read artifacts/tmp102/prompt0c/src/main.zig [limit=10]
 
 ← Edit artifacts/tmp102/prompt0c/src/main.zig
 Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
 ===================================================================
 --- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
 +++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -3,8 +3,9 @@
+@@ -1,11 +1,10 @@
+ const std = @import("std");
  
- const prompt0c = @import("prompt0c");
+ // TMP102 data conversion functions and reference algorithms.
+-//!
+-//! Reference: Texas Instruments TMP102 datasheet, 12-bit (Normal) and 13-bit
+-//! (Extended) temperature formats. All temperature registers (Temperature,
+-//! TLOW, THIGH) share the same two's-complement, left-aligned layout.
++// Reference: Texas Instruments TMP102 datasheet, 12-bit (Normal) and 13-bit
++// (Extended) temperature formats. All temperature registers (Temperature,
++// TLOW, THIGH) share the same two's-complement, left-aligned layout.
  
- pub fn main(init: std.process.Init) !void {
-+    _ = init;
-     // Prints worked examples to stderr, unbuffered, ignoring potential errors.
-     std.debug.print("TMP102 data conversions\n", .{});
-     std.debug.print("  +100 C Normal  -> word 0x{x:0>4} (decode back: {d})\n", .{
-         prompt0c.encodeTempNormal(100.0),
+ const LSB_CELSIUS: f32 = 0.0625;
+ 
+ // ---- decode primitives -----------------------------------------------------
 
+
+$ zig build test 2>&1
+test
++- run test
+   +- compile test Debug native 1 errors
+src/main.zig:207:67: error: expected expression, found '+'
+    try std.testing.expectEqual(@as(u16, 0x7FF0), celsiusToWord12(+200.0));
+                                                                  ^
+error: 1 compilation errors
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/5 steps succeeded (1 failed); 1/1 tests passed
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 1 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x65ee3196 -Za0ea0da7a018d173 test
+
+← Edit artifacts/tmp102/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+@@ -203,9 +203,9 @@
+ }
+ 
+ test "celsiusToWord12 out-of-range clamps" {
+     try std.testing.expectEqual(@as(u16, 0x8000), celsiusToWord12(-200.0));
+-    try std.testing.expectEqual(@as(u16, 0x7FF0), celsiusToWord12(+200.0));
++    try std.testing.expectEqual(@as(u16, 0x7FF0), celsiusToWord12(200.0));
+ }
+ 
+ test "celsiusToWord13 spec worked examples" {
+     try std.testing.expectEqual(@as(u16, 0x4B01), celsiusToWord13(150.0));
+
+
+$ zig build test 2>&1
+test
++- run test
+   +- compile test Debug native 1 errors
+src/main.zig:221:67: error: expected expression, found '+'
+    try std.testing.expectEqual(@as(u16, 0x7FF9), celsiusToWord13(+300.0));
+                                                                  ^
+error: 1 compilation errors
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/5 steps succeeded (1 failed); 1/1 tests passed
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 1 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x56671870 -Z635afc0c2ed993a7 test
+
+← Edit artifacts/tmp102/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+@@ -217,9 +217,9 @@
+     try std.testing.expectEqual(@as(u16, 0xE481), celsiusToWord13(-55.0));
+ }
+ 
+ test "celsiusToWord13 out-of-range clamps" {
+-    try std.testing.expectEqual(@as(u16, 0x7FF9), celsiusToWord13(+300.0));
++    try std.testing.expectEqual(@as(u16, 0x7FF9), celsiusToWord13(300.0));
+     try std.testing.expectEqual(@as(u16, 0x8001), celsiusToWord13(-300.0));
+ }
+ 
+ test "round trip 12-bit over all codes" {
+
+
+$ zig build test 2>&1
+test
++- run test
+   +- compile test Debug native 1 errors
+src/main.zig:54:37: error: unable to resolve comptime value
+    const count = decodeCount(word, extended);
+                                    ^~~~~~~~
+src/main.zig:54:37: note: argument to comptime parameter must be comptime-known
+src/main.zig:36:31: note: parameter declared comptime here
+pub fn decodeCount(word: u16, comptime extended: bool) i16 {
+                              ^~~~~~~~
+referenced by:
+    test.wordToCelsius spec worked examples with mode auto-detection: src/main.zig:172:59
+error: 1 compilation errors
+failed command: /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig test -ODebug --dep prompt0c -Mroot=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig -Mprompt0c=/home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig --cache-dir .zig-cache --global-cache-dir /home/pi/.cache/zig --name test --zig-lib-dir /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/ --listen=-
+
+Build Summary: 2/5 steps succeeded (1 failed); 1/1 tests passed
+test transitive failure
++- run test transitive failure
+   +- compile test Debug native 1 errors
+
+error: the following build command failed with exit code 1:
+.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0xaa77d990 -Zbcf6a21c82e12c2c test
+
+← Edit artifacts/tmp102/prompt0c/src/main.zig
+Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
++++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
+@@ -32,9 +32,9 @@
+     return signExtend(word >> 3, 13);
+ }
+ 
+ /// Decode a temperature register word using the caller-chosen mode.
+-pub fn decodeCount(word: u16, comptime extended: bool) i16 {
++pub fn decodeCount(word: u16, extended: bool) i16 {
+     return if (extended) decodeCount13(word) else decodeCount12(word);
+ }
+ 
+ /// Convert a signed two's-complement count to degrees Celsius (0.0625 °C/LSB).
+
+
+$ zig build test 2>&1
+(no output)
 
 $ zig build 2>&1 && echo "BUILD OK"
 BUILD OK
 
-$ zig build test 2>&1 && echo "TESTS OK"
-test
-+- run test 1 pass, 1 fail (2 total)
-error: 'main.test.config reset roundtrip through prompt0c module' failed:
-       expected .interrupt, found .comparator
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x117eba3 in expectEqualInner__anon_42639 (test)
-                       return error.TestExpectedEqual;
-                       ^
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x117ec4f in expectEqual (test)
-           return expectEqualInner(T, expected, actual);
-           ^
-       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig:30:5: 0x117ec8f in test.config reset roundtrip through prompt0c module (test)
-           try std.testing.expectEqual(prompt0c.ThermostatMode.interrupt, cfg.thermostat_mode);
-           ^
-failed command: ./.zig-cache/o/e4311da1abb47e905fee217ebe95f54b/test --cache-dir=./.zig-cache --seed=0x7b994e15 --listen=-
-
-test
-+- run test 13 pass, 2 fail (15 total)
-error: 'root.test.config register reset value 0x60A0 decodes' failed:
-       expected .interrupt, found .comparator
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x118c60b in expectEqualInner__anon_46216 (test)
-                       return error.TestExpectedEqual;
-                       ^
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x118e00f in expectEqual (test)
-           return expectEqualInner(T, expected, actual);
-           ^
-       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig:388:5: 0x118e083 in test.config register reset value 0x60A0 decodes (test)
-           try std.testing.expectEqual(ThermostatMode.interrupt, cfg.thermostat_mode);
-           ^
-error: 'root.test.config toWord forces read-only fields and keeps reserved bits clear' failed:
-       expected 24736, found 24704
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:118:17: 0x118c54f in expectEqualInner__anon_46201 (test)
-                       return error.TestExpectedEqual;
-                       ^
-       /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig/std/testing.zig:83:5: 0x118c7a3 in expectEqual (test)
-           return expectEqualInner(T, expected, actual);
-           ^
-       /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig:400:5: 0x118c8a3 in test.config toWord forces read-only fields and keeps reserved bits clear (test)
-           try std.testing.expectEqual(@as(u16, 0x60A0), cfg.toWord());
-           ^
-failed command: ./.zig-cache/o/687417cae90dd3a42bac13ff0f89e4c3/test --cache-dir=./.zig-cache --seed=0x7b994e15 --listen=-
-
-Build Summary: 2/5 steps succeeded (2 failed); 14/17 tests passed (3 failed)
-test transitive failure
-+- run test 13 pass, 2 fail (15 total)
-+- run test 1 pass, 1 fail (2 total)
-
-error: the following build command failed with exit code 1:
-.zig-cache/o/74da5be036c7d8d1430882e2465b9406/build /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/bin/zig /home/linuxbrew/.linuxbrew/Cellar/zig/0.16.0_1/lib/zig /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c .zig-cache /home/pi/.cache/zig --seed 0x7b994e15 -Z939fb6d00c4d53a3 test
-
-Two test failures are my wrong assumptions about the reset config. `0x60A0` → bit5 (AL)=1 and bit9 (TM)=0. Let me verify the decode with a quick calc, then fix the tests:
-$ python3 -c "
-w=0x60A0
-print('bit9/TM', (w>>9)&1, 'bit5/AL', (w>>5)&1, 'CR', (w>>6)&3, 'R', (w>>13)&3, 'F', (w>>11)&3)
-print('toWord dropping read-only ->', (w & ~0x0020) & ~0x6000 | 0x6000)
-print('0x6080 =', 0x6080, '0x60A0 =', 0x60A0)
-"
-bit9/TM 0 bit5/AL 1 CR 2 R 3 F 0
-toWord dropping read-only -> 24704
-0x6080 = 24704 0x60A0 = 24736
-
-Confirmed. Fixing the three wrong
-← Edit artifacts/tmp102/prompt0c/src/root.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
-@@ -384,13 +384,13 @@
-     try std.testing.expectEqual(@as(u2, 0b11), cfg.resolution_bits);
-     try std.testing.expectEqual(@as(u2, 0b00), cfg.fault_queue_bits);
-     try std.testing.expectEqual(1, faultQueueCount(cfg.fault_queue_bits));
-     try std.testing.expectEqual(false, cfg.polarity);
--    try std.testing.expectEqual(ThermostatMode.interrupt, cfg.thermostat_mode);
-+    try std.testing.expectEqual(ThermostatMode.comparator, cfg.thermostat_mode);
-     try std.testing.expectEqual(false, cfg.shutdown);
-     try std.testing.expectEqual(@as(u2, 0b10), cfg.conversion_rate_bits);
-     try std.testing.expectApproxEqRel(4.0, conversionRateHz(cfg.conversion_rate_bits), 1e-6);
--    try std.testing.expectEqual(false, cfg.alert_status);
-+    try std.testing.expectEqual(true, cfg.alert_status);
-     try std.testing.expectEqual(false, cfg.extended_mode);
- }
- 
- test "config toWord forces read-only fields and keeps reserved bits clear" {
-
-
-← Edit artifacts/tmp102/prompt0c/src/root.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/root.zig
-@@ -396,9 +396,10 @@
- test "config toWord forces read-only fields and keeps reserved bits clear" {
-     var cfg = Config.fromWord(0x60A0);
-     cfg.alert_status = true; // read-only: must not change the packed word
-     cfg.resolution_bits = 0b00; // read-only: forced back to 0b11 on write
--    try std.testing.expectEqual(@as(u16, 0x60A0), cfg.toWord());
-+    // reset word has AL=1 (read-only); it must not survive a write.
-+    try std.testing.expectEqual(@as(u16, 0x6080), cfg.toWord());
- 
-     cfg = .{};
-     cfg.thermostat_mode = .interrupt;
-     cfg.extended_mode = true;
-
-
-← Edit artifacts/tmp102/prompt0c/src/main.zig
-Index: /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-===================================================================
---- /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-+++ /home/pi/Developer/wokwi-ai/artifacts/tmp102/prompt0c/src/main.zig
-@@ -26,9 +26,9 @@
- }
- 
- test "config reset roundtrip through prompt0c module" {
-     const cfg = prompt0c.Config.fromWord(0x60A0);
--    try std.testing.expectEqual(prompt0c.ThermostatMode.interrupt, cfg.thermostat_mode);
-+    try std.testing.expectEqual(prompt0c.ThermostatMode.comparator, cfg.thermostat_mode);
- }
- 
- test "fuzz: encode then decode is a stable fixed point" {
-     try std.testing.fuzz({}, fuzzRoundTrip, .{});
-
-
-$ zig build 2>&1 && zig build test 2>&1 && echo "ALL OK"
-ALL OK
-
-All pass. Let me also run the demo to sanity-check the CLI
-$ zig build run 2>&1
-TMP102 data conversions
-  +100 C Normal  -> word 0x6400 (decode back: 100)
-  -25 C Normal   -> word 0xe700 (decode back: -25)
-  +150 C Extend  -> word 0x4b01 (decode back: 150)
-  0x6400 msb/lsb -> 64 00 (big-endian)
+$ zig build test 2>&1; echo "exit: $?"
+exit: 0
 
 # Todos
-[✓] Run pwd to establish <original_pwd>
-[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
-[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
-[✓] zig init in artifacts/tmp102/prompt0c
-[✓] Edit src/main.zig with conversion functions + unit tests
-[✓] zig build verify
+[✓] Run pwd, create artifacts/tmp102/prompt0c, zig init
+[✓] Read spec_tmp102.md and identify conversions/algorithms
+[✓] Write src/main.zig with conversion functions + unit tests
+[✓] zig build to verify correctness
 [•] Create conversions_manifest.md
-[ ] Create feedback/prompt0c.md
+[ ] Write feedback/tmp102/prompt0c.md
+[ ] Verify required artifacts exist
+
+✗ Invalid Tool
+The arguments provided to the tool are invalid: Invalid input for tool write: JSON parsing failed: Text: {"content": "# TMP102 Conversions Manifest\n\nDevice: TMP102 (Texas Instruments, I²C digital temperature sensor)\nSource spec: `artifacts/tmp102/outputs/spec_tmp102.md`\nImplementation: `artifacts/tmp102/prompt0c/src/main.zig` (zig 0.16)\n\nThis file is the single source of truth for TMP102 register-level bit layout\n(alignment, byte order, and sign extension). Any skill that needs to encode or\ndecode TMP102 temperature registers MUST reuse/port these exact functions\nrather than re-deriving the encoding independently.\n\nAll temperature registers (Temperature 0x00, TLOW 0x02, THIGH 0x03) share the\nsame data format: two's complement, left-aligned in the 16-bit register word,\nMSB byte first (big-endian). Scale = 0.0625 °C/LSB.\n\n## Conversions identified\n\nNo CRC or checksum logic exists for this device; the complex logic is the\ntwo's-complement sign extension + left-alignment encode/decode for the two\ntemperature data formats, plus two Configuration-register field decoders.\n\n| Function | File | Purpose |\n|---|---|---|\n| `signExtend(value, bits)` | src/main.zig | Interpret `bits`-wide two's-complement field as signed i16 |\n| `decodeCount12(word)` | src/main.zig | Normal-mode (12-bit) register word -> signed count |\n| `decodeCount13(word)` | src/main.zig | Extended-mode (13-bit) register word -> signed count |\n| `decodeCount(word, extended)` | src/main.zig | Mode-select wrapper around the two decoders |\n| `countToCelsius(count)` | src/main.zig | signed count -> °C (count * 0.0625) |\n| `wordToCelsius(word)` | src/main.zig | word -> {°C, extended} with EM-flag auto-detection |\n| `celsiusToWord12(°C)` | src/main.zig | °C -> Normal-mode (12-bit) register word |\n| `celsiusToWord13(°C)` | src/main.zig | °C -> Extended-mode (13-bit) register word |\n| `conversionRateHz(config)` | src/main.zig | CR1:CR0 (bits 7:6) -> conversion rate in Hz |\n| `faultQueueCount(config)` | src/main.zig | F1:F0 (bits 12:11) -> consecutive-f.
+Error message: JSON Parse error: Unterminated string
 
 ← Write artifacts/tmp102/prompt0c/conversions_manifest.md
 Wrote file successfully.
 
-# Todos
-[✓] Run pwd to establish <original_pwd>
-[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
-[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
-[✓] zig init in artifacts/tmp102/prompt0c
-[✓] Edit src/main.zig with conversion functions + unit tests
-[✓] zig build verify
-[✓] Create conversions_manifest.md
-[•] Create feedback/prompt0c.md
-
-Final verification, then write
-$ ls -la build.zig build.zig.zon src/main.zig conversions_manifest.md && zig build test 2>&1 | tail -3
--rw-r--r-- 1 pi pi 8492 Aug 11 03:50 build.zig
--rw-r--r-- 1 pi pi 4293 Aug 11 03:50 build.zig.zon
--rw-r--r-- 1 pi pi 3998 Aug 11 04:01 conversions_manifest.md
--rw-r--r-- 1 pi pi 1855 Aug 11 03:59 src/main.zig
-
-$ zig build test 2>&1; echo "exit: $?"
-exit: 0
-
 ← Write feedback/tmp102/prompt0c.md
 Wrote file successfully.
 
+Now the feedback file.
+$ ls -la artifacts/tmp102/prompt0c/build.zig artifacts/tmp102/prompt0c/build.zig.zon artifacts/tmp102/prompt0c/src/main.zig artifacts/tmp102/prompt0c/conversions_manifest.md feedback/tmp102/prompt0c.md
+-rw-r--r-- 1 pi pi  8492 Aug 12 20:12 artifacts/tmp102/prompt0c/build.zig
+-rw-r--r-- 1 pi pi  4293 Aug 12 20:12 artifacts/tmp102/prompt0c/build.zig.zon
+-rw-r--r-- 1 pi pi  5209 Aug 12 20:16 artifacts/tmp102/prompt0c/conversions_manifest.md
+-rw-r--r-- 1 pi pi 12639 Aug 12 20:15 artifacts/tmp102/prompt0c/src/main.zig
+-rw-r--r-- 1 pi pi  2079 Aug 12 20:16 feedback/tmp102/prompt0c.md
+
 # Todos
-[✓] Run pwd to establish <original_pwd>
-[✓] Create artifacts/tmp102/prompt0c, feedback/tmp102 dirs
-[✓] Read spec at artifacts/tmp102/outputs/spec_tmp102.md
-[✓] zig init in artifacts/tmp102/prompt0c
-[✓] Edit src/main.zig with conversion functions + unit tests
-[✓] zig build verify
+[✓] Run pwd, create artifacts/tmp102/prompt0c, zig init
+[✓] Read spec_tmp102.md and identify conversions/algorithms
+[✓] Write src/main.zig with conversion functions + unit tests
+[✓] zig build to verify correctness
 [✓] Create conversions_manifest.md
-[✓] Create feedback/prompt0c.md
+[✓] Write feedback/tmp102/prompt0c.md
+[✓] Verify required artifacts exist
 
-Done. `zig build` and `zig build test` (17/17) pass.
+Done. Zig 0.16 std project created at `artifacts/tmp102/prompt0c`.
 
-**Artifacts at `artifacts/tmp102/prompt0c`:** `build.zig`, `build.zig.zon`, `src/main.zig`, `src/root.zig`, `conversions_manifest.md`; feedback at `feedback/tmp102/prompt0c.md`.
+- **`src/main.zig`** — conversion functions + unit tests: `signExtend`, `decodeCount12/13`, `decodeCount`, `countToCelsius`, `wordToCelsius`, `celsiusToWord12/13` (encode, clamp-to-range, documented), `conversionRateHz`, `faultQueueCount`. Tests cover all spec worked examples (expected counts derived via the `signExtend` primitive) plus exhaustive 12-bit/13-bit round trips.
+- **`conversions_manifest.md`** — records each function, bit-layout assumption, worked example, and out-of-range policy (clamp/saturate).
+- **Verification:** `zig build` and `zig build test` both pass.
+- **Feedback:** `feedback/tmp102/prompt0c.md` — notes the 0.16 `comptime bool` runtime pitfall, `try`-required `expect*`, and container doc-comment placement.
 
-`src/root.zig` holds the reference algorithms + unit tests:
-- **Temperature (12-bit Normal / 13-bit Extended):** `decodeTempNormal(Word)`, `decodeTempExtended(Word)`, `decodeTemp Normal12/Extended13`, `encodeTempNormal/Extended`, sign-extension primitives — verified against spec Tables 5/6 (e.g. `100.0 C -> 0x6400`, `150.0 C -> 0x4B01`).
-- **Byte order:** `wordFromMsbLsb`/`msbLsbFromWord` (big-endian, MSB first).
-- **Config register:** `Config.fromWord/toWord`, fault queue, conversion rate, slave-address tables; `0x60A0` reset confirmed (TM=comparator, AL=1).
-- Overflow policies explicitly documented in doc-comments + manifest (clamp for temps, error for fault count, nearest/clamp for rate). `src/main.zig` adds a CLI demo + encode∘decode fuzz test.
-
-One judgment call worth noting: the reset config `0x60A0` decodes TM=0 and AL=1, so `toWord()` drops the read-only AL bit (0x60A0 → 0x6080 on write).
+All required artifacts verified present (`build.zig`, `build.zig.zon`, `src/main.zig`, `conversions_manifest.md`).

@@ -1,0 +1,56 @@
+{
+  "name": "chip",
+  "author": "Raspberry Pi",
+  "pins": [
+    "SDA",
+    "INT",
+    "LDR",
+    "LEDK",
+    "LEDA",
+    "GND",
+    "SCL",
+    "VDD"
+  ],
+  "controls": [
+    {
+      "id": "clear",
+      "label": "Clear channel",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.1
+    },
+    {
+      "id": "red",
+      "label": "Red channel",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.1
+    },
+    {
+      "id": "green",
+      "label": "Green channel",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.1
+    },
+    {
+      "id": "blue",
+      "label": "Blue channel",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.1
+    },
+    {
+      "id": "proximity",
+      "label": "Proximity",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.1
+    }
+  ]
+}
