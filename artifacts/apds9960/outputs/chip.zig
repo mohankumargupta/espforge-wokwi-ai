@@ -379,23 +379,42 @@ fn rgbcByte(chip: *ChipState, reg: u8) u8 {
     return if (high_byte) bytes.high else bytes.low;
 }
 
+//Mohan: see gotchas
 fn readReg(chip: *ChipState, reg: u8) u8 {
     return switch (reg) {
-        R.id => 0xAB, // APDS-9960 device ID
+        R.id => 0xAB,
         R.status => computeStatus(chip),
-        R.cdata, R.rdata, R.gdata, R.bdata => rgbcByte(chip, reg),
+        R.cdata...R.bdata + 1 => rgbcByte(chip, reg), // 0x94..0x9B inclusive
         R.pdata => proxCountFromPercent(proxPct(chip)),
         else => chip.regs[reg],
     };
 }
 
+// fn readReg(chip: *ChipState, reg: u8) u8 {
+//     return switch (reg) {
+//         R.id => 0xAB, // APDS-9960 device ID
+//         R.status => computeStatus(chip),
+//         R.cdata, R.rdata, R.gdata, R.bdata => rgbcByte(chip, reg),
+//         R.pdata => proxCountFromPercent(proxPct(chip)),
+//         else => chip.regs[reg],
+//     };
+// }
+
+//Mohan: see gotchas
 fn writeReg(chip: *ChipState, reg: u8, val: u8) void {
     switch (reg) {
-        // Read-only registers: data registers, ID, STATUS, gesture status/FIFO.
-        R.id, R.status, R.cdata, R.rdata, R.gdata, R.bdata, R.pdata, R.gflvl, R.gstatus, R.gfifo, R.gfifo + 1, R.gfifo + 2, R.gfifo + 3 => {},
+        R.id, R.status, R.pdata, R.gflvl, R.gstatus, R.gfifo, R.gfifo + 1, R.gfifo + 2, R.gfifo + 3, R.cdata...R.bdata + 1 => {}, // block the whole RGBC data block
         else => chip.regs[reg] = val,
     }
 }
+
+// fn writeReg(chip: *ChipState, reg: u8, val: u8) void {
+//     switch (reg) {
+//         // Read-only registers: data registers, ID, STATUS, gesture status/FIFO.
+//         R.id, R.status, R.cdata, R.rdata, R.gdata, R.bdata, R.pdata, R.gflvl, R.gstatus, R.gfifo, R.gfifo + 1, R.gfifo + 2, R.gfifo + 3 => {},
+//         else => chip.regs[reg] = val,
+//     }
+// }
 
 // ─── I2C Callbacks ────────────────────────────────────────────────────────────
 
