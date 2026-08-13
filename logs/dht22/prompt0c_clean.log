@@ -1,0 +1,146 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "data-conversions-complex-logic"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls artifacts/dht22/outputs/ 2>/dev/null
+dht
+dht.mdx
+esphome_component.txt
+spec_dht22.md
+test_spec_dht22.md
+
+$ ls artifacts/dht22/ 2>/dev/null
+outputs
+prompt0a
+
+# Todos
+[•] Read spec_dht22.md and identify data conversions / complex logic
+[ ] Create artifacts/dht22/prompt0c and run `zig init`
+[ ] Write data conversion functions + unit tests in src/main.zig
+[ ] Run `zig build` to verify
+[ ] Create conversions_manifest.md
+[ ] Write feedback file prompt0c.md
+
+→ Read artifacts/dht22/outputs/spec_dht22.md
+Spec read. I found the data conversions: humidity decode (word ÷10), temperature sign/magnitude decode (bit 15 = sign), and checksum. I also spotted an internal contradiction in the worked-example table (the −10.0 °C row uses raw `0x8000`, which the table's own comment decodes to 0.0) — I'll document how I resolve it in the manifest.
+
+Let me set
+
+$ mkdir -p artifacts/dht22/prompt0c && ls artifacts/dht22/prompt0c
+(no output)
+
+$ zig version
+0.16.0
+
+# Todos
+[✓] Read spec_dht22.md and identify data conversions / complex logic
+[•] Create artifacts/dht22/prompt0c and run `zig init`
+[ ] Write data conversion functions + unit tests in src/main.zig
+[ ] Run `zig build` to verify
+[ ] Create conversions_manifest.md
+[ ] Write feedback file prompt0c.md
+
+$ zig init
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+
+→ Read artifacts/dht22/prompt0c/build.zig
+→ Read artifacts/dht22/prompt0c/src/main.zig
+→ Read artifacts/dht22/prompt0c/src/root.zig
+Template created. Now I'll write the conversion functions and tests into `src/main.zig`.
+
+Key conversions from the spec (`spec_dht22.md`):
+- Humidity: `((RH_INT<<8)|RH_DEC)/10.0`
+- Temperature: sign/magnitude word, bit 15 = sign, ÷10
+- Checksum: low byte of sum of 4 data bytes
+
+I also noted the spec's worked-example table has an internal inconsistency (−10.0 °C listed with raw `0x8000`, which its own formula decodes to 0.0). I'll implement the decode primitive as authoritative and document the discrepancy in the
+
+← Write artifacts/dht22/prompt0c/src/main.zig
+Wrote file successfully.
+
+# Todos
+[✓] Read spec_dht22.md and identify data conversions / complex logic
+[✓] Create artifacts/dht22/prompt0c and run `zig init`
+[✓] Write data conversion functions + unit tests in src/main.zig
+[•] Run `zig build` to verify
+[ ] Create conversions_manifest.md
+[ ] Write feedback file prompt0c.md
+
+$ zig build 2>&1
+(no output)
+
+$ zig build test 2>&1
+(no output)
+
+Build and tests pass. Let me run the tests with output to be sure and confirm the exe
+$ zig build test --summary all 2>&1
+Build Summary: 5/5 steps succeeded; 11/11 tests passed
+test success
++- run test 1 pass (1 total) 32ms MaxRSS:3M
+|  +- compile test Debug native cached 93ms MaxRSS:59M
++- run test 10 pass (10 total) 29ms MaxRSS:4M
+   +- compile test Debug native cached 76ms MaxRSS:59M
+
+$ zig build run 2>&1
+humidity: 50.4 %RH, temperature: 25.0 C, checksum_ok: true
+
+# Todos
+[✓] Read spec_dht22.md and identify data conversions / complex logic
+[✓] Create artifacts/dht22/prompt0c and run `zig init`
+[✓] Write data conversion functions + unit tests in src/main.zig
+[✓] Run `zig build` to verify
+[•] Create conversions_manifest.md
+[ ] Write feedback file prompt0c.md
+
+All 11 tests pass and the demo run works. Now the conversions manifest
+← Write artifacts/dht22/prompt0c/conversions_manifest.md
+Wrote file successfully.
+
+← Edit artifacts/dht22/prompt0c/conversions_manifest.md
+Index: /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt0c/conversions_manifest.md
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt0c/conversions_manifest.md
++++ /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt0c/conversions_manifest.md
+@@ -91,9 +91,9 @@
+ "temperature decode of spec's negative raw 0x80 0x00 -> 0.0".
+ 
+ ## Duplicate encoding of ±0 (sign/magnitude)
+ 
+-In an 8... 16-bit sign/magnitude field, zero is representable in two ways:
++In the 16-bit sign/magnitude temperature field, zero is representable in two ways:
+ `0x0000` (+0) and `0x8000` (−0).
+ - Decoder: both canonicalize to the same real-world value `+0.0`
+   (`temperatureDecode` handles both; test "canonical zero" asserts this).
+ - Encoder: picks exactly one canonical byte, `0x0000`. It never emits `0x8000`.
+
+
+Now the feedback file. First create the feedback directory:
+$ mkdir -p feedback/dht22 && ls feedback/dht22
+prompt0a.md
+prompt0b.md
+
+← Write feedback/dht22/prompt0c.md
+Wrote file successfully.
+
+# Todos
+[✓] Read spec_dht22.md and identify data conversions / complex logic
+[✓] Create artifacts/dht22/prompt0c and run `zig init`
+[✓] Write data conversion functions + unit tests in src/main.zig
+[✓] Run `zig build` to verify
+[✓] Create conversions_manifest.md
+[✓] Write feedback file prompt0c.md
+
+Done. Zig 0.16 std project created at `artifacts/dht22/prompt0c`.
+
+- **Deliverables**: `build.zig`, `build.zig.zon`, `src/main.zig`, `conversions_manifest.md`, plus `feedback/dht22/prompt0c.md`.
+- **Functions** (src/main.zig): `humidityWord/Decode/Encode`, `temperatureWord/Decode/DecodeRaw/Encode` (sign/magnitude, bit 15 = sign), `checksum`, `checksumValid`, whole-frame `decode`/`encode`.
+- **Resolution**: spec table's `−10.0 °C → 0x8000` row contradicts its own formula (decodes to 0.0); implemented the formula and logged it in the manifest.
+- **Verified**: `zig build` and `zig build test` pass — 11/11 tests.

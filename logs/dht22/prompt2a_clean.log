@@ -1,0 +1,264 @@
+
+> build · deepseek-v4-flash-free
+
+→ Skill "wokwi-chip-diagram"
+
+$ pwd
+/home/pi/Developer/wokwi-ai
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/ 2>/dev/null && echo "---outputs---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/ 2>/dev/null && echo "---prompt2d---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2d/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  46 Aug 13 20:20 .
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 ..
+drwxr-xr-x 1 pi pi 124 Aug 13 19:13 outputs
+drwxr-xr-x 1 pi pi  18 Aug 13 19:09 prompt0a
+drwxr-xr-x 1 pi pi 130 Aug 13 20:23 prompt0c
+---outputs---
+total 24
+drwxr-xr-x 1 pi pi  124 Aug 13 19:13 .
+drwxr-xr-x 1 pi pi   46 Aug 13 20:20 ..
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 dht
+-rw-r--r-- 1 pi pi 4083 Aug 13 19:09 dht.mdx
+-rw-r--r-- 1 pi pi    4 Aug 13 19:09 esphome_component.txt
+-rw-r--r-- 1 pi pi 8168 Aug 13 19:11 spec_dht22.md
+-rw-r--r-- 1 pi pi 5853 Aug 13 19:13 test_spec_dht22.md
+---prompt2d---
+
+→ Read artifacts/dht22/outputs/spec_dht22.md
+→ Read artifacts/dht22/outputs/test_spec_dht22.md
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/diagram.json
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/esp32c3.yaml
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/diagramjson.md
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/dht/ && echo "---prompt0c---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt0c/ && echo "---feedback---" && ls -la /home/pi/Developer/wokwi-ai/feedback/ 2>/dev/null
+total 20
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi  124 Aug 13 19:13 ..
+-rw-r--r-- 1 pi pi 6897 Aug 13 19:09 dht.cpp
+-rw-r--r-- 1 pi pi 1703 Aug 13 19:09 dht.h
+-rw-r--r-- 1 pi pi   29 Aug 13 19:09 __init__.py
+-rw-r--r-- 1 pi pi 2268 Aug 13 19:09 sensor.py
+---prompt0c---
+total 28
+drwxr-xr-x 1 pi pi  130 Aug 13 20:23 .
+drwxr-xr-x 1 pi pi   46 Aug 13 20:20 ..
+-rw-r--r-- 1 pi pi 8492 Aug 13 20:20 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug 13 20:20 build.zig.zon
+-rw-r--r-- 1 pi pi 5119 Aug 13 20:23 conversions_manifest.md
+drwxr-xr-x 1 pi pi   32 Aug 13 20:20 src
+drwxr-xr-x 1 pi pi   12 Aug 13 20:21 .zig-cache
+drwxr-xr-x 1 pi pi    6 Aug 13 20:22 zig-out
+---feedback---
+total 0
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi 592 Aug 13 13:50 ..
+drwxr-xr-x 1 pi pi 132 Aug 12 21:56 apds9960
+drwxr-xr-x 1 pi pi  66 Aug 13 20:23 dht22
+drwxr-xr-x 1 pi pi 132 Aug 12 05:27 scd40
+drwxr-xr-x 1 pi pi 132 Aug 11 05:01 tmp102
+
+→ Read /home/pi/.config/opencode/skills/wokwi-chip-diagram/references/wokwi.md
+
+$ ls -la /home/pi/Developer/wokwi-ai/artifacts/ 2>/dev/null && echo "---tmp102---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/ 2>/dev/null && echo "---scd40---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ 2>/dev/null && echo "---apds9960---" && ls -la /home/pi/Developer/wokwi-ai/artifacts/apds9960/outputs/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi 592 Aug 13 13:50 ..
+drwxr-xr-x 1 pi pi  94 Aug 12 21:52 apds9960
+drwxr-xr-x 1 pi pi  46 Aug 13 20:20 dht22
+drwxr-xr-x 1 pi pi  62 Aug 12 05:28 scd40
+drwxr-xr-x 1 pi pi 110 Aug 12 20:11 tmp102
+---tmp102---
+total 632
+drwxr-xr-x 1 pi pi    352 Aug 11 05:01 .
+drwxr-xr-x 1 pi pi    110 Aug 12 20:11 ..
+-rw-r--r-- 1 pi pi   2727 Aug 11 04:34 build.zig
+-rw-r--r-- 1 pi pi    300 Aug 11 04:10 chip.json
+-rwxr-xr-x 1 pi pi 559104 Aug 11 04:34 chip.wasm
+-rw-r--r-- 1 pi pi  26092 Aug 11 04:34 chip.zig
+-rw-r--r-- 1 pi pi    655 Aug 11 04:10 diagram.json
+drwxr-xr-x 1 pi pi     58 Aug 11 05:11 .esphome
+-rw-r--r-- 1 pi pi      7 Aug 11 02:39 esphome_component.txt
+-rw-r--r-- 1 pi pi    170 Aug 11 05:01 .gitignore
+drwxr-xr-x 1 pi pi     68 Aug 11 05:00 qa_test
+-rw-r--r-- 1 pi pi  15770 Aug 11 02:49 spec_tmp102.md
+-rw-r--r-- 1 pi pi   3813 Aug 11 02:55 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi     76 Aug 11 02:39 tmp102
+-rw-r--r-- 1 pi pi   1767 Aug 11 02:39 tmp102.mdx
+-rw-r--r-- 1 pi pi    604 Aug 11 05:00 tmp102.yaml
+-rw-r--r-- 1 pi pi   3032 Aug 11 04:34 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 11 05:00 wokwi.toml
+---scd40---
+total 660
+drwxr-xr-x 1 pi pi    342 Aug 12 05:28 .
+drwxr-xr-x 1 pi pi     62 Aug 12 05:28 ..
+-rw-r--r-- 1 pi pi   2727 Aug 12 05:27 build.zig
+-rw-r--r-- 1 pi pi    567 Aug 12 04:43 chip.json
+-rwxr-xr-x 1 pi pi 583167 Aug 12 05:27 chip.wasm
+-rw-r--r-- 1 pi pi  25538 Aug 12 05:27 chip.zig
+-rw-r--r-- 1 pi pi    688 Aug 12 04:43 diagram.json
+drwxr-xr-x 1 pi pi     58 Aug 12 05:37 .esphome
+-rw-r--r-- 1 pi pi      6 Aug 11 19:16 esphome_component.txt
+-rw-r--r-- 1 pi pi    170 Aug 12 05:28 .gitignore
+drwxr-xr-x 1 pi pi     68 Aug 12 05:49 qa_test
+-rw-r--r-- 1 pi pi    796 Aug 12 04:50 scd40.yaml
+drwxr-xr-x 1 pi pi     96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi   6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi  12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi   3192 Aug 12 04:31 test_spec_scd40.md
+-rw-r--r-- 1 pi pi   3032 Aug 12 05:27 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 12 04:50 wokwi.toml
+---apds9960---
+total 656
+drwxr-xr-x 1 pi pi    392 Aug 13 14:14 .
+drwxr-xr-x 1 pi pi     94 Aug 12 21:52 ..
+drwxr-xr-x 1 pi pi    116 Aug 12 17:14 apds9960
+-rw-r--r-- 1 pi pi   3608 Aug 12 17:14 apds9960.mdx
+-rw-r--r-- 1 pi pi   1345 Aug 12 21:48 apds9960.yaml
+-rw-r--r-- 1 pi pi   2727 Aug 12 21:55 build.zig
+-rw-r--r-- 1 pi pi    874 Aug 12 21:43 chip.json
+-rwxr-xr-x 1 pi pi 576120 Aug 13 14:14 chip.wasm
+-rw-r--r-- 1 pi pi  23560 Aug 13 14:13 chip.zig
+-rw-r--r-- 1 pi pi    670 Aug 12 21:43 diagram.json
+drwxr-xr-x 1 pi pi     58 Aug 12 22:24 .esphome
+-rw-r--r-- 1 pi pi      9 Aug 12 17:14 esphome_component.txt
+-rw-r--r-- 1 pi pi    170 Aug 12 22:15 .gitignore
+drwxr-xr-x 1 pi pi     68 Aug 12 21:48 qa_test
+-rw-r--r-- 1 pi pi  19142 Aug 12 17:18 spec_apds9960.md
+-rw-r--r-- 1 pi pi   9535 Aug 12 18:25 test_spec_apds9960.md
+-rw-r--r-- 1 pi pi   3032 Aug 12 21:55 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 12 21:48 wokwi.toml
+drwxr-xr-x 1 pi pi     12 Aug 13 14:13 .zig-cache
+
+Let me look at existing examples in the repo for
+$ cat /home/pi/Developer/wokwi-ai/feedback/dht22/ 2>/dev/null; ls -la /home/pi/Developer/wokwi-ai/feedback/dht22/
+total 12
+drwxr-xr-x 1 pi pi   66 Aug 13 20:23 .
+drwxr-xr-x 1 pi pi   48 Aug 13 19:09 ..
+-rw-r--r-- 1 pi pi 3378 Aug 13 19:11 prompt0a.md
+-rw-r--r-- 1 pi pi 3469 Aug 13 19:14 prompt0b.md
+-rw-r--r-- 1 pi pi 1815 Aug 13 20:23 prompt0c.md
+
+→ Read artifacts/scd40/outputs/chip.json
+→ Read artifacts/scd40/outputs/diagram.json
+→ Read artifacts/apds9960/outputs/chip.json
+→ Read artifacts/apds9960/outputs/diagram.json
+→ Read artifacts/tmp102/outputs/chip.json
+Let me check the existing chip.json/diagram.json examples to follow repo
+→ Read artifacts/tmp102/outputs/diagram.json
+
+# Todos
+[•] Create artifacts/dht22/prompt2a and feedback/dht22 dirs; copy chip.schema.json
+[ ] Generate chip.json (pins + controls) per spec, save to prompt2a
+[ ] Validate chip.json with check-jsonschema, copy to outputs/chip.json
+[ ] Generate diagram.json from template (MCU + custom chip + single-wire wiring + env attrs)
+[ ] Validate diagram.json with wokwi-cli lint in outputs dir
+[ ] Write feedback/prompt2a.md
+
+$ mkdir -p /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2a /home/pi/Developer/wokwi-ai/feedback/dht22 && cp /home/pi/.config/opencode/skills/wokwi-chip-diagram/assets/chip.schema.json /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2a/chip.schema.json && ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2a/
+total 4
+drwxr-xr-x 1 pi pi   32 Aug 13 20:32 .
+drwxr-xr-x 1 pi pi   62 Aug 13 20:32 ..
+-rw-r--r-- 1 pi pi 2960 Aug 13 20:32 chip.schema.json
+
+Now create chip.json. The DHT22 spec defines 4 pins (VDD, DATA, NULL=NC, GND), with NULL skipped. Controls: both observables (temperature, humidity) are environmental. Operating ranges per spec: temperature −40…+80 °C, humidity 0–
+← Write artifacts/dht22/prompt2a/chip.json
+Wrote file successfully.
+
+$ check-jsonschema --schemafile /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2a/chip.schema.json /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2a/chip.json
+ok -- validation done
+
+Validated. Copy to outputs
+$ cp /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2a/chip.json /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/chip.json && cat /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/chip.json
+{
+  "name": "chip",
+  "author": "Raspberry Pi",
+  "pins": [
+    "VDD",
+    "DATA",
+    "",
+    "GND"
+  ],
+  "controls": [
+    {
+      "id": "temperature",
+      "label": "Temperature",
+      "type": "range",
+      "min": -40,
+      "max": 80,
+      "step": 0.01
+    },
+    {
+      "id": "humidity",
+      "label": "Humidity",
+      "type": "range",
+      "min": 0,
+      "max": 100,
+      "step": 0.01
+    }
+  ]
+}
+
+# Todos
+[✓] Create artifacts/dht22/prompt2a and feedback/dht22 dirs; copy chip.schema.json
+[✓] Generate chip.json (pins + controls) per spec, save to prompt2a
+[✓] Validate chip.json with check-jsonschema, copy to outputs/chip.json
+[•] Generate diagram.json from template (MCU + custom chip + single-wire wiring + env attrs)
+[ ] Validate diagram.json with wokwi-cli lint in outputs dir
+[ ] Write feedback/prompt2a.md
+
+← Write artifacts/dht22/outputs/diagram.json
+Wrote file successfully.
+
+Now generate diagram.json. Both controls are environmental, so attrs = test-spec defaults (25.0, 50.4). DATA is a single-wire signal → GPIO 3 (free primary pin), colors per rules
+$ wokwi-cli lint
+Wokwi CLI v0.26.1 (9d71b975b7eb)
+ℹ [unsupported-part] Part "esp" uses undocumented type "board-esp32-c3-devkitm-1". This part may change or be removed in future versions. (esp)
+
+Found 1 info
+
+Lint passes (only expected info about the board part type). Let me check the feedback convention before writing prompt
+$ ls -la /home/pi/Developer/wokwi-ai/feedback/apds9960/ /home/pi/Developer/wokwi-ai/feedback/tmp102/ 2>/dev/null
+/home/pi/Developer/wokwi-ai/feedback/apds9960/:
+total 28
+drwxr-xr-x 1 pi pi  132 Aug 12 21:56 .
+drwxr-xr-x 1 pi pi   48 Aug 13 19:09 ..
+-rw-r--r-- 1 pi pi 2397 Aug 12 17:18 prompt0a.md
+-rw-r--r-- 1 pi pi 3989 Aug 12 18:25 prompt0b.md
+-rw-r--r-- 1 pi pi 3684 Aug 12 20:28 prompt0c.md
+-rw-r--r-- 1 pi pi 2112 Aug 12 21:44 prompt2a.md
+-rw-r--r-- 1 pi pi 2445 Aug 12 21:48 prompt2c.md
+-rw-r--r-- 1 pi pi 5779 Aug 12 21:56 prompt2d.md
+
+/home/pi/Developer/wokwi-ai/feedback/tmp102/:
+total 28
+drwxr-xr-x 1 pi pi  132 Aug 11 05:01 .
+drwxr-xr-x 1 pi pi   48 Aug 13 19:09 ..
+-rw-r--r-- 1 pi pi 2682 Aug 11 02:50 prompt0a.md
+-rw-r--r-- 1 pi pi 2141 Aug 11 02:56 prompt0b.md
+-rw-r--r-- 1 pi pi 2079 Aug 12 20:16 prompt0c.md
+-rw-r--r-- 1 pi pi 2531 Aug 11 04:11 prompt2a.md
+-rw-r--r-- 1 pi pi 2409 Aug 11 05:01 prompt2c.md
+-rw-r--r-- 1 pi pi 4719 Aug 11 04:35 prompt2d.md
+
+→ Read feedback/apds9960/prompt2a.md
+→ Read feedback/tmp102/prompt2a.md
+
+← Write feedback/dht22/prompt2a.md
+Wrote file successfully.
+
+Now write the feedback file, following
+# Todos
+[✓] Create artifacts/dht22/prompt2a and feedback/dht22 dirs; copy chip.schema.json
+[✓] Generate chip.json (pins + controls) per spec, save to prompt2a
+[✓] Validate chip.json with check-jsonschema, copy to outputs/chip.json
+[✓] Generate diagram.json from template (MCU + custom chip + single-wire wiring + env attrs)
+[✓] Validate diagram.json with wokwi-cli lint in outputs dir
+[✓] Write feedback/prompt2a.md
+
+Done. Both files created and validated.
+
+- `artifacts/dht22/outputs/chip.json` — pins `VDD, DATA, "", GND` (pin 3 NULL skipped per spec), controls `temperature` (−40…80 °C) and `humidity` (0–100 %) — both environmental. Passed `check-jsonschema`.
+- `artifacts/dht22/outputs/diagram.json` — template preserved (ESP32-C3 + `chip-chip` + serial), attrs `temperature: "25.0"`, `humidity: "50.4"` (test-spec defaults), DATA→`esp:3` (green), VDD→`3V3.1` (red), GND→`GND.1` (black). `wokwi-cli lint` passes (only the expected template board-part info).
+
+Feedback written to `feedback/dht22/prompt2a.md`.

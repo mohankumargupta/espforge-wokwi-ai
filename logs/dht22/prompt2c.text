@@ -1,0 +1,1 @@
+create test harness involving esphome yaml and rust std test project called qa_test for device dht22 based on Canonical Test Specification

@@ -1,0 +1,545 @@
+[0m
+> build · deepseek-v4-flash-free
+[0m
+I'll load the wokwi-test-harness skill to create the test harness for DHT22.
+[0m→ [0mSkill "wokwi-test-harness"
+[0m
+[0m$ [0mpwd
+/home/pi/Developer/wokwi-ai
+[0m
+[0m$ [0mls -la artifacts/ 2>/dev/null; echo "---"; ls -la artifacts/dht22/ 2>/dev/null
+total 0
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi 592 Aug 13 13:50 ..
+drwxr-xr-x 1 pi pi  94 Aug 12 21:52 apds9960
+drwxr-xr-x 1 pi pi  62 Aug 13 20:32 dht22
+drwxr-xr-x 1 pi pi  62 Aug 12 05:28 scd40
+drwxr-xr-x 1 pi pi 110 Aug 12 20:11 tmp102
+---
+total 0
+drwxr-xr-x 1 pi pi  62 Aug 13 20:32 .
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 ..
+drwxr-xr-x 1 pi pi 166 Aug 13 20:32 outputs
+drwxr-xr-x 1 pi pi  18 Aug 13 19:09 prompt0a
+drwxr-xr-x 1 pi pi 130 Aug 13 20:23 prompt0c
+drwxr-xr-x 1 pi pi  50 Aug 13 20:32 prompt2a
+[0m
+[0m$ [0mls -la /home/pi/.config/opencode/skills/wokwi-test-harness/assets/ /home/pi/.config/opencode/skills/wokwi-test-harness/references/
+/home/pi/.config/opencode/skills/wokwi-test-harness/assets/:
+total 16
+drwxr-xr-x 1 pi pi  116 Aug  6 06:23 .
+drwxr-xr-x 1 pi pi   48 Aug  4 14:18 ..
+-rw-r--r-- 1 pi pi 4035 Aug  6 06:25 esp32c3.yaml
+drwxr-xr-x 1 pi pi   84 Aug  4 14:32 qa_test
+-rw-r--r-- 1 pi pi  231 Aug  4 14:18 template.yaml
+-rw-r--r-- 1 pi pi 1758 Aug  4 14:32 _test_example.rs
+-rw-r--r-- 1 pi pi  271 Aug  6 06:19 wokwi.toml
+
+/home/pi/.config/opencode/skills/wokwi-test-harness/references/:
+total 20
+drwxr-xr-x 1 pi pi    42 Aug  4 14:18 .
+drwxr-xr-x 1 pi pi    48 Aug  4 14:18 ..
+-rw-r--r-- 1 pi pi 20389 Aug  4 14:18 core-configuration.md
+[0m
+[0m$ [0mls -la artifacts/dht22/outputs/; echo "---"; ls -la artifacts/dht22/prompt0c/; echo "---"; ls -la artifacts/dht22/prompt2a/
+total 32
+drwxr-xr-x 1 pi pi  166 Aug 13 20:32 .
+drwxr-xr-x 1 pi pi   62 Aug 13 20:32 ..
+-rw-r--r-- 1 pi pi  413 Aug 13 20:32 chip.json
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 dht
+-rw-r--r-- 1 pi pi 4083 Aug 13 19:09 dht.mdx
+-rw-r--r-- 1 pi pi  586 Aug 13 20:32 diagram.json
+-rw-r--r-- 1 pi pi    4 Aug 13 19:09 esphome_component.txt
+-rw-r--r-- 1 pi pi 8168 Aug 13 19:11 spec_dht22.md
+-rw-r--r-- 1 pi pi 5853 Aug 13 19:13 test_spec_dht22.md
+---
+total 28
+drwxr-xr-x 1 pi pi  130 Aug 13 20:23 .
+drwxr-xr-x 1 pi pi   62 Aug 13 20:32 ..
+-rw-r--r-- 1 pi pi 8492 Aug 13 20:20 build.zig
+-rw-r--r-- 1 pi pi 4293 Aug 13 20:20 build.zig.zon
+-rw-r--r-- 1 pi pi 5119 Aug 13 20:23 conversions_manifest.md
+drwxr-xr-x 1 pi pi   32 Aug 13 20:20 src
+drwxr-xr-x 1 pi pi   12 Aug 13 20:21 .zig-cache
+drwxr-xr-x 1 pi pi    6 Aug 13 20:22 zig-out
+---
+total 8
+drwxr-xr-x 1 pi pi   50 Aug 13 20:32 .
+drwxr-xr-x 1 pi pi   62 Aug 13 20:32 ..
+-rw-r--r-- 1 pi pi  413 Aug 13 20:32 chip.json
+-rw-r--r-- 1 pi pi 2960 Aug 13 20:32 chip.schema.json
+[0m
+[0m# [0mTodos
+[•] Read skill assets (template.yaml, esp32c3.yaml, wokwi.toml, _test_example.rs, assert_serial.rs, lib.rs, Cargo.toml) and references/core-configuration.md
+[ ] Read spec, esphome_component.txt, dht.mdx from outputs_dir
+[ ] Create artifacts_dir prompt2c and feedback_dir
+[ ] STEP 1: Generate <artifacts_dir>/dht22.yaml with on_boot/on_value from template
+[ ] Verify on_boot/on_value section added correctly
+[ ] Validate esphome config: esphome config dht22.yaml
+[ ] STEP 2: cargo new qa_test in artifacts_dir
+[ ] Copy assert_serial.rs and lib.rs from skill into qa_test/src
+[ ] STEP 3: Create qa_test/tests/test.rs
+[ ] Compile qa_test (aarch64 target)
+[ ] Copy wokwi.toml, qa_test, and dht22.yaml to outputs_dir
+[ ] Write feedback file feedback/dht22/prompt2c.md
+[0m
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/esp32c3.yaml
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/_test_example.rs
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/assert_serial.rs
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/lib.rs
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/Cargo.toml
+Now let me read all the required
+[0m→ [0mRead /home/pi/.config/opencode/skills/wokwi-test-harness/references/core-configuration.md
+[0m→ [0mRead artifacts/dht22/outputs/test_spec_dht22.md
+[0m→ [0mRead artifacts/dht22/outputs/esphome_component.txt
+Now let me read the spec, component info, and mdx file
+[0m
+[0m$ [0mls -la artifacts/dht22/outputs/dht/
+total 20
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi  166 Aug 13 20:32 ..
+-rw-r--r-- 1 pi pi 6897 Aug 13 19:09 dht.cpp
+-rw-r--r-- 1 pi pi 1703 Aug 13 19:09 dht.h
+-rw-r--r-- 1 pi pi   29 Aug 13 19:09 __init__.py
+-rw-r--r-- 1 pi pi 2268 Aug 13 19:09 sensor.py
+[0m
+[0m→ [0mRead artifacts/dht22/outputs/dht.mdx
+[0m→ [0mRead artifacts/dht22/outputs/dht/dht.cpp
+[0m→ [0mRead artifacts/dht22/outputs/dht/dht.h
+[0m→ [0mRead artifacts/dht22/outputs/chip.json
+[0m→ [0mRead artifacts/dht22/outputs/dht/sensor.py
+Let me read the DHT component source and check the chip.json from the earlier pipeline step.
+[0m→ [0mRead artifacts/dht22/outputs/diagram.json
+All inputs gathered. Now let me create the required directories.
+[0m
+[0m$ [0mmkdir -p artifacts/dht22/prompt2c feedback/dht22 && ls -la artifacts/dht22/ feedback/
+artifacts/dht22/:
+total 0
+drwxr-xr-x 1 pi pi  78 Aug 13 21:28 .
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 ..
+drwxr-xr-x 1 pi pi 166 Aug 13 20:32 outputs
+drwxr-xr-x 1 pi pi  18 Aug 13 19:09 prompt0a
+drwxr-xr-x 1 pi pi 130 Aug 13 20:23 prompt0c
+drwxr-xr-x 1 pi pi  50 Aug 13 20:32 prompt2a
+drwxr-xr-x 1 pi pi   0 Aug 13 21:28 prompt2c
+
+feedback/:
+total 0
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi 592 Aug 13 13:50 ..
+drwxr-xr-x 1 pi pi 132 Aug 12 21:56 apds9960
+drwxr-xr-x 1 pi pi  88 Aug 13 20:33 dht22
+drwxr-xr-x 1 pi pi 132 Aug 12 05:27 scd40
+drwxr-xr-x 1 pi pi 132 Aug 11 05:01 tmp102
+[0m
+[0m$ [0mls -la feedback/dht22/
+total 16
+drwxr-xr-x 1 pi pi   88 Aug 13 20:33 .
+drwxr-xr-x 1 pi pi   48 Aug 13 19:09 ..
+-rw-r--r-- 1 pi pi 3378 Aug 13 19:11 prompt0a.md
+-rw-r--r-- 1 pi pi 3469 Aug 13 19:14 prompt0b.md
+-rw-r--r-- 1 pi pi 1815 Aug 13 20:23 prompt0c.md
+-rw-r--r-- 1 pi pi 2644 Aug 13 20:33 prompt2a.md
+[0m
+[0m$ [0mcp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml artifacts/dht22/prompt2c/dht22.yaml && cat artifacts/dht22/prompt2c/dht22.yaml
+esphome:
+  name: dut
+
+esp32: 
+  variant: esp32c3 # Use always
+  framework:
+    type: esp-idf
+
+#wifi:
+#  ssid: !secret wifi_ssid
+#  password: !secret wifi_password
+
+#api:
+#ota:
+#  platform: esphome
+logger:
+  hardware_uart: UART0
+[0m
+Now STEP 1: copy template and build the dht
+Now let me build the dht22.yaml with the on_boot section (adding it inside the `esphome:` block) and the sensor config appended after the template content
+[0m← [0mWrite artifacts/dht22/prompt2c/dht22.yaml
+Wrote file successfully.
+[0m
+[0m$ [0mcp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/template.yaml artifacts/dht22/prompt2c/dht22.yaml && cat -A artifacts/dht22/prompt2c/dht22.yaml
+esphome:$
+  name: dut$
+$
+esp32: $
+  variant: esp32c3 # Use always$
+  framework:$
+    type: esp-idf$
+$
+#wifi:$
+#  ssid: !secret wifi_ssid$
+#  password: !secret wifi_password$
+$
+#api:$
+#ota:$
+#  platform: esphome$
+logger:$
+  hardware_uart: UART0$
+$
+$
+$
+[0m
+I need to preserve template blank lines exactly. Let me redo this using edits on a fresh copy.
+Now let me construct the yaml while strictly preserving template content. First the on_boot edit inside the es
+[0m← [0mEdit artifacts/dht22/prompt2c/dht22.yaml
+Index: /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml
++++ /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml
+@@ -1,6 +1,10 @@
+ esphome:
+   name: dut
++  on_boot:
++    - priority: 600
++      then:
++        - component.update: dht22
+ 
+ esp32: 
+   variant: esp32c3 # Use always
+   framework:
+
+[0m
+[0m← [0mEdit artifacts/dht22/prompt2c/dht22.yaml
+Index: /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml
++++ /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml
+@@ -20,5 +20,27 @@
+ logger:
+   hardware_uart: UART0
+ 
+ 
++sensor:
++  - platform: dht
++    id: dht22
++    model: DHT22
++    pin: GPIO3
++    temperature:
++      name: "Temperature"
++      accuracy_decimals: 1
++      on_value:
++        - logger.log:
++            format: "Temperature = %.1f C"
++            args: ['x']
++    humidity:
++      name: "Humidity"
++      accuracy_decimals: 1
++      on_value:
++        - logger.log:
++            format: "Humidity = %.1f %%"
++            args: ['x']
++    update_interval: 60s
+ 
++
++
+
+[0m
+[0m→ [0mRead artifacts/dht22/prompt2c/dht22.yaml
+Now verify the file preserves template and check format strings
+[0m
+[0m$ [0mgrep -n '{:' artifacts/dht22/prompt2c/dht22.yaml; echo "exit: $?"
+exit: 1
+[0m
+[0m# [0mTodos
+[✓] Read skill assets (template.yaml, esp32c3.yaml, wokwi.toml, _test_example.rs, assert_serial.rs, lib.rs, Cargo.toml) and references/core-configuration.md
+[✓] Read spec, esphome_component.txt, dht.mdx from outputs_dir
+[✓] Create artifacts_dir prompt2c and feedback_dir
+[✓] STEP 1: Generate <artifacts_dir>/dht22.yaml with on_boot/on_value from template
+[✓] Verify on_boot/on_value section added correctly
+[•] Validate esphome config: esphome config dht22.yaml
+[ ] STEP 2: cargo new qa_test in artifacts_dir
+[ ] Copy assert_serial.rs and lib.rs from skill into qa_test/src
+[ ] STEP 3: Create qa_test/tests/test.rs
+[ ] Compile qa_test (aarch64 target)
+[ ] Copy wokwi.toml, qa_test, and dht22.yaml to outputs_dir
+[ ] Write feedback file feedback/dht22/prompt2c.md
+[0m
+Template preserved, on_boot added, no `{:` leftover, `%` escaped as `%%`. The pin GPIO3 matches the diagram wiring (esp:3 → chip1:DATA). Now let me update the checklist and validate the esphome
+[0m$ [0mesphome config dht22.yaml
+INFO ESPHome 2026.5.3
+INFO Reading configuration dht22.yaml...
+esphome:
+  name: dut
+  on_boot:
+    - priority: 600.0
+      then:
+        - component.update:
+            id: dht22
+  min_version: 2026.5.3
+  build_path: build/dut
+  friendly_name: ''
+  platformio_options: {}
+  environment_variables: {}
+  includes: []
+  includes_c: []
+  libraries: []
+  name_add_mac_suffix: false
+  debug_scheduler: false
+  areas: []
+  devices: []
+esp32:
+  variant: ESP32C3
+  framework:
+    type: esp-idf
+    version: 5.5.4
+    sdkconfig_options: {}
+    log_level: ERROR
+    advanced:
+      compiler_optimization: SIZE
+      enable_idf_experimental_features: false
+      enable_lwip_assert: true
+      ignore_efuse_custom_mac: false
+      ignore_efuse_mac_crc: false
+      sram1_as_iram: false
+      enable_lwip_dhcp_server: false
+      enable_lwip_mdns_queries: true
+      enable_lwip_bridge_interface: false
+      enable_lwip_tcpip_core_locking: true
+      enable_lwip_check_thread_safety: true
+      disable_libc_locks_in_iram: true
+      disable_vfs_support_termios: true
+      disable_vfs_support_select: true
+      disable_vfs_support_dir: true
+      freertos_in_iram: false
+      ringbuf_in_iram: false
+      heap_in_iram: false
+      execute_from_psram: false
+      loop_task_stack_size: 8192
+      enable_ota_rollback: false
+      use_full_certificate_bundle: false
+      include_builtin_idf_components: []
+      enable_full_printf: false
+      disable_debug_stubs: true
+      disable_ocd_aware: true
+      disable_usb_serial_jtag_secondary: true
+      disable_dev_null_vfs: true
+      disable_mbedtls_peer_cert: true
+      disable_mbedtls_pkcs7: true
+      disable_regi2c_in_iram: true
+      adc_oneshot_in_iram: false
+      disable_fatfs: true
+    components: []
+    platform_version: https://github.com/pioarduino/platform-espressif32/releases/download/55.03.38-1/platform-espressif32.zip
+    source: pioarduino/framework-espidf@https://github.com/pioarduino/esp-idf/releases/download/v5.5.4/esp-idf-v5.5.4.tar.xz
+  flash_size: 4MB
+  watchdog_timeout: 5s
+  board: esp32-c3-devkitm-1
+  cpu_frequency: 160MHZ
+logger:
+  hardware_uart: UART0
+  baud_rate: 115200
+  tx_buffer_size: 512
+  deassert_rts_dtr: false
+  task_log_buffer_size: 768
+  level: DEBUG
+  logs: {}
+  runtime_tag_levels: false
+sensor:
+  - platform: dht
+    id: dht22
+    model: DHT22
+    pin:
+      number: 3
+      mode:
+        input: true
+        pullup: true
+        output: false
+        open_drain: false
+        pulldown: false
+      inverted: false
+      ignore_pin_validation_error: false
+      ignore_strapping_warning: false
+      drive_strength: 20.0
+    temperature:
+      name: Temperature
+      accuracy_decimals: 1
+      on_value:
+        - then:
+            - logger.log:
+                format: Temperature = %.1f C
+                args:
+                  - !lambda |-
+                    x
+                level: DEBUG
+                tag: main
+      disabled_by_default: false
+      force_update: false
+      unit_of_measurement: °C
+      device_class: temperature
+      state_class: measurement
+    humidity:
+      name: Humidity
+      accuracy_decimals: 1
+      on_value:
+        - then:
+            - logger.log:
+                format: Humidity = %.1f %%
+                args:
+                  - !lambda |-
+                    x
+                level: DEBUG
+                tag: main
+      disabled_by_default: false
+      force_update: false
+      unit_of_measurement: '%'
+      device_class: humidity
+      state_class: measurement
+    update_interval: 60s
+
+INFO Configuration is valid!
+[0m
+[0m# [0mTodos
+[✓] Read skill assets (template.yaml, esp32c3.yaml, wokwi.toml, _test_example.rs, assert_serial.rs, lib.rs, Cargo.toml) and references/core-configuration.md
+[✓] Read spec, esphome_component.txt, dht.mdx from outputs_dir
+[✓] Create artifacts_dir prompt2c and feedback_dir
+[✓] STEP 1: Generate <artifacts_dir>/dht22.yaml with on_boot/on_value from template
+[✓] Verify on_boot/on_value section added correctly
+[✓] Validate esphome config: esphome config dht22.yaml
+[•] STEP 2: cargo new qa_test in artifacts_dir
+[ ] Copy assert_serial.rs and lib.rs from skill into qa_test/src
+[ ] STEP 3: Create qa_test/tests/test.rs
+[ ] Compile qa_test (aarch64 target)
+[ ] Copy wokwi.toml, qa_test, and dht22.yaml to outputs_dir
+[ ] Write feedback file feedback/dht22/prompt2c.md
+[0m
+ESPhome config validates. The `on_value` triggers fire only when values are published (race-safe), and `%.1f`/`%%` are correct printf specifiers.
+[0m$ [0mcargo new --vcs none --lib qa_test && ls -la qa_test/
+Creating library `qa_test` package
+note: see more `Cargo.toml` keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+total 4
+drwxr-xr-x 1 pi pi 26 Aug 13 21:30 .
+drwxr-xr-x 1 pi pi 34 Aug 13 21:30 ..
+-rw-r--r-- 1 pi pi 78 Aug 13 21:30 Cargo.toml
+drwxr-xr-x 1 pi pi 12 Aug 13 21:30 src
+[0m
+[0m$ [0mcp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/assert_serial.rs qa_test/src/ && cp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/qa_test/src/lib.rs qa_test/src/ && mkdir -p qa_test/tests && ls -la qa_test/ qa_test/src/
+qa_test/:
+total 4
+drwxr-xr-x 1 pi pi 36 Aug 13 21:30 .
+drwxr-xr-x 1 pi pi 34 Aug 13 21:30 ..
+-rw-r--r-- 1 pi pi 78 Aug 13 21:30 Cargo.toml
+drwxr-xr-x 1 pi pi 44 Aug 13 21:30 src
+drwxr-xr-x 1 pi pi  0 Aug 13 21:30 tests
+
+qa_test/src/:
+total 8
+drwxr-xr-x 1 pi pi   44 Aug 13 21:30 .
+drwxr-xr-x 1 pi pi   36 Aug 13 21:30 ..
+-rw-r--r-- 1 pi pi 3268 Aug 13 21:30 assert_serial.rs
+-rw-r--r-- 1 pi pi   23 Aug 13 21:30 lib.rs
+[0m
+Now let me align Cargo.toml with the skill's version and create the test file. Let me check what cargo new generated first
+[0m→ [0mRead artifacts/dht22/prompt2c/qa_test/Cargo.toml
+[0m
+[0m← [0mEdit artifacts/dht22/prompt2c/qa_test/Cargo.toml
+Index: /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/qa_test/Cargo.toml
+===================================================================
+--- /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/qa_test/Cargo.toml
++++ /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/qa_test/Cargo.toml
+@@ -3,4 +3,6 @@
+ version = "0.1.0"
+ edition = "2024"
+ 
+ [dependencies]
++# You can add normal PC dependencies here if you need them later
++# e.g., reqwest, tokio, regex, etc.
+
+[0m
+[0m← [0mWrite artifacts/dht22/prompt2c/qa_test/tests/test.rs
+Wrote file successfully.
+[0m
+Now create the test file. The on_boot triggers a read; DHT publishes temperature then humidity, so `on_value` logs stream
+[0m# [0mTodos
+[✓] Read skill assets (template.yaml, esp32c3.yaml, wokwi.toml, _test_example.rs, assert_serial.rs, lib.rs, Cargo.toml) and references/core-configuration.md
+[✓] Read spec, esphome_component.txt, dht.mdx from outputs_dir
+[✓] Create artifacts_dir prompt2c and feedback_dir
+[✓] STEP 1: Generate <artifacts_dir>/dht22.yaml with on_boot/on_value from template
+[✓] Verify on_boot/on_value section added correctly
+[✓] Validate esphome config: esphome config dht22.yaml
+[✓] STEP 2: cargo new qa_test in artifacts_dir
+[✓] Copy assert_serial.rs and lib.rs from skill into qa_test/src
+[✓] STEP 3: Create qa_test/tests/test.rs
+[•] Compile qa_test (aarch64 target)
+[ ] Copy wokwi.toml, qa_test, and dht22.yaml to outputs_dir
+[ ] Write feedback file feedback/dht22/prompt2c.md
+[0m
+Now compile the qa_test for the a
+[0m$ [0mcargo build --target aarch64-unknown-linux-gnu
+Compiling qa_test v0.1.0 (/home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/qa_test)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 1.61s
+[0m
+[0m# [0mTodos
+[✓] Read skill assets (template.yaml, esp32c3.yaml, wokwi.toml, _test_example.rs, assert_serial.rs, lib.rs, Cargo.toml) and references/core-configuration.md
+[✓] Read spec, esphome_component.txt, dht.mdx from outputs_dir
+[✓] Create artifacts_dir prompt2c and feedback_dir
+[✓] STEP 1: Generate <artifacts_dir>/dht22.yaml with on_boot/on_value from template
+[✓] Verify on_boot/on_value section added correctly
+[✓] Validate esphome config: esphome config dht22.yaml
+[✓] STEP 2: cargo new qa_test in artifacts_dir
+[✓] Copy assert_serial.rs and lib.rs from skill into qa_test/src
+[✓] STEP 3: Create qa_test/tests/test.rs
+[✓] Compile qa_test (aarch64 target)
+[•] Copy wokwi.toml, qa_test, and dht22.yaml to outputs_dir
+[ ] Write feedback file feedback/dht22/prompt2c.md
+[0m
+Compiles cleanly. Now copy all artifacts to outputs_dir
+[0m$ [0mcp /home/pi/.config/opencode/skills/wokwi-test-harness/assets/wokwi.toml /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/ && cp -r /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/qa_test /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/ && cp /home/pi/Developer/wokwi-ai/artifacts/dht22/prompt2c/dht22.yaml /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/ && ls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/
+total 40
+drwxr-xr-x 1 pi pi  220 Aug 13 21:30 .
+drwxr-xr-x 1 pi pi   78 Aug 13 21:28 ..
+-rw-r--r-- 1 pi pi  413 Aug 13 20:32 chip.json
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 dht
+-rw-r--r-- 1 pi pi  749 Aug 13 21:30 dht22.yaml
+-rw-r--r-- 1 pi pi 4083 Aug 13 19:09 dht.mdx
+-rw-r--r-- 1 pi pi  586 Aug 13 20:32 diagram.json
+-rw-r--r-- 1 pi pi    4 Aug 13 19:09 esphome_component.txt
+drwxr-xr-x 1 pi pi   68 Aug 13 21:30 qa_test
+-rw-r--r-- 1 pi pi 8168 Aug 13 19:11 spec_dht22.md
+-rw-r--r-- 1 pi pi 5853 Aug 13 19:13 test_spec_dht22.md
+-rw-r--r-- 1 pi pi  271 Aug 13 21:30 wokwi.toml
+[0m
+All files copied. Now write the feedback file
+[0m$ [0mls -la /home/pi/Developer/wokwi-ai/feedback/dht22/
+total 16
+drwxr-xr-x 1 pi pi   88 Aug 13 20:33 .
+drwxr-xr-x 1 pi pi   48 Aug 13 19:09 ..
+-rw-r--r-- 1 pi pi 3378 Aug 13 19:11 prompt0a.md
+-rw-r--r-- 1 pi pi 3469 Aug 13 19:14 prompt0b.md
+-rw-r--r-- 1 pi pi 1815 Aug 13 20:23 prompt0c.md
+-rw-r--r-- 1 pi pi 2644 Aug 13 20:33 prompt2a.md
+[0m
+[0m→ [0mRead feedback/dht22/prompt2a.md
+[0m
+[0m← [0mWrite feedback/dht22/prompt2c.md
+Wrote file successfully.
+[0m
+[0m# [0mTodos
+[✓] Read skill assets (template.yaml, esp32c3.yaml, wokwi.toml, _test_example.rs, assert_serial.rs, lib.rs, Cargo.toml) and references/core-configuration.md
+[✓] Read spec, esphome_component.txt, dht.mdx from outputs_dir
+[✓] Create artifacts_dir prompt2c and feedback_dir
+[✓] STEP 1: Generate <artifacts_dir>/dht22.yaml with on_boot/on_value from template
+[✓] Verify on_boot/on_value section added correctly
+[✓] Validate esphome config: esphome config dht22.yaml
+[✓] STEP 2: cargo new qa_test in artifacts_dir
+[✓] Copy assert_serial.rs and lib.rs from skill into qa_test/src
+[✓] STEP 3: Create qa_test/tests/test.rs
+[✓] Compile qa_test (aarch64 target)
+[✓] Copy wokwi.toml, qa_test, and dht22.yaml to outputs_dir
+[✓] Write feedback file feedback/dht22/prompt2c.md
+[0m
+Test harness complete for DHT22:
+
+- **`artifacts/dht22/prompt2c/dht22.yaml`** — ESPHome config. `on_boot` forces a read via `component.update`, and log lines live in each sensor's `on_value` trigger (race-safe). Spec templates translated to printf (`%.1f`, `%%` for the literal percent).
+- **`artifacts/dht22/prompt2c/qa_test/`** — Rust std test asserting the spec ground-truth values: `Temperature = 25.0 C`, `Humidity = 50.4 %`.
+- **Validated**: `esphome config dht22.yaml` passes; `cargo build --target aarch64-unknown-linux-gnu` compiles clean.
+- **Copied** `dht22.yaml`, `qa_test/`, and `wokwi.toml` to `outputs/`; feedback written to `feedback/dht22/prompt2c.md`.

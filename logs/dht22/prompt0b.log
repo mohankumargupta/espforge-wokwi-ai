@@ -1,0 +1,135 @@
+[0m
+> build · deepseek-v4-flash-free
+[0m
+[0m→ [0mSkill "canonical-test-spec"
+[0m
+[0m$ [0mpwd
+/home/pi/Developer/wokwi-ai
+[0m
+[0m$ [0mls -la artifacts/dht22/outputs/ 2>/dev/null && echo "---" && ls -la feedback/dht22/ 2>/dev/null
+total 16
+drwxr-xr-x 1 pi pi   88 Aug 13 19:11 .
+drwxr-xr-x 1 pi pi   30 Aug 13 19:09 ..
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 dht
+-rw-r--r-- 1 pi pi 4083 Aug 13 19:09 dht.mdx
+-rw-r--r-- 1 pi pi    4 Aug 13 19:09 esphome_component.txt
+-rw-r--r-- 1 pi pi 8168 Aug 13 19:11 spec_dht22.md
+---
+total 4
+drwxr-xr-x 1 pi pi   22 Aug 13 19:11 .
+drwxr-xr-x 1 pi pi   48 Aug 13 19:09 ..
+-rw-r--r-- 1 pi pi 3378 Aug 13 19:11 prompt0a.md
+[0m
+[0m→ [0mRead artifacts/dht22/outputs/esphome_component.txt
+[0m→ [0mRead artifacts/dht22/outputs/dht.mdx
+[0m→ [0mRead artifacts/dht22/outputs/spec_dht22.md
+[0m
+[0m$ [0mls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/outputs/dht/
+total 20
+drwxr-xr-x 1 pi pi   64 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi   88 Aug 13 19:11 ..
+-rw-r--r-- 1 pi pi 6897 Aug 13 19:09 dht.cpp
+-rw-r--r-- 1 pi pi 1703 Aug 13 19:09 dht.h
+-rw-r--r-- 1 pi pi   29 Aug 13 19:09 __init__.py
+-rw-r--r-- 1 pi pi 2268 Aug 13 19:09 sensor.py
+[0m
+[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/sensor-classes.md
+[0m→ [0mRead /home/pi/.config/opencode/skills/canonical-test-spec/references/small-classes.md
+[0m→ [0mRead artifacts/dht22/outputs/dht/dht.cpp
+[0m→ [0mRead artifacts/dht22/outputs/dht/dht.h
+[0m→ [0mRead artifacts/dht22/outputs/dht/sensor.py
+[0m
+[0m$ [0mls -la /home/pi/Developer/wokwi-ai/artifacts/dht22/ && ls -la /home/pi/Developer/wokwi-ai/artifacts/
+total 0
+drwxr-xr-x 1 pi pi 30 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi 48 Aug 13 19:09 ..
+drwxr-xr-x 1 pi pi 88 Aug 13 19:11 outputs
+drwxr-xr-x 1 pi pi 18 Aug 13 19:09 prompt0a
+total 0
+drwxr-xr-x 1 pi pi  48 Aug 13 19:09 .
+drwxr-xr-x 1 pi pi 592 Aug 13 13:50 ..
+drwxr-xr-x 1 pi pi  94 Aug 12 21:52 apds9960
+drwxr-xr-x 1 pi pi  30 Aug 13 19:09 dht22
+drwxr-xr-x 1 pi pi  62 Aug 12 05:28 scd40
+drwxr-xr-x 1 pi pi 110 Aug 12 20:11 tmp102
+[0m
+[0m→ [0mRead feedback/dht22/prompt0a.md
+[0m
+[0m$ [0mls -la /home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/ /home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/ 2>/dev/null
+/home/pi/Developer/wokwi-ai/artifacts/scd40/outputs/:
+total 660
+drwxr-xr-x 1 pi pi    342 Aug 12 05:28 .
+drwxr-xr-x 1 pi pi     62 Aug 12 05:28 ..
+-rw-r--r-- 1 pi pi   2727 Aug 12 05:27 build.zig
+-rw-r--r-- 1 pi pi    567 Aug 12 04:43 chip.json
+-rwxr-xr-x 1 pi pi 583167 Aug 12 05:27 chip.wasm
+-rw-r--r-- 1 pi pi  25538 Aug 12 05:27 chip.zig
+-rw-r--r-- 1 pi pi    688 Aug 12 04:43 diagram.json
+drwxr-xr-x 1 pi pi     58 Aug 12 05:37 .esphome
+-rw-r--r-- 1 pi pi      6 Aug 11 19:16 esphome_component.txt
+-rw-r--r-- 1 pi pi    170 Aug 12 05:28 .gitignore
+drwxr-xr-x 1 pi pi     68 Aug 12 05:49 qa_test
+-rw-r--r-- 1 pi pi    796 Aug 12 04:50 scd40.yaml
+drwxr-xr-x 1 pi pi     96 Aug 11 19:16 scd4x
+-rw-r--r-- 1 pi pi   6634 Aug 11 19:16 scd4x.mdx
+-rw-r--r-- 1 pi pi  12886 Aug 11 19:28 spec_scd40.md
+-rw-r--r-- 1 pi pi   3192 Aug 12 04:31 test_spec_scd40.md
+-rw-r--r-- 1 pi pi   3032 Aug 12 05:27 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 12 04:50 wokwi.toml
+
+/home/pi/Developer/wokwi-ai/artifacts/tmp102/outputs/:
+total 632
+drwxr-xr-x 1 pi pi    352 Aug 11 05:01 .
+drwxr-xr-x 1 pi pi    110 Aug 12 20:11 ..
+-rw-r--r-- 1 pi pi   2727 Aug 11 04:34 build.zig
+-rw-r--r-- 1 pi pi    300 Aug 11 04:10 chip.json
+-rwxr-xr-x 1 pi pi 559104 Aug 11 04:34 chip.wasm
+-rw-r--r-- 1 pi pi  26092 Aug 11 04:34 chip.zig
+-rw-r--r-- 1 pi pi    655 Aug 11 04:10 diagram.json
+drwxr-xr-x 1 pi pi     58 Aug 11 05:11 .esphome
+-rw-r--r-- 1 pi pi      7 Aug 11 02:39 esphome_component.txt
+-rw-r--r-- 1 pi pi    170 Aug 11 05:01 .gitignore
+drwxr-xr-x 1 pi pi     68 Aug 11 05:00 qa_test
+-rw-r--r-- 1 pi pi  15770 Aug 11 02:49 spec_tmp102.md
+-rw-r--r-- 1 pi pi   3813 Aug 11 02:55 test_spec_tmp102.md
+drwxr-xr-x 1 pi pi     76 Aug 11 02:39 tmp102
+-rw-r--r-- 1 pi pi   1767 Aug 11 02:39 tmp102.mdx
+-rw-r--r-- 1 pi pi    604 Aug 11 05:00 tmp102.yaml
+-rw-r--r-- 1 pi pi   3032 Aug 11 04:34 wokwi_api.zig
+-rw-r--r-- 1 pi pi    271 Aug 11 05:00 wokwi.toml
+[0m
+[0m✱ [0mGlob "artifacts/**/test_spec_*.md"[90m 3 matches[0m
+Let me look at existing canonical test specs for reference on format consistency.
+[0m→ [0mRead artifacts/tmp102/outputs/test_spec_tmp102.md
+[0m→ [0mRead artifacts/scd40/outputs/test_spec_scd40.md
+[0m
+[0m# [0mTodos
+[✓] Read all inputs (spec_dht22.md, dht.mdx, dht component source)
+[✓] Review reference formats (tmp102/scd40 test specs, sensor-classes)
+[•] Write test_spec_dht22.md
+[ ] Write feedback/prompt0b.md
+[0m
+I have all inputs. Let me create the checklist and write the specification.
+Now I'll write the Canonical Test Specification for the DHT22.
+[0m← [0mWrite artifacts/dht22/outputs/test_spec_dht22.md
+Wrote file successfully.
+[0m
+[0m← [0mWrite feedback/dht22/prompt0b.md
+Wrote file successfully.
+[0m
+Now let me write the feedback file.
+[0m# [0mTodos
+[✓] Read all inputs (spec_dht22.md, dht.mdx, dht component source)
+[✓] Review reference formats (tmp102/scd40 test specs, sensor-classes)
+[✓] Write test_spec_dht22.md
+[✓] Write feedback/prompt0b.md
+[0m
+Done. Produced `artifacts/dht22/outputs/test_spec_dht22.md` and feedback at `feedback/dht22/prompt0b.md`.
+
+Key decisions:
+- **Device**: DHT22, Aosong, single-wire proprietary single-bus (no address, no registers)
+- **Observables**: temperature `25.0` C and humidity `50.4` %, both float (0.1 resolution), sourced from the inferred `spec_dht22.md` test vectors; they form one self-consistent frame `0x01 0xF8 0x00 0xFA 0xF3` (checksum verified)
+- **Presentation**: precision 1 for both (device 0.1 resolution + dht.mdx `accuracy_decimals: 1` recommendation)
+- Documented exclusions (model auto-detect, DHT11 decode path, checksum error paths, sign-bit handling) and a full traceability table
+
+Feedback notes the frame-oriented/non-register gap and a precision-sourcing conflict the skill doesn't cover.
